@@ -7,9 +7,9 @@ var express_1 = __importDefault(require("express"));
 var path_1 = __importDefault(require("path"));
 var app = (0, express_1.default)();
 app.use(express_1.default.static(path_1.default.join(__dirname, "../public")));
-app.get("/", function (req, res, next) {
+app.get("*", function (req, res, next) {
     try {
-        res.send("index.html");
+        res.sendFile(path_1.default.join(__dirname, "../public", "index.html"));
     }
     catch (error) {
         next(error);
