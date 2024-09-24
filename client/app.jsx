@@ -7,3 +7,6 @@ const App = () => {
 }
 
 ReactDOM.render(<App />, document.querySelector("#app"));
+App = () => {
+    if (true){} else {}s
+}
