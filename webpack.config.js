@@ -1,27 +1,23 @@
-import path from 'path';
 
-const loaders = [];
+const path = require("path");
 
-loaders.push({
-    test: /\.jsx?$/,
-    exclude: /node_modules/,
-    use: 'babel-loader'
-});
-
-export default {
-    devServer: {
-        static: './dist',
+module.exports = {
+  entry: "./client/index.tsx",
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
       },
-    entry: {
-        app: './client/app.jsx'
-    },
-    module: {
-        rules: loaders
-    },
-    output: {
-        filename: 'main.bundle.js',
-        path: path.resolve(path.resolve(), "dist"),
-        publicPath: '/',
-    },
-
-}
+    ],
+  },
+  mode: "development",
+  resolve: {
+    extensions: [".tsx", ".ts", ".js"],
+  },
+  output: {
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "public"),
+  },
+};
