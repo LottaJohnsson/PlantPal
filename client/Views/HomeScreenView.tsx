@@ -6,7 +6,6 @@ type Props = {}
 export default function HomeScreenView({}: Props) {
     return (
         <>
-            <TopBar></TopBar>
             <div>HomeScreenView</div>
         </>
 

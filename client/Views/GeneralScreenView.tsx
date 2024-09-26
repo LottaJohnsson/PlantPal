@@ -58,8 +58,7 @@ function BasicTable() {
 
 export default function GeneralScreenView({}: Props) {
     return (
-        <ThemeProvider theme={customTheme}>
-            <TopBar></TopBar>
+        <>
             <Stack
                 direction="row"
                 spacing={2}
@@ -102,7 +101,6 @@ export default function GeneralScreenView({}: Props) {
                     </BasicTable>
                 </Stack>
             </Stack>
-        </ThemeProvider>
-
+        </>
     )
 }
