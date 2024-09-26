@@ -2,3 +2,4 @@ node_modules
 package-lock.json
 firebase.js
 DS_Store
+public/bundle.js
