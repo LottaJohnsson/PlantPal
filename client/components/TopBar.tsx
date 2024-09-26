@@ -4,14 +4,13 @@ import {AppBar, Box, IconButton, Toolbar, Typography, Button, InputBase} from "@
 import MenuIcon from '@mui/icons-material/Menu';
 import {ThemeProvider} from '@mui/material/styles';
 import customTheme from "../theme";
-import {Search} from "@mui/icons-material";
 import {styled, alpha} from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 
 
 const Search = styled('div')(({theme}) => ({
     position: 'relative',
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: '20px',
     backgroundColor: alpha(theme.palette.common.white, 0.15),
     '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 0.25),
@@ -39,7 +38,6 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
     color: 'inherit',
     '& .MuiInputBase-input': {
         padding: theme.spacing(1, 1, 1, 0),
-        borderRadius: '1px',
         // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create('width'),
@@ -73,7 +71,7 @@ function TopBar() {
 
                         <Search>
                             <SearchIconWrapper>
-                                <SearchIcon color="primary.dark"></SearchIcon>
+                                <SearchIcon color="info"></SearchIcon>
                             </SearchIconWrapper>
                             <StyledInputBase
                                 placeholder="Search…"
