@@ -11,6 +11,7 @@ const customTheme = createTheme({
         secondary: {
             main: '#B41878',
             light: '#F1B6DA',
+            dark: '#B41878',
         },
         info: {
             main: '#F7F7F7',

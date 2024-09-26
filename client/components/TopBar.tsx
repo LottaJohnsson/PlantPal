@@ -51,40 +51,38 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 
 function TopBar() {
     return (
-        <ThemeProvider theme={customTheme}>
-            <Box sx={{flexGrow: 1}}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <IconButton>
-                            <img
-                                src="logo.png"
-                                alt="my image"
-                                style={{height: '50px'}}
-                            >
-                            </img>
+        <Box sx={{flexGrow: 1}}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton>
+                        <img
+                            src="logo.png"
+                            alt="my image"
+                            style={{height: '50px'}}
+                        >
+                        </img>
 
-                        </IconButton>
+                    </IconButton>
 
-                        <Typography variant="h3" component="div" color="primary.dark" sx={{flexGrow: 1}}>
-                            PlantPal
-                        </Typography>
+                    <Typography variant="h3" component="div" color="primary.dark" sx={{flexGrow: 1}}>
+                        PlantPal
+                    </Typography>
 
-                        <Search>
-                            <SearchIconWrapper>
-                                <SearchIcon color="info"></SearchIcon>
-                            </SearchIconWrapper>
-                            <StyledInputBase
-                                placeholder="Search…"
-                                inputProps={{'aria-label': 'search'}}
-                            />
-                        </Search>
-                        <Button color="secondary">Profile</Button>
-                        <Button color="secondary">Explore</Button>
-                        <Button color="secondary">About</Button>
-                    </Toolbar>
-                </AppBar>
-            </Box>
-        </ThemeProvider>
+                    <Search>
+                        <SearchIconWrapper>
+                            <SearchIcon color="info"></SearchIcon>
+                        </SearchIconWrapper>
+                        <StyledInputBase
+                            placeholder="Search…"
+                            inputProps={{'aria-label': 'search'}}
+                        />
+                    </Search>
+                    <Button color="secondary">Profile</Button>
+                    <Button color="secondary">Explore</Button>
+                    <Button color="secondary">About</Button>
+                </Toolbar>
+            </AppBar>
+        </Box>
     );
 }
 
