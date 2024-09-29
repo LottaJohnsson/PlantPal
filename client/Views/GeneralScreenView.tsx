@@ -1,6 +1,6 @@
 import React, {SyntheticEvent} from 'react'
 import {
-    Box,
+    Box, IconButton,
     Stack, Tab,
     Table,
     TableBody,
@@ -12,6 +12,7 @@ import {
 import {Paper} from "@mui/material";
 import Button from "@mui/material/Button";
 import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface GeneralScreenViewProps {
     advice: any,
@@ -129,6 +130,7 @@ export default function GeneralScreenView(
                         justifyContent={"center"}
                         sx={{padding: "3%", flex: 1, minHeight: '300px'}}
                     >
+
                         <img src={species.default_image.original_url} alt={"plant image"} style={{
                             height: '150px',
                             objectFit: 'contain',

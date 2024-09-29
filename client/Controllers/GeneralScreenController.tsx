@@ -4,6 +4,7 @@ import {getCareAdvice, searchSpecies} from "../../server/Models/plantModel";
 
 type Props = {}
 
+//Get search result from Explore Page
 export default function GeneralScreenController({}: Props) {
     const [tabIndex, setTabIndex] = useState(0)
     const [advice, setAdvice] = useState(null);
@@ -18,11 +19,12 @@ export default function GeneralScreenController({}: Props) {
         //TODO
     }
 
+    //Should be done from Explore Page
     useEffect(() => {
-        searchSpecies("lily").then(res => {
+        searchSpecies("Aloe").then(res => {
             setSpecies(res[0]);
         })
-        getCareAdvice("lily").then(res => {
+        getCareAdvice("Aloe").then(res => {
             setAdvice(res[0]);
         })
     }, []);
