@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import AuthScreenController from "./Controllers/AuthScreenController";
 import {ThemeProvider} from "@mui/material/styles";
 import customTheme from "./theme";
+import PrivateRoute from "./components/PrivateRouter";
 
 const App: React.FC = () => {
     return (
@@ -15,11 +16,16 @@ const App: React.FC = () => {
             <TopBar></TopBar>
             <Router>
                 <Routes>
+                    {/*Public Routes*/}
                     <Route path="/" element={<Button>Hello plantpals!</Button>}/>
                     <Route path="/home" element={<HomeScreen/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<AuthScreenController/>}></Route>
                     <Route path="/about" element={<AboutScreen/>}/>
+                    {/*Private Routes*/}
+                    <Route path="/private" element={<PrivateRoute/>}>
+                        <Route path="test" element={<Button>Private</Button>}/>
+                    </Route>
                 </Routes>
             </Router>
         </ThemeProvider>

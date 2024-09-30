@@ -4,10 +4,28 @@ import Grid from '@mui/material/Grid2'
 import TopBar from "../components/TopBar";
 
 type Props = {
+    error: string
     setIsLogin: React.Dispatch<React.SetStateAction<boolean>>
+    onEmailChange: (event: string) => void
+    onPasswordChange: (password: string) => void
+    onSubmit : () => void
 }
 
-export default function LoginScreenView({setIsLogin}: Props) {
+export default function LoginScreenView({error, setIsLogin, onEmailChange, onPasswordChange, onSubmit}: Props) {
+    
+    function emailInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
+        onEmailChange(event.target.value)
+    }
+
+    function passwordInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
+        onPasswordChange(event.target.value)
+    } 
+
+    function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+        event.preventDefault()
+        onSubmit()
+    }
+
     return (
         <Stack
             direction="row"
@@ -36,12 +54,14 @@ export default function LoginScreenView({setIsLogin}: Props) {
                             id="outlined-required"
                             label="Email"
                             color="secondary"
+                            onChange={emailInputChanged}
                         />
                         <TextField
                             required
                             id="outlined-required"
                             label="Password"
                             color="secondary"
+                            onChange={passwordInputChanged}
 
                         />
                         <Stack direction="row" justifyContent="space-between">
@@ -51,9 +71,12 @@ export default function LoginScreenView({setIsLogin}: Props) {
                                     setIsLogin(false);
                                 }}> Register</a>
                             </Typography>
-                            <Button variant="contained"
-                                    sx={{backgroundColor: 'secondary.light'}}>Sign
-                                in</Button>
+                            <Button 
+                                    variant="contained"
+                                    sx={{backgroundColor: 'secondary.light'}}
+                                    onClick={handleSubmit}
+                                    >Sign in
+                            </Button>
                         </Stack>
                     </Stack>
                 </div>
