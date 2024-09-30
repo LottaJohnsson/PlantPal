@@ -8,6 +8,8 @@ import AuthScreenController from "./Controllers/AuthScreenController";
 import {ThemeProvider} from "@mui/material/styles";
 import customTheme from "./theme";
 import PrivateRoute from "./components/PrivateRouter";
+import UploadPlantScreen from "./Controllers/UploadPlantScreenController";
+
 
 const App: React.FC = () => {
     return (
@@ -20,10 +22,13 @@ const App: React.FC = () => {
                     <Route path="/home" element={<HomeScreen/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<AuthScreenController/>}></Route>
+                    <Route path="upload" element={<UploadPlantScreen/>}/>
+                    
 
                     {/*Private Routes*/}
                     <Route path="/private" element={<PrivateRoute/>}>
                         <Route path="test" element={<Button>Private</Button>}/>
+                        
                     </Route>
                 </Routes>
             </Router>
