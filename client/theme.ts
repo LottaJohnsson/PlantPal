@@ -18,6 +18,9 @@ const customTheme = createTheme({
         }
 
     },
+    typography: {
+        fontFamily: 'poppins',
+    },
 });
 
 
