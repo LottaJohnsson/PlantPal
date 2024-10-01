@@ -1,33 +1,43 @@
-import React, {useState} from 'react'
-import {Typography, Box, Stack, Button, TextField} from '@mui/material'
-import { useDropzone } from 'react-dropzone'
+import React, { useState } from 'react';
+import { Typography, Box, Button, TextField, MenuItem, CircularProgress } from '@mui/material';
+import { useDropzone } from 'react-dropzone';
+import { searchSpecies } from "../../server/Models/plantModel";
 
-type Props = {}
 
-export default function UploadPlantScreenView({}: Props) {
-
-    const [showForm, setShowForm] = useState(false);
-    const [image, setImage] = useState<File | null>(null);
-    const [formData, setFormData] = useState({
-        name: '',
-        whenBought: '',
-        placement: ''
-    });
-
-    // Handle file drop
-    const onDrop = (acceptedFiles: File[]) => {
-        setImage(acceptedFiles[0]);
+type Props = {
+    image: File | null;
+    searchQuery: string;
+    searchResult: any[];
+    loading: boolean;
+    formVisible: boolean;
+    formData: {
+        name: string;
+        lastWatered: string;
+        waterFrequency: string;
     };
+    handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleSelectPlant: () => void;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onDrop: (acceptedFiles: File[]) => void;
+    isDragActive: boolean;
+    onAddToProfile: () => void;
+};
 
-    // Dropzone config
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-    // Handle form field change
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
+export default function UploadPlantScreenView({
+    image,
+    searchQuery,
+    searchResult,
+    loading,
+    formVisible,
+    formData,
+    handleSearchChange,
+    handleSelectPlant,
+    handleChange,
+    onDrop,
+    isDragActive,
+    onAddToProfile,
+}: Props) {
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
         <Box
@@ -62,55 +72,93 @@ export default function UploadPlantScreenView({}: Props) {
                     backgroundColor: 'white',
                 }}
             >
-                Add a new plant to your collection! Don’t know the name of your plant? Don’t worry, 
-                use the identify button to identify the plant with an image. If you already know what 
-                plant you have, use the fill in button!
+                Add a new plant to your collection! Search for a plant or add it manually if you can't find it.
             </Typography>
 
-            <Stack
-                direction="row"
-                spacing={4}
-                sx={{
-                    justifyContent: 'center',
-                }}
-            >
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: 'secondary.light', 
-                        color: 'secondary.dark',
-                        fontSize: '1rem',
-                        padding: '12px 24px',
-                        '&:hover': {
-                            backgroundColor: 'secondary.dark', 
-                            color: 'secondary.light',
-                        }
-                    }}
-                    onClick={() => setShowForm(true)}
-                >
-                    Fill in
-                </Button>
+            {/* Search bar */}
+            <TextField
+                label="Search for a plant"
+                variant="outlined"
+                fullWidth
+                value={searchQuery}
+                onChange={handleSearchChange}
+                sx={{ marginBottom: '16px', maxWidth: '600px' }}
+            />
 
-                <Button
-                    variant="contained"
-                    sx={{
-                        backgroundColor: 'secondary.light', 
-                        color: 'secondary.dark',
-                        fontSize: '1rem',
-                        padding: '12px 24px',
-                        '&:hover': {
-                            backgroundColor: 'secondary.dark', 
-                            color: 'secondary.light',
-                        }
-                    }}
-                    
-                >
-                    Identify
-                </Button>
-            </Stack>
+            {/* loading spinner while searching */}
+            {loading && <CircularProgress sx={{ marginBottom: '16px', color: 'secondary.dark' }} />}
 
-            {/* Form that pops up when 'Fill in' is clicked */}
-            {showForm && (
+            {/* Search results */}
+            {searchResult.length > 0 ? (
+                <Box sx={{ 
+                    marginBottom: '16px', 
+                    width: '100%', 
+                    maxWidth: '600px', 
+                }}>
+                    {searchResult.map((plant: any) => (
+                        <Box key={plant.id} sx={{ 
+                            marginBottom: '16px', 
+                            marginTop: '16px',
+                            borderRadius: '8px',
+                            padding: '16px',
+                            backgroundColor: 'info.main',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            }}>
+                            <Typography variant="h5">{plant.common_name || plant.scientific_name}</Typography>
+                            {plant.default_image?.original_url && (
+                                <img
+                                    src={plant.default_image.original_url}
+                                    alt={plant.common_name || plant.scientific_name}
+                                    style={{ width: '100px', height: '100px', objectFit: 'cover', marginBottom: '8px', marginTop: '8px', border: 'px solid ##B41878' }}
+                                />
+                            )}
+                            <Button
+                                variant="contained"
+                                onClick={handleSelectPlant}
+                                sx={{
+                                    backgroundColor: 'secondary.light',
+                                    color: 'secondary.dark',
+                                    margin: '8px',
+                                    '&:hover': {
+                                        backgroundColor: 'secondary.dark',
+                                        color: 'secondary.light',
+                                    },
+                                }}
+                            >
+                                Use this plant
+                            </Button>
+                        </Box>
+                    ))}
+                </Box>
+            ) : (
+                searchQuery && !loading && (
+                    <Box sx={{ marginBottom: '16px' }}>
+                        <Typography variant="body1">
+                            Sorry, we don't recognize that plant...please add it manually!
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            onClick={handleSelectPlant}
+                            sx={{
+                                backgroundColor: 'secondary.light',
+                                color: 'secondary.dark',
+                                margin: '8px',
+                                '&:hover': {
+                                    backgroundColor: 'secondary.dark',
+                                    color: 'secondary.light',
+                                },
+                            }}
+                        >
+                            Add plant manually
+                        </Button>
+                    </Box>
+                )
+            )}
+
+            {/* Form when a plant is selected */}
+            {formVisible && (
                 <Box
                     sx={{
                         display: 'flex',
@@ -122,20 +170,20 @@ export default function UploadPlantScreenView({}: Props) {
                         borderRadius: '8px',
                         border: '1px solid primary.dark',
                         backgroundColor: '#fafafa',
-                        marginTop: '32px',
+                        marginTop: '16px',
                     }}
                 >
-                    {/* File Upload */}
+                    {/* File Upload with default image option if plant is found in the API */}
                     <Box
                         {...getRootProps()}
                         sx={{
-                            border: '2px dashed #ccc',
+                            border: '2px dashed #e0e0e0',
                             borderRadius: '8px',
                             padding: '16px',
                             width: '100%',
                             textAlign: 'center',
                             cursor: 'pointer',
-                            marginBottom: '16px',
+                            margin: '16px 0',
                             backgroundColor: isDragActive ? '#e0e0e0' : 'transparent',
                         }}
                     >
@@ -144,15 +192,17 @@ export default function UploadPlantScreenView({}: Props) {
                             <Typography variant="body1">Selected file: {image.name}</Typography>
                         ) : (
                             <Typography variant="body1">
-                                {isDragActive ? 'Drop the files here...' : 'Drag & drop or click to select an image'}
+                                Drag & drop or click to select an image, or{' '}
+                                {searchResult && <strong>use default image</strong>}
                             </Typography>
                         )}
                     </Box>
 
+                    {/* Input fields */}
                     <TextField
                         label="Plant Name"
                         name="name"
-                        value={formData.name}
+                        value={formData.name || ''}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
@@ -160,45 +210,47 @@ export default function UploadPlantScreenView({}: Props) {
                     />
 
                     <TextField
-                        label="When Bought"
-                        name="whenBought"
-                        value={formData.whenBought}
+                        label="When was this plant last watered?"
+                        name="lastWatered"
+                        type="date"
+                        value={formData.lastWatered}
                         onChange={handleChange}
                         variant="outlined"
                         fullWidth
                         sx={{ marginBottom: '16px' }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
 
-                    <TextField
-                        label="Placement"
-                        name="placement"
-                        value={formData.placement}
-                        onChange={handleChange}
-                        variant="outlined"
-                        fullWidth
-                        sx={{ marginBottom: '16px' }}
-                    />
+                    {/* Water frequency select if add manually*/}
+                    {!searchResult.length && (
+                        <TextField
+                            label="How often does this plant need water?"
+                            name="waterFrequency"
+                            select
+                            value={formData.waterFrequency}
+                            onChange={handleChange}
+                            variant="outlined"
+                            fullWidth
+                            sx={{ marginBottom: '16px' }}
+                        >
+                            {["Every day", "Every second day", "Three times a week", "Twice a week", "Once a week", "Every second week", "Every third week", "Once a month"].map(option => (
+                                <MenuItem key={option} value={option}>{option}</MenuItem>
+                            ))}
+                        </TextField>
+                    )}
 
-                    <TextField
-                        label="Size"
-                        name="size"
-                        value={formData.placement}
-                        onChange={handleChange}
-                        variant="outlined"
-                        fullWidth
-                        sx={{ marginBottom: '16px' }}
-                    />
-
-                    {/* Submit Button */}
                     <Button
                         variant="contained"
+                        onClick={onAddToProfile}
                         sx={{
-                            backgroundColor: 'primary.light',
-                            color: 'primary.dark',
+                            backgroundColor: 'secondary.light',
+                            color: 'secondary.dark',
                             padding: '12px 24px',
                             '&:hover': {
-                                backgroundColor: 'primary.dark',
-                                color: 'primary.light',
+                                backgroundColor: 'secondary.dark',
+                                color: 'secondary.light',
                             },
                         }}
                     >
@@ -206,7 +258,6 @@ export default function UploadPlantScreenView({}: Props) {
                     </Button>
                 </Box>
             )}
-
         </Box>
-    )
+    );
 }
