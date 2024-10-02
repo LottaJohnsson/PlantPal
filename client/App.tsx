@@ -4,6 +4,7 @@ import HomeScreen from "./Controllers/HomeScreenController";
 import GeneralScreen from "./Controllers/GeneralScreenController";
 import AboutScreen from "./Controllers/AboutScreenController";
 import TopBar from "./components/TopBar";
+import ExplorePage from "./Controllers/ExplorePageController";
 import Button from '@mui/material/Button';
 import AuthScreenController from "./Controllers/AuthScreenController";
 import {ThemeProvider} from "@mui/material/styles";
@@ -19,6 +20,7 @@ const App: React.FC = () => {
                     {/*Public Routes*/}
                     <Route path="/" element={<Button>Hello plantpals!</Button>}/>
                     <Route path="/home" element={<HomeScreen/>}/>
+                    <Route path="/explore" element={<ExplorePage />} />
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<AuthScreenController/>}></Route>
                     <Route path="/about" element={<AboutScreen/>}/>
