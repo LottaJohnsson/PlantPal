@@ -9,6 +9,7 @@ import AuthScreenController from "./Controllers/AuthScreenController";
 import {ThemeProvider} from "@mui/material/styles";
 import customTheme from "./theme";
 import PrivateRoute from "./components/PrivateRouter";
+import ProfileScreen from "./Controllers/ProfileScreenController";
 
 const App: React.FC = () => {
     return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<AuthScreenController/>}></Route>
                     <Route path="/about" element={<AboutScreen/>}/>
+                    <Route path="/profile" element={<ProfileScreen/>}/>
                     {/*Private Routes*/}
                     <Route path="/private" element={<PrivateRoute/>}>
                         <Route path="test" element={<Button>Private</Button>}/>
