@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import LoginScreenView from '../Views/LoginScreenView'
 import RegisterScreenView from '../Views/RegisterScreenView'
 import { useNavigate } from 'react-router-dom'
@@ -7,12 +7,12 @@ import { useAuth } from '../Contexts/authContext'
 type Props = {}
 
 export default function AuthScreenController({}: Props) {
-  const [isLogin, setIsLogin] = React.useState(true)
-  const emailRef = React.useRef('')
-  const passwordRef = React.useRef('')
-  const confirmPasswordRef = React.useRef('')
-  const [loading, setLoading] = React.useState(false)
-  const [error, setError] = React.useState('')
+  const [isLogin, setIsLogin] = useState(true)
+  const emailRef = useRef('')
+  const passwordRef = useRef('')
+  const confirmPasswordRef = useRef('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
   const { loginUser, registerUser } = useAuth()
 
@@ -28,7 +28,25 @@ export default function AuthScreenController({}: Props) {
     confirmPasswordRef.current = confirmPassword;
   }
 
+  function setIsLoginCB(isLogin: boolean) {
+    setIsLogin(isLogin)
+    setError('')
+  }
+
+  function validateEmail(email: string) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
   async function handleLoginSubmitCB() {
+    if(emailRef.current === '' || passwordRef.current === ''){
+      setError('Please fill in all fields')
+      return;
+    }
+    if(!validateEmail(emailRef.current)){
+      setError('Email is not in a valid format')
+      return;
+    }
     try {
       setError('')
       setLoading(true)
@@ -39,7 +57,7 @@ export default function AuthScreenController({}: Props) {
         return;
       }
       setLoading(false)
-      navigate('/private/test')
+      navigate('/private/test') //Should be changed when profile page is added
     } catch (error) {
       setError('Wrong email or password')
       console.log(error)
@@ -47,6 +65,14 @@ export default function AuthScreenController({}: Props) {
   }
 
   async function handleRegisterSubmitCB() {
+    if(emailRef.current === '' || passwordRef.current === '' || confirmPasswordRef.current === ''){
+      setError('Please fill in all fields')
+      return;
+    }
+    if(!validateEmail(emailRef.current)){
+      setError('Email is not in a valid format')
+      return;
+    }
     try {
       setError('')
       setLoading(true)
@@ -57,7 +83,7 @@ export default function AuthScreenController({}: Props) {
         return;
       }
       setLoading(false)
-      navigate('/private/test')
+      navigate('/private/test') //Should be changed when profile page is added
     } catch (error) {
       setError('Something went wrong while registring account')
       console.log(error)
@@ -66,8 +92,8 @@ export default function AuthScreenController({}: Props) {
 
   return (
     <>
-        {isLogin? <LoginScreenView error={error} setIsLogin={setIsLogin} onEmailChange={setEmailCB} onPasswordChange={setPasswordCB} onSubmit={handleLoginSubmitCB}/> : 
-                  <RegisterScreenView error={error} setIsLogin={setIsLogin} onEmailChange={setEmailCB} onPasswordChange={setPasswordCB} onConfirmPassswordChange={setConfirmPasswordCB} onSubmit={handleRegisterSubmitCB}/>}
+        {isLogin? <LoginScreenView error={error} loading={loading} setIsLogin={setIsLoginCB} onEmailChange={setEmailCB} onPasswordChange={setPasswordCB} onSubmit={handleLoginSubmitCB}/> : 
+                  <RegisterScreenView error={error} loading={loading} setIsLogin={setIsLoginCB} onEmailChange={setEmailCB} onPasswordChange={setPasswordCB} onConfirmPassswordChange={setConfirmPasswordCB} onSubmit={handleRegisterSubmitCB}/>}
     </>
   )
 }

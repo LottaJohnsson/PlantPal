@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import session from "express-session";
 import path from "path";
-import authRouter from "./Routers/authRouter";
+import authRouter from "./Controllers/auth.controller";
 
 
 const app = express();
