@@ -14,18 +14,18 @@ import PrivateRoute from "./components/PrivateRouter";
 const App: React.FC = () => {
     return (
         <ThemeProvider theme={customTheme}>
-            <TopBar></TopBar>
             <Router>
+                <TopBar></TopBar>
                 <Routes>
                     {/*Public Routes*/}
                     <Route path="/" element={<Button>Hello plantpals!</Button>}/>
                     <Route path="/home" element={<HomeScreen/>}/>
                     <Route path="/explore" element={<ExplorePage />} />
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
-                    <Route path="/login" element={<AuthScreenController/>}></Route>
+                    <Route path="/login" element={<AuthScreenController/>}/>
                     <Route path="/about" element={<AboutScreen/>}/>
                     {/*Private Routes*/}
-                    <Route path="/private" element={<PrivateRoute/>}>
+                    <Route element={<PrivateRoute/>}>
                         <Route path="test" element={<Button>Private</Button>}/>
                     </Route>
                 </Routes>

@@ -51,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await response.json();
       if (data.loggedIn) {
         setIsAuthenticated(true);
+        setCurrentUser({ email: email });
         return true;
       }
       return false;
