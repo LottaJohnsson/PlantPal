@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import session from "express-session";
 import path from "path";
 import authRouter from "./Controllers/auth.controller";
+import morgan from "morgan";
 
 
 const app = express();
@@ -9,6 +10,7 @@ app.use(express.json());
 
 
 app.use(express.static(path.join(__dirname, "../public")));
+app.use(morgan("dev"));
 
 app.use(session({
   secret: "Super hemligt jag lovar",
