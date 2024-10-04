@@ -11,6 +11,13 @@ const root = createRoot(container!); // Create a root
 root.render(
   <React.StrictMode>
     <AuthProvider>
+      <style>
+          {`
+              body {
+                  margin: 0;
+              }
+          `}
+      </style>
       <App />
     </AuthProvider>
   </React.StrictMode>
