@@ -52,13 +52,11 @@ exports.initializeDatabase = initializeDatabase;
 var promise_1 = __importDefault(require("mysql2/promise"));
 // password StrongPassword123!
 var pool = promise_1.default.createPool({
-    host: 'localhost',
-    user: 'plantpal',
-    password: 'StrongPassword123!',
-    database: 'plantpalDB',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+    host: process.env.MYSQL_HOST || 'localhost', // Use the service name 'db' defined in docker-compose.yml
+    user: process.env.MYSQL_USER || 'plantpal',
+    port: 3306,
+    password: process.env.MYSQL_PASSWORD || 'StrongPassword123!',
+    database: process.env.MYSQL_DATABASE || 'plantpalDB',
 });
 function query(sql, values) {
     return __awaiter(this, void 0, void 0, function () {

@@ -60,7 +60,7 @@ export default function LoginScreenView({error, loading, setIsLogin, onEmailChan
                             onChange={passwordInputChanged}
                         />
                         <Stack direction="row" justifyContent="space-between">
-                            <Typography>Don’t have an account?
+                            <Typography>Don’t have an account? scaboing
                                 <a href="#" onClick={(e) => {
                                     e.preventDefault();
                                     setIsLogin(false);
