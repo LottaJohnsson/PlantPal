@@ -1,22 +1,49 @@
-import React from 'react'
-import TopBar from "../components/TopBar";
+import React, {SyntheticEvent} from 'react'
 import {
-    Stack,
+    Box, IconButton,
+    Stack, Tab,
     Table,
     TableBody,
     TableCell,
     TableContainer,
-    TableRow,
+    TableRow, Tabs,
     Typography
 } from "@mui/material";
 import {Paper} from "@mui/material";
-import {ThemeProvider} from "@mui/material/styles";
-import customTheme from "../theme";
+import Button from "@mui/material/Button";
+import AddIcon from '@mui/icons-material/Add';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-type Props = {}
+interface GeneralScreenViewProps {
+    advice: any,
+    species: any,
+    handleTabChange: (event: SyntheticEvent<Element, Event>, tabindex: number) => void,
+    onAddToProfile: () => void,
+    tabIndex: number
+}
 
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
 
-//Dummmy data
+function CustomTabPanel(props: TabPanelProps) {
+    const {children, value, index, ...other} = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && <Box sx={{p: 3}}>{children}</Box>}
+        </div>
+    );
+}
+
 function createData(
     name: string,
     data: string,
@@ -24,28 +51,53 @@ function createData(
     return {name, data};
 }
 
-// Combine all data into a single string for each row
-const rows = [
-    createData('Watering', 'Often'),
-    createData('Soil Type', 'bla vla'),
-    createData('Temperature', '20-30 C'),
-    createData('Placement', 'Direct sunlight'),
-    createData('Soil pH', '7'),
-];
 
-function BasicTable() {
+function CareAdviceTabs(props: any) {
+    return (
+        <Box sx={{width: '100%'}}>
+            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+                <Tabs onChange={props.handleTabChange}
+                      textColor="secondary"
+                      indicatorColor="secondary"
+                      aria-label="lab API tabs example" value={props.tabIndex}>
+                    {props.section.map((section: any, i: number) => (
+                        <Tab label={section.type} key={section.type}
+                             value={i}>
+                        </Tab>
+                    ))}
+                </Tabs>
+            </Box>
+            {props.section.map((section: any, i: number) => (
+                <CustomTabPanel key={section.type} value={props.tabIndex} index={i}>
+                    <Typography>
+                        {section.description}
+                    </Typography>
+                </CustomTabPanel>
+            ))}
+        </Box>
+    )
+}
+
+
+function BasicTable(plant: any) {
+    const rows = [
+        createData('Cycle', plant.plant.cycle),
+        createData('Other Names', plant.plant.other_name.join(', ')),
+        createData('Scientific Name', plant.plant.scientific_name),
+        createData('Sunlight', plant.plant.sunlight.join(', ')),
+        createData('Watering', plant.plant.watering),
+    ];
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{minWidth: 650}} aria-label="plant table">
                 <TableBody>
                     {rows.map((row) => (
                         <TableRow key={row.name}>
-                            {/* First column for the header */}
                             <TableCell component="th" scope="row"
                                        sx={{borderRight: '1px solid rgba(224, 224, 224, 1)'}}>
                                 {row.name}
                             </TableCell>
-                            {/* Second column for the data */}
                             <TableCell align="left">{row.data}</TableCell>
                         </TableRow>
                     ))}
@@ -56,51 +108,75 @@ function BasicTable() {
 }
 
 
-export default function GeneralScreenView({}: Props) {
-    return (
-        <>
-            <Stack
-                direction="row"
-                spacing={2}
-                sx={{flex: 1, '& > :not(style)': {width: '100%'}}}
-            >
+export default function GeneralScreenView(
+    {
+        species,
+        advice,
+        handleTabChange,
+        tabIndex,
+        onAddToProfile,
+    }: GeneralScreenViewProps) {
+    if (species && advice) {
+        return (
+            <>
                 <Stack
-                    direction="column"
-                    alignItems={"left"}
-                    justifyContent={"center"}
-                    sx={{padding: "3%"}}
-                >
-                    <img src={"general_info.png"} alt={"plant image"} style={{
-                        height: '150px',
-                        objectFit: 'contain',
-                        flex: 1,
-                        objectPosition: 'left bottom',
-
-                    }}/>
-
-                </Stack>
-
-                <Stack
-                    direction="column"
-                    alignItems={"left"}
-                    justifyContent={"center"}
+                    direction="row"
                     spacing={2}
-                    sx={{paddingRight: "10%"}}
-
+                    sx={{width: '100%', '& > :not(style)': {flex: 1}}}
                 >
-                    <Typography color="secondary" variant="h2">
-                        Hoya
-                    </Typography>
-                    <Typography variant="h6">
-                        Hoyas, also called wax plants, are an Asian native plant with fragrant, low-maintenance tropical
-                        flowers that grow in a ball-shaped cluster. These low-maintenance plants produce woody stems
-                        with
-                        waxy leaves, which remain evergreen.
-                    </Typography>
-                    <BasicTable>
-                    </BasicTable>
+                    <Stack
+                        direction="column"
+                        alignItems={"left"}
+                        justifyContent={"center"}
+                        sx={{padding: "3%", flex: 1, minHeight: '300px'}}
+                    >
+
+                        <img src={species.default_image.original_url} alt={"plant image"} style={{
+                            height: '150px',
+                            objectFit: 'contain',
+                            flex: 1,
+                            objectPosition: 'left bottom',
+
+                        }}/>
+
+                    </Stack>
+
+                    <Stack
+                        direction="column"
+                        alignItems={"left"}
+                        justifyContent={"center"}
+                        spacing={2}
+                        sx={{paddingRight: "10%", paddingTop: "5%", flex: 1}}
+                    >
+                        <Typography color="secondary" variant="h2">
+                            {species.common_name}
+                        </Typography>
+
+                        <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange}
+                                        tabIndex={tabIndex}>
+                        </CareAdviceTabs>
+
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => onAddToProfile()}
+                            endIcon={<AddIcon/>}>
+                            Add to profile
+                        </Button>
+
+                        <BasicTable plant={species}>
+                        </BasicTable>
+                    </Stack>
+
+
                 </Stack>
-            </Stack>
-        </>
-    )
+            </>
+        )
+
+    } else {
+        return (
+            <div>Nothing found</div>
+        )
+    }
+
 }

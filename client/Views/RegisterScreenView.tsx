@@ -1,16 +1,17 @@
 import React from 'react'
-import {Stack, TextField, Button, Typography, Box} from '@mui/material'
+import {Stack, TextField, Button, Typography, Alert, CircularProgress} from '@mui/material'
 
 type Props = {
     error: string
-    setIsLogin: React.Dispatch<React.SetStateAction<boolean>>
+    loading: boolean
+    setIsLogin: (isLogin: boolean) => void
     onEmailChange: (event: string) => void
     onPasswordChange: (password: string) => void
     onConfirmPassswordChange: (password: string) => void
     onSubmit : () => void
 }
 
-export default function RegisterScreenView({error, setIsLogin, onEmailChange, onPasswordChange, onConfirmPassswordChange, onSubmit }: Props) {
+export default function RegisterScreenView({error, loading, setIsLogin, onEmailChange, onPasswordChange, onConfirmPassswordChange, onSubmit }: Props) {
     function emailInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
         onEmailChange(event.target.value)
     }
@@ -31,7 +32,6 @@ export default function RegisterScreenView({error, setIsLogin, onEmailChange, on
     return (
         <Stack
             direction="row"
-            justifyContent="space-between"
             sx={{height: '100vh', padding: 0}}
         >
             <Stack
@@ -39,22 +39,21 @@ export default function RegisterScreenView({error, setIsLogin, onEmailChange, on
                 spacing={2}
                 noValidate
                 autoComplete="off"
-                sx={{flex: 1, '& > :not(style)': {width: '100%'}}}
+                sx={{flex: 1, '& > :not(style)': {width: '100%'}, marginLeft: '2%'}}
             >
-                <div
-                    style={{marginBottom: '20%', marginTop: '5%'}}
-                >
+                <div style={{marginBottom: '10%', marginTop: '10%'}}>
                     <Typography variant='h2'>Are your plants dying?</Typography>
                     <Typography variant='h2' color="primary">Login to save them!</Typography>
                 </div>
                 <div>
                     <Stack spacing={2}>
                         <Typography variant='h4' color="secondary">Register</Typography>
-                        <Typography>{error}</Typography>
+                        <Alert severity="error" sx={{display: error !== '' ? 'flex' : 'none'}}>{error}</Alert>
                         <TextField
                             required
                             id="outlined-required"
                             label="Email"
+                            type='email'
                             color="secondary"
                             onChange={emailInputChanged}
                         />
@@ -62,6 +61,7 @@ export default function RegisterScreenView({error, setIsLogin, onEmailChange, on
                             required
                             id="outlined-required"
                             label="Password"
+                            type='password'
                             color="secondary"
                             onChange={passwordInputChanged}
                         />
@@ -69,6 +69,7 @@ export default function RegisterScreenView({error, setIsLogin, onEmailChange, on
                             required
                             id="outlined-required"
                             label="Confirm Password"
+                            type='password'
                             color="secondary"
                             onChange={confirmPasswordInputChanged}
                         />
@@ -79,7 +80,14 @@ export default function RegisterScreenView({error, setIsLogin, onEmailChange, on
                                     setIsLogin(true);
                                 }}> Login</a>
                             </Typography>
-                            <Button variant="contained" sx={{backgroundColor: "secondary.light"}} onClick={handleSubmit}>Register</Button>
+                            {loading ? 
+                                <CircularProgress /> : 
+                                <Button 
+                                    variant="contained" 
+                                    sx={{backgroundColor: "secondary.light"}} 
+                                    onClick={handleSubmit}>Register
+                                </Button>
+                        }
                         </Stack>
                     </Stack>
                 </div>
