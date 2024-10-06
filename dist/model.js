@@ -175,6 +175,32 @@ var Model = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Function to fetch all plants for a user
+     * @param email User email
+     * @returns Array of plants
+     */
+    Model.prototype.fetchPlantsForUser = function (email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, rows, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        query = "\n            SELECT plant_id, plant_name, watering_frequency, latest_watered, image_url, image_blob\n            FROM plants\n            WHERE user_email = ?\n        ";
+                        return [4 /*yield*/, db_1.default.query(query, [email])];
+                    case 1:
+                        rows = (_a.sent())[0];
+                        return [2 /*return*/, rows];
+                    case 2:
+                        error_2 = _a.sent();
+                        console.error("Error fetching plants for user:", error_2);
+                        return [2 /*return*/, []];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return Model;
 }());
 exports.default = new Model();

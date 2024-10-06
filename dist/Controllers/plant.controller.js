@@ -118,24 +118,45 @@ router.post("/add", requireAuth, upload.single('imageFile'), function (req, res)
         }
     });
 }); });
-// TODO functions below in model to remove and get plants, maybe also update plant 
-// /**
-//  * Route for getting all plants associated with the user.
-//  */
-// router.get("/get", requireAuth, (req: Request, res: Response) => {
-//   try {
-//     const { email } = req.query; 
-//     Model.getPlantsByUser(email as string)
-//       .then((plants) => {
-//         res.status(200).json(plants);
-//       })
-//       .catch((error) => {
-//         res.status(500).json({ message: "Error fetching plants", error });
-//       });
-//   } catch (error) {
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// });
+// TODO functions below in model to remove, fetch and update plants
+/**
+ * Route for getting all plants associated with the user.
+ */
+router.get("/get", requireAuth, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var email, user, plants, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                email = "";
+                // get email from fidUserBySessionId
+                try {
+                    user = model_1.default.findUserBySessionId(req.session.id);
+                    if (!user) {
+                        throw new Error("User not found");
+                    }
+                    email = user.email;
+                }
+                catch (error) {
+                    console.error("Error getting email from session ID:", error);
+                    res.status(500).json({ success: false, message: "Error getting email from session ID" });
+                }
+                if (!email) {
+                    return [2 /*return*/, res.status(400).json({ message: "Email is required" })];
+                }
+                return [4 /*yield*/, model_2.default.fetchPlantsForUser(email)];
+            case 1:
+                plants = _a.sent();
+                res.status(200).json({ success: true, plants: plants });
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _a.sent();
+                res.status(500).json({ success: false, message: "Internal server error" });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 // /**
 //  * Route for removing a plant from the user's profile.
 //  */

@@ -72,26 +72,38 @@ router.post("/add", requireAuth, upload.single('imageFile'), async (req: Request
 });
 
 
-// TODO functions below in model to remove and get plants, maybe also update plant 
+// TODO functions below in model to remove, fetch and update plants
 
-// /**
-//  * Route for getting all plants associated with the user.
-//  */
-// router.get("/get", requireAuth, (req: Request, res: Response) => {
-//   try {
-//     const { email } = req.query; 
-    
-//     Model.getPlantsByUser(email as string)
-//       .then((plants) => {
-//         res.status(200).json(plants);
-//       })
-//       .catch((error) => {
-//         res.status(500).json({ message: "Error fetching plants", error });
-//       });
-//   } catch (error) {
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// });
+
+/**
+ * Route for getting all plants associated with the user.
+ */
+router.get("/get", requireAuth, async (req: Request, res: Response) => {
+  try {
+
+    let email = "";
+        // get email from fidUserBySessionId
+        try {
+          const user = model.findUserBySessionId(req.session.id);
+          if (!user) {
+            throw new Error("User not found");
+          }
+          email = user.email;
+        } catch (error) {
+          console.error("Error getting email from session ID:", error);
+          res.status(500).json({ success: false, message: "Error getting email from session ID" });
+        }
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const plants = await Model.fetchPlantsForUser(email);
+    res.status(200).json({ success: true, plants });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
 
 // /**
 //  * Route for removing a plant from the user's profile.

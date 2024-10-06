@@ -113,6 +113,30 @@ class Model {
           return false;
       }
   }
+
+
+  /**
+   * Function to fetch all plants for a user
+   * @param email User email
+   * @returns Array of plants
+   */
+  async fetchPlantsForUser(email: string): Promise<RowDataPacket[]> {
+    try {
+        const query = `
+            SELECT plant_id, plant_name, watering_frequency, latest_watered, image_url, image_blob
+            FROM plants
+            WHERE user_email = ?
+        `;
+
+        const [rows]: [RowDataPacket[], FieldPacket[]] = await pool.query(query, [email]);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching plants for user:", error);
+        return [];
+    }
+  }
+
+
 }
 
 export default new Model();

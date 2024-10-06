@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Plant = {
     id: string; 
@@ -12,7 +12,7 @@ export type Plant = {
 interface PlantContextProps {
     plants: Plant[];
     addPlantToProfile: (plantData: Plant) => Promise<boolean>; // Method to add a plant
-    fetchPlants: () => Promise<void>; // Method to fetch plants from the database
+    fetchPlants: () => Promise<Plant[]>; // Method to fetch plants from the database
 }
 
 const PlantContext = createContext<PlantContextProps | undefined>(undefined);
@@ -58,18 +58,39 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     // Method to fetch plants from the database
     const fetchPlants = async () => {
-        try {
-            const response = await fetch('/api/plants');
-            if (!response.ok) {
-                throw new Error('Failed to fetch plants');
-            }
+        console.log("Fetching plants");
 
+        try {
+            const response = await fetch('/plants/get');
             const data = await response.json();
-            setPlants(data); 
+            if (data.success) {
+                const plantData = data.plants;
+
+                // make array from plantData consiting of Plant objects
+                const plants = plantData.map((plant: any) => {
+
+                    return {
+                        id: plant.plant_id,
+                        name: plant.plant_name,
+                        wateringFrequency: plant.watering_frequency,
+                        lastWatered: plant.latest_watered,
+                        imageURL: plant.image_url,
+                        imageFile: plant.image_blob ? new File([plant.image_blob], plant.plant_name) : null,
+                    };
+                });
+
+                console.log("Plants fetched successfully", data.plants);
+
+                return plants;
+
+            } else {
+                console.log("Failed to fetch plants");
+            }
         } catch (error) {
-            console.error(error);
+            console.error("Error fetching plants:", error);
+            return [];
         }
-    };
+    }
 
     return (
         <PlantContext.Provider value={{ plants, addPlantToProfile, fetchPlants }}>

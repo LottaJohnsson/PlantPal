@@ -12,7 +12,7 @@ import customTheme from "./theme";
 import PrivateRoute from "./components/PrivateRouter";
 import { useAuth } from "./Contexts/authContext"; // Should be removed later
 import UploadPlantScreen from "./Controllers/UploadPlantScreenController";
-
+import ProfileScreen from "./Controllers/ProfileScreenController";
 
 const App: React.FC = () => {
     const { logoutUser } = useAuth(); // Should be removed later. Used to test logout
@@ -30,11 +30,11 @@ const App: React.FC = () => {
                     <Route path="/login" element={<AuthScreenController/>}/>
                     <Route path="/about" element={<AboutScreen/>}/>
                     
-            
                     {/*Private Routes*/}
                     <Route element={<PrivateRoute/>}>
                         <Route path="test" element={<Button onClick={() => logoutUser()}>Logout</Button>}/> {/* Test for private route*/}
                         <Route path="upload" element={<UploadPlantScreen/>}/>
+                        <Route path="/profile" element={<ProfileScreen/>}/>
                     </Route>
                 </Routes>
             </Router>
