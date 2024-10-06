@@ -18,10 +18,10 @@ const App: React.FC = () => {
     return (
         <ThemeProvider theme={customTheme}>
             <Router>
-                <TopBar></TopBar>
+                <TopBar/>
                 <Routes>
                     {/*Public Routes*/}
-                    <Route path="/" element={<TopBar></TopBar>}/>
+                    <Route path="/"/>
                     <Route path="/home" element={<HomeScreen/>}/>
                     <Route path="/explore" element={<ExplorePage/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>

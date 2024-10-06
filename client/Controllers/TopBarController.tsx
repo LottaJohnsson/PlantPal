@@ -13,13 +13,10 @@ export default function TopBarController() {
 
     }
 
-    function onOptionClick(id: number) {
+    function onOptionClick(id: string, name: string) {
         if (id) {
-            navigate(`/generalinfo?query=${encodeURIComponent(id)}`,);
-        } else {
-            navigate('/page');
+            navigate(`/generalinfo?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`,);
         }
-
     }
 
 

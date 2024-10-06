@@ -1,12 +1,12 @@
 import React from "react";
-import {AppBar, Box, IconButton, Toolbar, Typography, Button, InputBase, Autocomplete, TextField} from "@mui/material";
+import {AppBar, Box, Toolbar, Typography, Button, Autocomplete, TextField} from "@mui/material";
 
 interface TopBarProps {
     isLoggedIn: boolean,
     onInputChange: (query: string) => void,
     data: any,
     buttonClick: (page: any) => void;
-    onOptionClick: (id: number) => void;
+    onOptionClick: (id: string, name: string) => void;
 }
 
 function TopBar(
@@ -20,25 +20,25 @@ function TopBar(
     }: TopBarProps) {
 
     return (
-        <Box sx={{flexGrow: 1}}>
+        <Box sx={{
+            flexGrow: 1,
+        }}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton>
-                        <img
-                            src="logo.png"
-                            alt="my image"
-                            style={{height: '50px'}}
-                        >
-                        </img>
+                    <img
+                        src="logo.png"
+                        alt="my image"
+                        style={{height: '50px'}}
+                    >
+                    </img>
 
-                    </IconButton>
 
                     <Typography variant="h3" component="div" color="primary.dark" sx={{flexGrow: 1}}>
                         PlantPal
                     </Typography>
 
                     <Autocomplete
-                        sx={{borderColor: "secondary"}}
+                        sx={{paddingLeft: "30px", paddingTop: "10px", paddingBottom: "10px"}}
                         freeSolo
                         id="free-solo-2-demo"
                         disableClearable
@@ -46,16 +46,17 @@ function TopBar(
                         getOptionKey={(option: any) => option.id ?? null}
                         getOptionLabel={(option: any) => option.common_name ?? option}
                         fullWidth={true}
-                        onChange={(event, value: any) => onOptionClick(value.id)}
+                        onChange={(event, option: any) => onOptionClick(option.id, option.common_name)}
                         onInputChange={(e, input: string) => {
                             onInputChange(input)
                         }}
                         renderInput={(params) => (
                             <TextField
-
-                                sx={{outlineColor: "secondary", width: 300, borderRadius: "100%"}}
+                                sx={{
+                                    width: "300px",
+                                }}
                                 {...params}
-                                label="Search input"
+                                label="Search for a plant"
                                 slotProps={{
                                     input: {
                                         ...params.InputProps,
@@ -65,7 +66,7 @@ function TopBar(
                             />
                         )}
                     />
-                    <Box sx={{flexGrow: 1}}>
+                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-start', gap: 2}}>
                         {isLoggedIn ? (<Button
                             color="secondary"
                             onClick={() => buttonClick("profile")}

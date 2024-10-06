@@ -2,4 +2,8 @@ node_modules
 package-lock.json
 firebase.js
 DS_Store
+dist
 public/bundle.js
+.idea
+.DS_Store
+/dist
