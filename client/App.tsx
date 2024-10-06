@@ -29,12 +29,12 @@ const App: React.FC = () => {
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<AuthScreenController/>}/>
                     <Route path="/about" element={<AboutScreen/>}/>
-                    <Route path="upload" element={<UploadPlantScreen/>}/>
                     
-
+            
                     {/*Private Routes*/}
                     <Route element={<PrivateRoute/>}>
                         <Route path="test" element={<Button onClick={() => logoutUser()}>Logout</Button>}/> {/* Test for private route*/}
+                        <Route path="upload" element={<UploadPlantScreen/>}/>
                     </Route>
                 </Routes>
             </Router>

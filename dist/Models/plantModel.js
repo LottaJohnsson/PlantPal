@@ -44,6 +44,18 @@ exports.getFAQ = getFAQ;
 exports.getPlantDiseaseList = getPlantDiseaseList;
 var API_KEY = 'sk-cPs166f55590d72357015'; //change to your API key
 var baseUrl = 'https://perenual.com/api/';
+// Plant class to model plant data and behavior
+var Plant = /** @class */ (function () {
+    function Plant(name, lastWatered, waterFrequency, imageURL, imageBlob) {
+        if (imageBlob === void 0) { imageBlob = null; }
+        this.name = name;
+        this.lastWatered = lastWatered;
+        this.waterFrequency = waterFrequency;
+        this.imageURL = imageURL;
+        this.imageBlob = imageBlob;
+    }
+    return Plant;
+}());
 //returns a list of plants matching the search phrase
 function searchSpecies(searchPhrase) {
     return __awaiter(this, void 0, void 0, function () {

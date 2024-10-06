@@ -127,6 +127,54 @@ var Model = /** @class */ (function () {
     Model.prototype.findUserBySessionId = function (sessionId) {
         return this.users[sessionId];
     };
+    /**
+     * Function to add a plant to the user's profile.
+     * If it's an API plant, it uses api_plant_id, otherwise, the plant is manually added with plant_name.
+     * @param plantName Name of the plant
+     * @param wateringFrequency Watering frequency (e.g., "daily", "weekly")
+     * @param latestWatered Latest watered date
+     * @param apiPlantId Optional, plant ID from the API if the plant is fetched from the API
+     * @param imageURL Optional, image URL of the plant
+     * @param imageBlob Optional, image blob of the plant
+     * @param email User email
+  
+     * @returns true if the plant was added successfully
+     */
+    Model.prototype.addPlantToUser = function (apiPlantId, plantName, wateringFrequency, latestWatered, imageURL, imageFile, // Allow for null imageFile
+    email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var query, imageBuffer, _a, _b, _c, error_1;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        _d.trys.push([0, 5, , 6]);
+                        query = "\n              INSERT INTO plants (plant_id, plant_name, watering_frequency, latest_watered, image_url, image_blob, user_email)\n              VALUES (?, ?, ?, ?, ?, ?, ?)\n          ";
+                        if (!imageFile) return [3 /*break*/, 2];
+                        _c = (_b = Buffer).from;
+                        return [4 /*yield*/, imageFile.arrayBuffer()];
+                    case 1:
+                        _a = _c.apply(_b, [_d.sent()]);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        _a = null;
+                        _d.label = 3;
+                    case 3:
+                        imageBuffer = _a;
+                        // Execute query
+                        return [4 /*yield*/, db_1.default.query(query, [apiPlantId, plantName, wateringFrequency, latestWatered, imageURL, imageBuffer, email])];
+                    case 4:
+                        // Execute query
+                        _d.sent();
+                        return [2 /*return*/, true];
+                    case 5:
+                        error_1 = _d.sent();
+                        console.error("Error adding plant to user:", error_1);
+                        return [2 /*return*/, false];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return Model;
 }());
 exports.default = new Model();

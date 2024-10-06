@@ -57,7 +57,7 @@ export default function AuthScreenController({}: Props) {
         return;
       }
       setLoading(false)
-      navigate('/private/test') //Should be changed when profile page is added
+      navigate('/test') //Should be changed when profile page is added
     } catch (error) {
       setError('Wrong email or password')
       console.log(error)
@@ -83,7 +83,7 @@ export default function AuthScreenController({}: Props) {
         return;
       }
       setLoading(false)
-      navigate('/private/test') //Should be changed when profile page is added
+      navigate('/test') //Should be changed when profile page is added
     } catch (error) {
       setError('Something went wrong while registring account')
       console.log(error)

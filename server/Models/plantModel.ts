@@ -2,6 +2,26 @@ const API_KEY = 'sk-cPs166f55590d72357015'; //change to your API key
 const baseUrl = 'https://perenual.com/api/'
 
 
+// Plant class to model plant data and behavior
+class Plant {
+    name: string;
+    lastWatered: string;
+    waterFrequency: string;
+    imageURL: string;
+    imageBlob: Blob | null;
+  
+    constructor(name: string, lastWatered: string, waterFrequency: string, imageURL: string, imageBlob: Blob | null = null) {
+      this.name = name;
+      this.lastWatered = lastWatered;
+      this.waterFrequency = waterFrequency;
+      this.imageURL = imageURL;
+      this.imageBlob = imageBlob;
+    }
+  
+    // TODO method for scheduling watering
+  }
+
+
 //returns a list of plants matching the search phrase
 export async function searchSpecies(searchPhrase: string): Promise<any> {
     const response = await fetch(`${baseUrl}species-list?key=${API_KEY}&page=1&q=${searchPhrase}`);

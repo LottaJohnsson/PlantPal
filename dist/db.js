@@ -84,26 +84,35 @@ function initializeDatabase() {
                     db = _a.sent();
                     _a.label = 2;
                 case 2:
-                    _a.trys.push([2, 6, 7, 8]);
+                    _a.trys.push([2, 7, 8, 9]);
+                    // create database if not exists
                     return [4 /*yield*/, db.query('CREATE DATABASE IF NOT EXISTS plantpalDB')];
                 case 3:
+                    // create database if not exists
                     _a.sent();
                     return [4 /*yield*/, db.query('USE plantpalDB')];
                 case 4:
                     _a.sent();
-                    return [4 /*yield*/, db.query("\n      CREATE TABLE IF NOT EXISTS users (\n        email VARCHAR(255) NOT NULL,\n        password VARCHAR(255) NOT NULL\n      )\n    ")];
+                    // create users table if not exists
+                    return [4 /*yield*/, db.query("\n      CREATE TABLE IF NOT EXISTS users (\n        email VARCHAR(255) UNIQUE NOT NULL,\n        password VARCHAR(255) NOT NULL\n      )\n    ")];
                 case 5:
+                    // create users table if not exists
+                    _a.sent();
+                    // Create plants table if it doesn't exist
+                    return [4 /*yield*/, db.query("\n      CREATE TABLE IF NOT EXISTS plants (\n        id INT AUTO_INCREMENT PRIMARY KEY,\n        plant_id VARCHAR(255), \n        plant_name VARCHAR(255) NOT NULL,\n        watering_frequency VARCHAR(50) NOT NULL,\n        latest_watered DATE NOT NULL,\n        image_url VARCHAR(255),\n        image_blob LONGBLOB,\n        user_email VARCHAR(255),\n        FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE\n      )\n    ")];
+                case 6:
+                    // Create plants table if it doesn't exist
                     _a.sent();
                     console.log('Database initialized');
-                    return [3 /*break*/, 8];
-                case 6:
+                    return [3 /*break*/, 9];
+                case 7:
                     err_1 = _a.sent();
                     console.error('Error initializing database:', err_1);
-                    return [3 /*break*/, 8];
-                case 7:
+                    return [3 /*break*/, 9];
+                case 8:
                     db.release();
                     return [7 /*endfinally*/];
-                case 8: return [2 /*return*/];
+                case 9: return [2 /*return*/];
             }
         });
     });

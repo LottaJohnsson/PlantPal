@@ -7,6 +7,7 @@ var express_1 = __importDefault(require("express"));
 var express_session_1 = __importDefault(require("express-session"));
 var path_1 = __importDefault(require("path"));
 var auth_controller_1 = __importDefault(require("./Controllers/auth.controller"));
+var plant_controller_1 = __importDefault(require("./Controllers/plant.controller"));
 var morgan_1 = __importDefault(require("morgan"));
 var app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -18,6 +19,7 @@ app.use((0, express_session_1.default)({
     saveUninitialized: true,
 }));
 app.use('/auth', auth_controller_1.default);
+app.use('/plants', plant_controller_1.default);
 app.get("*", function (req, res, next) {
     try {
         res.sendFile(path_1.default.join(__dirname, "../public", "index.html"));

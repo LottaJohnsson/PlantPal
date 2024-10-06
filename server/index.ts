@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import session from "express-session";
 import path from "path";
 import authRouter from "./Controllers/auth.controller";
+import plantRouter from "./Controllers/plant.controller";
 import morgan from "morgan";
 
 
@@ -20,6 +21,7 @@ app.use(session({
 }))
 
 app.use('/auth', authRouter);
+app.use('/plants', plantRouter);
 
 app.get("*", (req: Request, res: Response, next: NextFunction): void => {
   try {

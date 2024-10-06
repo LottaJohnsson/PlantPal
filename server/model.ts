@@ -74,6 +74,45 @@ class Model {
   }
 
 
+  /**
+   * Function to add a plant to the user's profile.
+   * If it's an API plant, it uses api_plant_id, otherwise, the plant is manually added with plant_name.
+   * @param plantName Name of the plant
+   * @param wateringFrequency Watering frequency (e.g., "daily", "weekly")
+   * @param latestWatered Latest watered date
+   * @param apiPlantId Optional, plant ID from the API if the plant is fetched from the API
+   * @param imageURL Optional, image URL of the plant
+   * @param imageBlob Optional, image blob of the plant
+   * @param email User email
+
+   * @returns true if the plant was added successfully
+   */
+  async addPlantToUser(
+    apiPlantId: string,
+    plantName: string, 
+    wateringFrequency: string, 
+    latestWatered: string, 
+    imageURL: string,
+    imageFile: Blob | null, // Allow for null imageFile
+    email: string, 
+  ): Promise<boolean> {
+      try {
+          const query = `
+              INSERT INTO plants (plant_id, plant_name, watering_frequency, latest_watered, image_url, image_blob, user_email)
+              VALUES (?, ?, ?, ?, ?, ?, ?)
+          `; 
+          // Convert imageFile to Buffer if it exists
+          const imageBuffer = imageFile ? Buffer.from(await imageFile.arrayBuffer()) : null; 
+          
+          // Execute query
+          await pool.query(query, [apiPlantId, plantName, wateringFrequency, latestWatered, imageURL, imageBuffer, email]);
+          
+          return true;
+      } catch (error) {
+          console.error("Error adding plant to user:", error);
+          return false;
+      }
+  }
 }
 
 export default new Model();
