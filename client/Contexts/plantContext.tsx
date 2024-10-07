@@ -1,12 +1,12 @@
-import React, {createContext, useContext, useState, useEffect} from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type Plant = {
-    id: string;
+    id: string; 
     name: string;
     wateringFrequency: string;
     lastWatered: string;
-    imageURL: string;
-    imageFile: File | null;
+    imageURL: string; 
+    imageFile: File | null; 
 }
 
 interface PlantContextProps {
@@ -17,19 +17,19 @@ interface PlantContextProps {
 
 const PlantContext = createContext<PlantContextProps | undefined>(undefined);
 
-export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
+export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [plants, setPlants] = useState<Plant[]>([]);
 
     // Method to add a plant
-    const addPlantToProfile = async (plantData: Plant): Promise<boolean> => {
-
+    const addPlantToProfile = async (plantData: Plant): Promise<boolean> => { 
+    
         const formData = new FormData();
-
+    
         formData.append('plantName', plantData.name);
         formData.append('wateringFrequency', plantData.wateringFrequency);
         formData.append('lastWatered', plantData.lastWatered);
         formData.append('id', plantData.id);
-
+    
         if (plantData.imageFile) {
             formData.append('imageFile', plantData.imageFile);
         } else if (plantData.imageURL) {
@@ -41,7 +41,7 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({children
                 method: 'POST',
                 body: formData,
             });
-
+    
             const data = await response.json();
             if (data.success) {
                 console.log("Plant added successfully");
@@ -75,7 +75,7 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({children
                         wateringFrequency: plant.watering_frequency,
                         lastWatered: plant.latest_watered,
                         imageURL: plant.image_url,
-                        imageFile: plant.image_blob ? new File([plant.image_blob], plant.plant_name) : null,
+                        imageFile: plant.image_blob
                     };
                 });
 
@@ -92,9 +92,8 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({children
         }
     }
 
-
     return (
-        <PlantContext.Provider value={{plants, addPlantToProfile, fetchPlants}}>
+        <PlantContext.Provider value={{ plants, addPlantToProfile, fetchPlants }}>
             {children}
         </PlantContext.Provider>
     );
