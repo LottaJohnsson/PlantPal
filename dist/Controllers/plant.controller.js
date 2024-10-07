@@ -43,7 +43,6 @@ var express_1 = __importDefault(require("express"));
 var model_1 = __importDefault(require("../model"));
 var model_2 = __importDefault(require("../model"));
 var multer_1 = __importDefault(require("multer"));
-var plantModel_1 = require("../Models/plantModel");
 var router = express_1.default.Router();
 var upload = (0, multer_1.default)({ dest: "uploads/" });
 /**
@@ -175,51 +174,4 @@ router.get("/get", requireAuth, function (req, res) { return __awaiter(void 0, v
 //     res.status(500).json({ message: "Internal server error" });
 //   }
 // });
-router.get("/search", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var query, result, e_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                query = req.query.query;
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, (0, plantModel_1.searchSpecies)(query)];
-            case 2:
-                result = _a.sent();
-                res.status(200).json({ result: result });
-                return [3 /*break*/, 4];
-            case 3:
-                e_1 = _a.sent();
-                console.error("Error in /search:", e_1);
-                res.status(500).json({ result: null });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); });
-router.get("/care_advice", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var query, result, e_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                query = req.query.query;
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, (0, plantModel_1.getCareAdvice)(undefined, query)];
-            case 2:
-                result = _a.sent();
-                console.log(result);
-                res.status(200).json({ result: result });
-                return [3 /*break*/, 4];
-            case 3:
-                e_2 = _a.sent();
-                console.error("Error in /care advice:", e_2);
-                res.status(500).json({ result: null });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); });
 exports.default = router;
