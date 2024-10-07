@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProfileScreenView from '../Views/ProfileScreenView';
-import { useNavigate } from 'react-router-dom'
-import { usePlant, Plant } from '../Contexts/plantContext'; 
-
+import { useNavigate } from 'react-router-dom';
+import { usePlant, Plant } from '../Contexts/plantContext';
 
 type Props = {};
 
@@ -16,9 +15,9 @@ export default function ProfileScreenController({}: Props) {
   const [lateTasks, setLateTasks] = useState<Task[]>([]);
   const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
-  const navigate = useNavigate()
-  const { fetchPlants } = usePlant(); 
-
+  const [loading, setLoading] = useState<boolean>(false); 
+  const { fetchPlants } = usePlant();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTodayTasks();
@@ -51,27 +50,30 @@ export default function ProfileScreenController({}: Props) {
   };
 
   const onFetchPlants = async () => {
+    setLoading(true); 
     try {
       const fetchedPlants = await fetchPlants();
       setPlants(fetchedPlants);
       console.log(fetchedPlants);
     } catch (error) {
       console.error('Error fetching plants:', error);
+    } finally {
+      setLoading(false);
     }
-  }
-
+  };
 
   const handleAddNewPlant = () => {
-    navigate('/upload') 
+    navigate('/upload');
   };
 
   return (
-    <ProfileScreenView 
+    <ProfileScreenView
       todayTasks={todayTasks}
       lateTasks={lateTasks}
       upcomingTasks={upcomingTasks}
       plants={plants}
       onAddNewPlant={handleAddNewPlant}
+      loading={loading}
     />
   );
 }

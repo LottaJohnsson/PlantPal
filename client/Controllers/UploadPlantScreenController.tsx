@@ -24,6 +24,7 @@ export default function UploadPlantScreenController({}: Props) {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [image, setImage] = useState<string | null>(null);
     const [selectedPlant, setSelectedPlant] = useState<any>(null);
+    const [usingDefaultImage, setUsingDefaultImage] = useState(false);
 
     const onDrop = (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -42,10 +43,12 @@ export default function UploadPlantScreenController({}: Props) {
     const handleRemoveImage = () => {
         setImageFile(null);
         setImage(null);
+        setUsingDefaultImage(false);
         setFormData({ ...formData, imageURL: '', imageFile: null }); 
     };
 
     const handleUseDefaultImage = () => {
+        setUsingDefaultImage(true);
         if (selectedPlant) {
             const defaultImageUrl = selectedPlant.default_image?.original_url;
 
@@ -156,6 +159,7 @@ export default function UploadPlantScreenController({}: Props) {
             isPlantSelected={isPlantSelected}
             handleRemoveImage={handleRemoveImage}
             handleUseDefaultImage={handleUseDefaultImage}
+            usingDefaultImage={usingDefaultImage}
         />
     );
 }
