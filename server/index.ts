@@ -4,7 +4,6 @@ import path from "path";
 import authRouter from "./Controllers/auth.controller";
 import morgan from "morgan";
 import plantRouter from "./Controllers/plant.controller";
-import plantRouter2 from "./Routers/plantRouter";
 
 
 const app = express();
@@ -23,7 +22,7 @@ app.use(session({
 
 app.use('/auth', authRouter);
 app.use('/plants', plantRouter);
-app.use('/plant', plantRouter2);
+app.use('/plant', plantRouter);
 
 app.get("*", (req: Request, res: Response, next: NextFunction): void => {
     try {
