@@ -3,7 +3,7 @@ import session from "express-session";
 import path from "path";
 import authRouter from "./Controllers/auth.controller";
 import morgan from "morgan";
-import plantRouter from "./Routers/plantRouter";
+import plantRouter from "./Controllers/plant.controller";
 
 
 const app = express();
@@ -21,6 +21,7 @@ app.use(session({
 }))
 
 app.use('/auth', authRouter);
+app.use('/plants', plantRouter);
 app.use('/plant', plantRouter);
 
 app.get("*", (req: Request, res: Response, next: NextFunction): void => {

@@ -29,14 +29,33 @@ export async function query(sql: string, values?: any) {
 export async function initializeDatabase() {
   const db = await pool.getConnection();
   try {
+    // create database if not exists
     await db.query('CREATE DATABASE IF NOT EXISTS plantpalDB');
     await db.query('USE plantpalDB');
+
+    // create users table if not exists
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
-        email VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL
       )
     `);
+
+    // Create plants table if it doesn't exist
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS plants (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        plant_id VARCHAR(255), 
+        plant_name VARCHAR(255) NOT NULL,
+        watering_frequency VARCHAR(50) NOT NULL,
+        latest_watered DATE NOT NULL,
+        image_url VARCHAR(255),
+        image_blob LONGBLOB,
+        user_email VARCHAR(255),
+        FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
+      )
+    `);
+
     console.log('Database initialized');
   } catch (err) {
     console.error('Error initializing database:', err);
