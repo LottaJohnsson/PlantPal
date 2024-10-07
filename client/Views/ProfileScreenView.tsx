@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import { on } from 'events';
+import { useEffect } from 'react';
 
 type Props = {
   todayTasks: any[];
@@ -17,6 +18,18 @@ export default function ProfileScreenView({
   plants, 
   onAddNewPlant 
 }: Props) {
+
+    useEffect(() => {
+        return () => {
+            plants.forEach(plant => {
+                if (plant.imageFile) {
+                    URL.revokeObjectURL(plant.imageFile);
+                }
+            });
+        };
+    }, [plants]);
+
+    
   return (
     <Box sx={{ 
         padding: '24px' 

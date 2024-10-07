@@ -23,8 +23,6 @@ export default function UploadPlantScreenController({}: Props) {
     const [selectedApiPlantId, setSelectedApiPlantId] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [image, setImage] = useState<string | null>(null);
-    
-    // New state variable to store the selected plant details
     const [selectedPlant, setSelectedPlant] = useState<any>(null);
 
     const onDrop = (acceptedFiles: File[]) => {
@@ -50,8 +48,6 @@ export default function UploadPlantScreenController({}: Props) {
     const handleUseDefaultImage = () => {
         if (selectedPlant) {
             const defaultImageUrl = selectedPlant.default_image?.original_url;
-
-            console.log('Default Image URL:', defaultImageUrl);
 
             if (defaultImageUrl) {
                 setFormData({ ...formData, imageURL: defaultImageUrl });
@@ -89,7 +85,7 @@ export default function UploadPlantScreenController({}: Props) {
         setFormVisible(true);
         if (plant.id) {
             setSelectedApiPlantId(plant.id);
-            setSelectedPlant(plant); // Store the selected plant details here
+            setSelectedPlant(plant); // Store the selected plant details 
             setFormData({
                 id: plant.id,
                 name: plant.common_name || plant.scientific_name || '',

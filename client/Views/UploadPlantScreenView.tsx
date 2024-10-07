@@ -42,8 +42,6 @@ export default function UploadPlantScreenView({
     handleUseDefaultImage,
 }: Props) {
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
-    
-    // State to manage errorand success message
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [usingDefaultImage, setUsingDefaultImage] = useState(false);
@@ -51,18 +49,18 @@ export default function UploadPlantScreenView({
     // Validation function to check if all fields are filled
     const isFormValid = () => {
         return (
-            (image !== null || usingDefaultImage) && // Check if an image is selected
-            formData.name.trim() !== '' && // Check if plant name is filled
-            formData.lastWatered.trim() !== '' && // Check if last watered date is filled
-            formData.wateringFrequency.trim() !== '' // Check if watering frequency is selected
+            (image !== null || usingDefaultImage) && 
+            formData.name.trim() !== '' && 
+            formData.lastWatered.trim() !== '' && 
+            formData.wateringFrequency.trim() !== '' 
         );
     };
 
     const handleAddPlant = async () => {
         if (!isFormValid()) {
-            setErrorMessage("You need to fill in everything to add the plant!"); // Set error message if validation fails
+            setErrorMessage("You need to fill in everything to add the plant!"); 
             setSuccessMessage(null);
-            return; // Stop execution if form is invalid
+            return; 
         }
         
         const plantData: Plant = {
@@ -76,8 +74,8 @@ export default function UploadPlantScreenView({
 
         const success = await onAddPlant(plantData);
         if (success) {
-            setErrorMessage(null); // Clear error message on success
-            setSuccessMessage("Plant added successfully!"); // Set success message
+            setErrorMessage(null); 
+            setSuccessMessage("Plant added successfully!"); 
         }
         
     };
