@@ -97,6 +97,7 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             {children}
         </PlantContext.Provider>
     );
+    
 };
 
 export const usePlant = (): PlantContextProps => {

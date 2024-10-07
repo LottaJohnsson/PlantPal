@@ -1,6 +1,6 @@
 import React, {SyntheticEvent} from 'react'
 import {
-    Box, IconButton,
+    Box, CircularProgress, IconButton,
     Stack, Tab,
     Table,
     TableBody,
@@ -13,6 +13,7 @@ import {Paper} from "@mui/material";
 import Button from "@mui/material/Button";
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PlantTable from "../components/PlantTable";
 
 interface GeneralScreenViewProps {
     advice: any,
@@ -44,14 +45,6 @@ function CustomTabPanel(props: TabPanelProps) {
     );
 }
 
-function createData(
-    name: string,
-    data: string,
-) {
-    return {name, data};
-}
-
-
 function CareAdviceTabs(props: any) {
     return (
         <Box sx={{width: '100%'}}>
@@ -78,36 +71,6 @@ function CareAdviceTabs(props: any) {
     )
 }
 
-
-function BasicTable(plant: any) {
-    const rows = [
-        createData('Cycle', plant.plant.cycle),
-        createData('Other Names', plant.plant.other_name.join(', ')),
-        createData('Scientific Name', plant.plant.scientific_name),
-        createData('Sunlight', plant.plant.sunlight.join(', ')),
-        createData('Watering', plant.plant.watering),
-    ];
-
-    return (
-        <TableContainer component={Paper}>
-            <Table sx={{minWidth: 650}} aria-label="plant table">
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.name}>
-                            <TableCell component="th" scope="row"
-                                       sx={{borderRight: '1px solid rgba(224, 224, 224, 1)'}}>
-                                {row.name}
-                            </TableCell>
-                            <TableCell align="left">{row.data}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
-}
-
-
 export default function GeneralScreenView(
     {
         species,
@@ -131,7 +94,7 @@ export default function GeneralScreenView(
                         sx={{padding: "3%", flex: 1, minHeight: '300px'}}
                     >
 
-                        <img src={species.default_image.original_url} alt={"plant image"} style={{
+                        <img src={species[0].default_image.original_url} alt={"plant image"} style={{
                             height: '150px',
                             objectFit: 'contain',
                             flex: 1,
@@ -149,10 +112,10 @@ export default function GeneralScreenView(
                         sx={{paddingRight: "10%", paddingTop: "5%", flex: 1}}
                     >
                         <Typography color="secondary" variant="h2">
-                            {species.common_name}
+                            {species[0].common_name}
                         </Typography>
 
-                        <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange}
+                        <CareAdviceTabs section={advice[0].section} handleTabChange={handleTabChange}
                                         tabIndex={tabIndex}>
                         </CareAdviceTabs>
 
@@ -163,9 +126,7 @@ export default function GeneralScreenView(
                             endIcon={<AddIcon/>}>
                             Add to profile
                         </Button>
-
-                        <BasicTable plant={species}>
-                        </BasicTable>
+                        <PlantTable plant={species[0]}/>
                     </Stack>
 
 
@@ -175,7 +136,22 @@ export default function GeneralScreenView(
 
     } else {
         return (
-            <div>Nothing found</div>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'fixed', // Fix to the viewport
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
+                    zIndex: 9999, // Ensure it is on top of other content
+                }}
+            >
+                <CircularProgress size={80}/> {/* You can change the size */}
+            </Box>
         )
     }
 

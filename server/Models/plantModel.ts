@@ -1,4 +1,7 @@
-const API_KEY = 'sk-cPs166f55590d72357015'; //change to your API key
+//const API_KEY = 'sk-cPs166f55590d72357015'; //change to your API key
+const API_KEY = 'sk-oqF366f96d7b858e57046'; //change to your API key
+// const API_KEY = 'sk-nubU66f96ebfc123b7048'; //change to your API key
+//const API_KEY = 'sk-eq1J66f98ad25fe9f7050'; //change to your API key
 const baseUrl = 'https://perenual.com/api/'
 
 
@@ -49,7 +52,7 @@ export async function getSpeciesList(page: number): Promise<any> {
 
 //Get care advice for plants
 //All plants cannot be found
-export async function getCareAdvice(searchPhrase?: string, speciesId?: number): Promise<any> {
+export async function getCareAdvice(searchPhrase?: string, speciesId?: string): Promise<any> {
     if (!searchPhrase && !speciesId) {
         throw new Error('Missing parameter');
     }

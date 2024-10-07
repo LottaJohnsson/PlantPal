@@ -1,9 +1,10 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, {Request, Response, NextFunction} from "express";
 import session from "express-session";
 import path from "path";
 import authRouter from "./Controllers/auth.controller";
-import plantRouter from "./Controllers/plant.controller";
 import morgan from "morgan";
+import plantRouter from "./Controllers/plant.controller";
+import plantRouter2 from "./Routers/plantRouter";
 
 
 const app = express();
@@ -14,25 +15,26 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use(morgan("dev"));
 
 app.use(session({
-  secret: "Super hemligt jag lovar",
-  resave: true,
-  saveUninitialized: true,
+    secret: "Super hemligt jag lovar",
+    resave: true,
+    saveUninitialized: true,
 
 }))
 
 app.use('/auth', authRouter);
 app.use('/plants', plantRouter);
+app.use('/plant', plantRouter2);
 
 app.get("*", (req: Request, res: Response, next: NextFunction): void => {
-  try {
-    res.sendFile(path.join(__dirname, "../public", "index.html"));
-  } catch (error) {
-    next(error);
-  }
+    try {
+        res.sendFile(path.join(__dirname, "../public", "index.html"));
+    } catch (error) {
+        next(error);
+    }
 });
 
 const PORT = 3000;
 
 app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
+    console.log(`App listening on port ${PORT}`);
 });
