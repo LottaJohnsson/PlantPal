@@ -1,85 +1,90 @@
 import React from "react";
+import {AppBar, Box, Toolbar, Typography, Button, Autocomplete, TextField} from "@mui/material";
 
-import {AppBar, Box, IconButton, Toolbar, Typography, Button, InputBase} from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-import {ThemeProvider} from '@mui/material/styles';
-import customTheme from "../theme";
-import {styled, alpha} from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
+interface TopBarProps {
+    isLoggedIn: boolean,
+    onInputChange: (query: string) => void,
+    data: any,
+    buttonClick: (page: any) => void;
+    onOptionClick: (id: string, name: string) => void;
+}
 
+function TopBar(
+    {
+        isLoggedIn,
+        onInputChange,
+        data,
+        buttonClick,
+        onOptionClick,
 
-const Search = styled('div')(({theme}) => ({
-    position: 'relative',
-    borderRadius: '20px',
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
+    }: TopBarProps) {
 
-const SearchIconWrapper = styled('div')(({theme}) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({theme}) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '40ch',
-        },
-    },
-}));
-
-
-function TopBar() {
     return (
-        <Box sx={{flexGrow: 1}}>
+        <Box sx={{
+            flexGrow: 1,
+        }}>
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton>
-                        <img
-                            src="logo.png"
-                            alt="my image"
-                            style={{height: '50px'}}
-                        >
-                        </img>
+                    <img
+                        src="logo.png"
+                        alt="my image"
+                        style={{height: '50px'}}
+                    >
+                    </img>
 
-                    </IconButton>
 
                     <Typography variant="h3" component="div" color="primary.dark" sx={{flexGrow: 1}}>
                         PlantPal
                     </Typography>
 
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon color="info"></SearchIcon>
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{'aria-label': 'search'}}
-                        />
-                    </Search>
-                    <Button color="secondary">Profile</Button>
-                    <Button color="secondary">Explore</Button>
-                    <Button color="secondary">About</Button>
+                    <Autocomplete
+                        sx={{paddingLeft: "30px", paddingTop: "10px", paddingBottom: "10px"}}
+                        freeSolo
+                        id="free-solo-2-demo"
+                        disableClearable
+                        options={data ?? []}
+                        getOptionKey={(option: any) => option.id ?? null}
+                        getOptionLabel={(option: any) => option.common_name ?? option}
+                        fullWidth={true}
+                        onChange={(event, option: any) => onOptionClick(option.id, option.common_name)}
+                        onInputChange={(e, input: string) => {
+                            onInputChange(input)
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                sx={{
+                                    width: "300px",
+                                }}
+                                {...params}
+                                label="Search for a plant"
+                                slotProps={{
+                                    input: {
+                                        ...params.InputProps,
+                                        type: 'search',
+                                    },
+                                }}
+                            />
+                        )}
+                    />
+                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-start', gap: 2}}>
+                        {isLoggedIn ? (<Button
+                            color="secondary"
+                            onClick={() => buttonClick("profile")}
+                        >Profile
+                        </Button>) : (<Button
+                            color="secondary"
+                            onClick={() => buttonClick("profile")}
+                        >Log in
+                        </Button>)}
+                        <Button color="secondary"
+                                onClick={() => buttonClick("explore")}
+                        >Explore
+                        </Button>
+                        <Button color="secondary"
+                                onClick={() => buttonClick("about")}
+                        >About</Button>
+                    </Box>
+
                 </Toolbar>
             </AppBar>
         </Box>

@@ -1,4 +1,5 @@
 import {createTheme} from '@mui/material/styles';
+import {dark} from "@mui/material/styles/createPalette";
 
 
 const customTheme = createTheme({
@@ -18,6 +19,44 @@ const customTheme = createTheme({
         }
 
     },
+
+    components: {
+        MuiFormLabel: {
+            styleOverrides: {
+                root: {
+                    '&.Mui-focused': {
+                        color: '#B41878', // Change the label color when focused
+                    },
+                },
+            },
+        },
+
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: {
+                    '& input': {
+                        color: '#B41878', // Change the input text color
+                        //backgroundColor: '#F7F7F7'
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#B41878',    // Change border color on hover
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#B41878',    // Change border color when focused
+                        // Set custom border width
+                    },
+                },
+                notchedOutline: {
+                    //backgroundColor: '#F7F7F7',
+                    borderColor: '#4DAC26',
+                    borderRadius: '20px',
+
+                },
+            },
+        },
+    },
+
+
     typography: {
         fontFamily: 'poppins',
     },
