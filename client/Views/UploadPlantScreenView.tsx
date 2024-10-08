@@ -16,7 +16,7 @@ type Props = {
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onDrop: (acceptedFiles: File[]) => void;
     isDragActive: boolean;
-    onAddPlant: (plantData: Plant) => Promise<boolean>;
+    onAddPlant: (plantData: Plant) => Promise<{ success: boolean; exists: boolean }>;
     selectedApiPlantId: string | null;
     isPlantSelected: boolean;
     handleRemoveImage: () => void;
@@ -46,6 +46,7 @@ export default function UploadPlantScreenView({
     const { getRootProps, getInputProps } = useDropzone({ onDrop });
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [plantAlreadyExists, setPlantAlreadyExists] = useState<boolean>(false);
 
     // Validation function to check if all fields are filled
     const isFormValid = () => {
@@ -58,12 +59,17 @@ export default function UploadPlantScreenView({
     };
 
     const handleAddPlant = async () => {
+        // Clear previous messages
+        setErrorMessage(null);
+        setSuccessMessage(null);
+        setPlantAlreadyExists(false);
+    
+        // Validate the form before adding the plant
         if (!isFormValid()) {
             setErrorMessage("You need to fill in everything to add the plant!");
-            setSuccessMessage(null);
             return;
         }
-
+    
         const plantData: Plant = {
             id: formData.id,
             name: formData.name,
@@ -72,13 +78,22 @@ export default function UploadPlantScreenView({
             imageURL: formData.imageURL,
             imageFile: formData.imageFile,
         };
-
-        const success = await onAddPlant(plantData);
-        if (success) {
-            setErrorMessage(null);
+    
+        const { success, exists } = await onAddPlant(plantData); // Get the result from the controller
+    
+        if (exists) {
+            // If the plant already exists, show an error message
+            setErrorMessage("Plant name already exists in profile, please choose another name.");
+            setPlantAlreadyExists(true);
+        } else if (success) {
+            // If the plant was added successfully, show a success message
             setSuccessMessage("Plant added successfully!");
+        } else {
+            // Handle any other errors
+            setErrorMessage("Something went wrong. Please try again.");
         }
     };
+    
 
     return (
         <Box
@@ -229,7 +244,7 @@ export default function UploadPlantScreenView({
                             backgroundColor: 'transparent',
                             '&:hover': { border: '2px dashed #B41878', color: 'secondary.dark' },
                             ...(!image && !usingDefaultImage && errorMessage && {
-                                border: '2px dashed error',
+                                border: '2px dashed red',
                             }),
                         }}
                     >
@@ -319,7 +334,7 @@ export default function UploadPlantScreenView({
                         onChange={handleChange}
                         sx={{ marginBottom: '16px', marginTop: '16px',
                             '& .MuiFormHelperText-root': {
-                            color: 'error',
+                            color: 'red',
                           },}}
                         helperText={errorMessage && !formData.name.trim() ? 'Please enter a plant name' : ''}
 
@@ -334,7 +349,7 @@ export default function UploadPlantScreenView({
                         onChange={handleChange}
                         sx={{ marginBottom: '16px',
                             '& .MuiFormHelperText-root': {
-                            color: 'error', 
+                            color: 'red', 
                           },}}
                         InputLabelProps={{
                             shrink: true,
@@ -360,7 +375,7 @@ export default function UploadPlantScreenView({
                             color: 'secondary.dark', 
                             },
                             '& .MuiFormHelperText-root': {
-                                color: 'error', 
+                                color: 'red', 
                               },
                         }}
                         InputLabelProps={{

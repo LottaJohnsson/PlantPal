@@ -6,7 +6,7 @@ import { usePlant, Plant } from '../Contexts/plantContext';
 type Props = {};
 
 export default function UploadPlantScreenController({}: Props) {
-    const { addPlantToProfile } = usePlant(); 
+    const { addPlantToProfile, fetchPlants } = usePlant(); 
     const [isPlantSelected, setIsPlantSelected] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResult, setSearchResult] = useState<any[]>([]);
@@ -25,6 +25,7 @@ export default function UploadPlantScreenController({}: Props) {
     const [image, setImage] = useState<string | null>(null);
     const [selectedPlant, setSelectedPlant] = useState<any>(null);
     const [usingDefaultImage, setUsingDefaultImage] = useState(false);
+
 
     const onDrop = (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -129,15 +130,30 @@ export default function UploadPlantScreenController({}: Props) {
         }
     };
 
-    const onAddPlant = async (plantData: Plant) => {
-        const success = await addPlantToProfile(plantData);
-        if (success) {
-            console.log("Plant added successfully");
-        } else {
-            console.log("Failed to add plant");
+    const onAddPlant = async (plantData: Plant): Promise<{ success: boolean, exists: boolean }> => {
+        try {
+            setLoading(true); 
+            const fetchedPlants = await fetchPlants(); // Assuming this fetches all plants from the DB
+    
+            // Check if the plant already exists in the database
+            const plantExists = fetchedPlants.some(
+                (p) => p.name.toLowerCase() === plantData.name.toLowerCase()
+            );
+    
+            if (plantExists) {
+                return { success: false, exists: true }; // Return that the plant exists
+            }
+    
+            const success = await addPlantToProfile(plantData); // Add the plant if it doesn't exist
+            return { success: success, exists: false };
+        } catch (error) {
+            console.error("Error adding plant:", error);
+            return { success: false, exists: false };
+        } finally {
+            setLoading(false);
         }
-        return success;
     };
+    
 
     const isDragActive = image !== null;
 
