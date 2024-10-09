@@ -34,8 +34,9 @@ export default function TopBarController() {
 
 
     const search = async (query: string) => {
+
         try {
-            const response = await fetch(`plant/search?query=${encodeURIComponent(query)}`, {
+            const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
