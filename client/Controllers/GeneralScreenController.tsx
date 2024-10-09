@@ -11,7 +11,7 @@ export default function GeneralScreenController({}: Props) {
     const [tabIndex, setTabIndex] = useState(0);
     const [advice, setAdvice] = useState(null);
     const [species, setSpecies] = useState(null);
-    
+
     const [queryValue, setQueryValue] = useState<string>();
     const {search} = usePlant();
 
@@ -46,24 +46,7 @@ export default function GeneralScreenController({}: Props) {
         console.log("Add to profile");
         //TODO
     }
-
-    /* const search = async (query: string) => {
-        try {
-            const response = await fetch(`plant/search?query=${encodeURIComponent(query)}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const json = await response.json();
-            return json.result;
-
-        } catch (error) {
-            console.error("Error during search:", error);
-            return null;
-        }
-    }; */
+    
     const careAdvice = async (query: string) => {
         try {
             const response = await fetch(`plant/care_advice?query=${encodeURIComponent(query)}`, {
