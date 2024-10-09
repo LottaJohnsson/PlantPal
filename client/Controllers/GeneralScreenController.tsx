@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import GeneralScreenView from "../Views/GeneralScreenView";
 import {getCareAdvice, searchSpecies} from "../../server/Models/plantModel";
 import TopBarController from "./TopBarController";
+import { usePlant } from '../Contexts/plantContext';
 
 type Props = {}
 
@@ -10,8 +11,9 @@ export default function GeneralScreenController({}: Props) {
     const [tabIndex, setTabIndex] = useState(0);
     const [advice, setAdvice] = useState(null);
     const [species, setSpecies] = useState(null);
-
+    
     const [queryValue, setQueryValue] = useState<string>();
+    const {search} = usePlant();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +47,7 @@ export default function GeneralScreenController({}: Props) {
         //TODO
     }
 
-    const search = async (query: string) => {
+    /* const search = async (query: string) => {
         try {
             const response = await fetch(`plant/search?query=${encodeURIComponent(query)}`, {
                 method: "GET",
@@ -61,7 +63,7 @@ export default function GeneralScreenController({}: Props) {
             console.error("Error during search:", error);
             return null;
         }
-    };
+    }; */
     const careAdvice = async (query: string) => {
         try {
             const response = await fetch(`plant/care_advice?query=${encodeURIComponent(query)}`, {
