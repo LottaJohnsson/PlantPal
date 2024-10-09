@@ -30,7 +30,7 @@ function TopBar(
                     </img>
 
 
-                    <Typography variant="h3" component="div" color="primary.dark" sx={{flexGrow: 1}}>
+                    <Typography variant="h3" component="div" color="primary.dark" sx={{flexGrow: 1, paddingRight: "30px"}}>
                         PlantPal
                     </Typography>
 

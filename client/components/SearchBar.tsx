@@ -17,7 +17,7 @@ function SearchBar(
 
     return (
         <Autocomplete
-            sx={{paddingLeft: "30px", paddingTop: "10px", paddingBottom: "10px"}}
+            sx={{paddingTop: "10px", paddingBottom: "10px"}}
             freeSolo
             id="free-solo-2-demo"
             disableClearable
