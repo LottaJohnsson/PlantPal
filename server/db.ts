@@ -53,7 +53,7 @@ export async function initializeDatabase() {
         image_blob LONGBLOB,
         user_email VARCHAR(255),
         FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
-      )
+      );
     `);
 
     console.log('Database initialized');

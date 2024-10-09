@@ -93,7 +93,7 @@ class Model {
     wateringFrequency: string, 
     latestWatered: string, 
     imageURL: string,
-    imageFile: Blob | null, // Allow for null imageFile
+    imageFile: Buffer | null, // Allow for null imageFile
     email: string, 
   ): Promise<boolean> {
       try {
@@ -101,11 +101,8 @@ class Model {
               INSERT INTO plants (plant_id, plant_name, watering_frequency, latest_watered, image_url, image_blob, user_email)
               VALUES (?, ?, ?, ?, ?, ?, ?)
           `; 
-          // Convert imageFile to Buffer if it exists
-          const imageBuffer = imageFile ? Buffer.from(await imageFile.arrayBuffer()) : null; 
-          
           // Execute query
-          await pool.query(query, [apiPlantId, plantName, wateringFrequency, latestWatered, imageURL, imageBuffer, email]);
+          await pool.query(query, [apiPlantId, plantName, wateringFrequency, latestWatered, imageURL, imageFile, email]);
           
           return true;
       } catch (error) {
