@@ -6,4 +6,5 @@ dist
 public/bundle.js
 .idea
 .DS_Store
-/dist
+/dist/
+/dist/*
