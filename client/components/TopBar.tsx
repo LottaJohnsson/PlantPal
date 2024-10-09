@@ -1,8 +1,9 @@
 import React from "react";
 import {AppBar, Box, Toolbar, Typography, Button, Autocomplete, TextField} from "@mui/material";
+import {useAuth} from '../Contexts/authContext'
 
 interface TopBarProps {
-    isLoggedIn: boolean,
+    isAuthenticated: boolean,
     onInputChange: (query: string) => void,
     data: any,
     buttonClick: (page: any) => void;
@@ -11,13 +12,13 @@ interface TopBarProps {
 
 function TopBar(
     {
-        isLoggedIn,
+        isAuthenticated,
         onInputChange,
         data,
         buttonClick,
         onOptionClick,
-
     }: TopBarProps) {
+
 
     return (
         <Box sx={{
@@ -67,7 +68,7 @@ function TopBar(
                         )}
                     />
                     <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-start', gap: 2}}>
-                        {isLoggedIn ? (<Button
+                        {isAuthenticated ? (<Button
                             color="secondary"
                             onClick={() => buttonClick("profile")}
                         >Profile
@@ -83,8 +84,14 @@ function TopBar(
                         <Button color="secondary"
                                 onClick={() => buttonClick("about")}
                         >About</Button>
+                        {isAuthenticated &&
+                            (<Button
+                                sx={{whiteSpace: 'nowrap'}}
+                                color="secondary"
+                                onClick={() => buttonClick("logout")}
+                            >Log out
+                            </Button>)}
                     </Box>
-
                 </Toolbar>
             </AppBar>
         </Box>

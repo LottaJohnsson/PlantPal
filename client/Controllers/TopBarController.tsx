@@ -1,15 +1,22 @@
 import React, {useEffect, useState} from 'react'
 import TopBar from '../components/TopBar'
 import {useNavigate} from "react-router-dom";
-
+import {useAuth} from "../Contexts/authContext";
 
 export default function TopBarController() {
     const [data, setData] = useState([])
     const navigate = useNavigate();
     const isLoggedIn = false;
+    const authContext = useAuth()
+
 
     function buttonClick(page: string) {
-        navigate('/' + page);
+        if (page == "logout") {
+            authContext.logoutUser();
+            navigate('/explore')
+        } else {
+            navigate('/' + page);
+        }
 
     }
 
@@ -46,7 +53,8 @@ export default function TopBarController() {
 
 
     return (
-        <TopBar buttonClick={buttonClick} onInputChange={onInPutChange} isLoggedIn={isLoggedIn} data={data}
+        <TopBar buttonClick={buttonClick} onInputChange={onInPutChange} isAuthenticated={authContext.isAuthenticated}
+                data={data}
                 onOptionClick={onOptionClick}/>
     )
 

@@ -1,12 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {createContext, useContext, useState, useEffect} from 'react';
 
 export type Plant = {
-    id: string; 
+    id: string;
     name: string;
     wateringFrequency: string;
     lastWatered: string;
-    imageURL: string; 
-    imageFile: File | null; 
+    imageURL: string;
+    imageFile: File | null;
 }
 
 interface PlantContextProps {
@@ -17,31 +17,31 @@ interface PlantContextProps {
 
 const PlantContext = createContext<PlantContextProps | undefined>(undefined);
 
-export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [plants, setPlants] = useState<Plant[]>([]);
 
     // Method to add a plant
-    const addPlantToProfile = async (plantData: Plant): Promise<boolean> => { 
-    
+    const addPlantToProfile = async (plantData: Plant): Promise<boolean> => {
+
         const formData = new FormData();
-    
+
         formData.append('plantName', plantData.name);
         formData.append('wateringFrequency', plantData.wateringFrequency);
         formData.append('lastWatered', plantData.lastWatered);
         formData.append('id', plantData.id);
-    
+
         if (plantData.imageFile) {
             formData.append('imageFile', plantData.imageFile);
         } else if (plantData.imageURL) {
             formData.append('imageURL', plantData.imageURL);
         }
-    
+
         try {
             const response = await fetch('/plants/add', {
                 method: 'POST',
                 body: formData,
             });
-    
+
             const data = await response.json();
             if (data.success) {
                 console.log("Plant added successfully");
@@ -92,12 +92,13 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
     }
 
+
     return (
-        <PlantContext.Provider value={{ plants, addPlantToProfile, fetchPlants }}>
+        <PlantContext.Provider value={{plants, addPlantToProfile, fetchPlants}}>
             {children}
         </PlantContext.Provider>
     );
-    
+
 };
 
 export const usePlant = (): PlantContextProps => {
