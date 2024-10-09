@@ -1,77 +1,88 @@
 import React, { useState, useEffect } from 'react';
 import ProfileScreenView from '../Views/ProfileScreenView';
-import { useNavigate } from 'react-router-dom'
-import { usePlant, Plant } from '../Contexts/plantContext'; 
+import { useNavigate } from 'react-router-dom';
+import { usePlant, Plant, Task } from '../Contexts/plantContext';
 
+export default function ProfileScreenController() {
 
-type Props = {};
-
-export default function ProfileScreenController({}: Props) {
-  type Task = {
-    date: string;
-    taskName: string;
-  };
-
+  const [plants, setPlants] = useState<Plant[]>([]);
+  const [loading, setLoading] = useState<boolean>(false); 
+  const { fetchPlants, fetchTasks } = usePlant();
+  const navigate = useNavigate();
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [todayTasks, setTodayTasks] = useState<Task[]>([]);
   const [lateTasks, setLateTasks] = useState<Task[]>([]);
   const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([]);
-  const [plants, setPlants] = useState<Plant[]>([]);
-  const navigate = useNavigate()
-  const { fetchPlants } = usePlant(); 
-
+  const [doneTasks, setDoneTasks] = useState<Task[]>([]); // New state for done tasks
 
   useEffect(() => {
-    fetchTodayTasks();
-    fetchLateTasks();
-    fetchUpcomingTasks();
+    onFetchTasks();
     onFetchPlants();
   }, []);
 
-  const fetchTodayTasks = () => {
-    setTodayTasks([
-      { date: 'Today 29/9', taskName: 'Water Cactus' },
-      { date: 'Today 29/9', taskName: 'Water Flower' },
-    ]);
-  };
-
-  const fetchLateTasks = () => {
-    setLateTasks([
-      { date: 'Today 29/9', taskName: 'Water Cactus' },
-      { date: 'Today 29/9', taskName: 'Water Flower' },
-    ]);
-  };
-
-  const fetchUpcomingTasks = () => {
-    setUpcomingTasks([
-      { date: 'Tomorrow 30/9', taskName: 'Water Cactus' },
-      { date: '5/10', taskName: 'Water Cactus' },
-      { date: '10/10', taskName: 'Water Cactus' },
-      { date: '11/10', taskName: 'Water Cactus' },
-    ]);
-  };
-
-  const onFetchPlants = async () => {
+  const onFetchTasks = async () => {
+    setLoading(true);
     try {
-      const fetchedPlants = await fetchPlants();
-      setPlants(fetchedPlants);
-      console.log(fetchedPlants);
+      const fetchedTasks = await fetchTasks();
+      setTasks(fetchedTasks);
+
+      const todayTasks = fetchedTasks.filter((task) => task.type === 'today');
+      setTodayTasks(todayTasks);
+
+      const lateTasks = fetchedTasks.filter((task) => task.type === 'late');
+      setLateTasks(lateTasks);
+
+      const upcomingTasks = fetchedTasks.filter((task) => task.type === 'upcoming');
+      setUpcomingTasks(upcomingTasks);
+
+      const doneTasks = fetchedTasks.filter((task) => task.type === 'done');
+      setDoneTasks(doneTasks); // Filter for done tasks
     } catch (error) {
-      console.error('Error fetching plants:', error);
+      console.error('Error fetching tasks:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
+  const onFetchPlants = async () => {
+    setLoading(true); 
+    try {
+      const fetchedPlants = await fetchPlants();
+      setPlants(fetchedPlants);
+    } catch (error) {
+      console.error('Error fetching plants:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddNewPlant = () => {
-    navigate('/upload') 
+    navigate('/upload');
+  };
+
+  const onCompleteTask = (completedTask: Task) => {
+    // Update the task type to 'done' and update the state
+    const updatedTasks = tasks.map(task => 
+      task.taskName === completedTask.taskName ? { ...task, type: 'done' } : task
+    );
+
+    setTasks(updatedTasks);
+    setTodayTasks(updatedTasks.filter((task) => task.type === 'today'));
+    setLateTasks(updatedTasks.filter((task) => task.type === 'late'));
+    setUpcomingTasks(updatedTasks.filter((task) => task.type === 'upcoming'));
+    setDoneTasks(updatedTasks.filter((task) => task.type === 'done'));
   };
 
   return (
-    <ProfileScreenView 
+    <ProfileScreenView
       todayTasks={todayTasks}
       lateTasks={lateTasks}
       upcomingTasks={upcomingTasks}
+      doneTasks={doneTasks}
       plants={plants}
       onAddNewPlant={handleAddNewPlant}
+      loading={loading}
+      onCompleteTask={onCompleteTask}
     />
   );
 }

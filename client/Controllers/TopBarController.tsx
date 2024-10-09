@@ -23,5 +23,4 @@ export default function TopBarController() {
         <TopBar buttonClick={buttonClick} isAuthenticated={authContext.isAuthenticated}/>
     )
 
-
 }

@@ -22,7 +22,6 @@ app.use(session({
 
 app.use('/auth', authRouter);
 app.use('/plants', plantRouter);
-app.use('/plant', plantRouter);
 
 app.get("*", (req: Request, res: Response, next: NextFunction): void => {
     try {
