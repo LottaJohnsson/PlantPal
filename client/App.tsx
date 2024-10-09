@@ -5,6 +5,7 @@ import GeneralScreen from "./Controllers/GeneralScreenController";
 import AboutScreen from "./Controllers/AboutScreenController";
 import ExplorePage from "./Controllers/ExplorePageController";
 import TopBar from "./Controllers/TopBarController";
+import MyPlantInfo from "./Controllers/MyPlantInfoController";
 import Button from '@mui/material/Button';
 import AuthScreenController from "./Controllers/AuthScreenController";
 import {ThemeProvider} from "@mui/material/styles";
@@ -29,7 +30,7 @@ const App: React.FC = () => {
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<AuthScreenController/>}/>
                     <Route path="/about" element={<AboutScreen/>}/>
-                    
+                    <Route path="/myplant" element={<MyPlantInfo/>}/>
                     {/*Private Routes*/}
                     <Route element={<PrivateRoute/>}>
                         <Route path="test" element={<Button onClick={() => logoutUser()}>Logout</Button>}/> {/* Test for private route*/}
