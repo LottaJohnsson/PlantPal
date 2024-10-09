@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-
 import ExplorePageView from '../Views/ExplorePageView'
 import { Card } from '@mui/material'
+import { usePlant } from '../Contexts/plantContext';
 
 type Props = {}
 
@@ -9,6 +9,7 @@ export default function ExplorePageController({}: Props) {
   const [slideDirrection, setSlideDirection] = useState< "right" | "left" | undefined >("left")
   const [cards,setCards] = useState<React.ReactElement[]>([])
   const [currentCards, setCurrentCards] = useState(0)
+  const {search} = usePlant()
 
   useEffect(() => {
     setCards(duplicateCards)

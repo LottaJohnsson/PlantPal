@@ -25,6 +25,7 @@ interface PlantContextProps {
     plants: Plant[];
     addPlantToProfile: (plantData: Plant) => Promise<boolean>; // Method to add a plant
     fetchPlants: () => Promise<Plant[]>; // Method to fetch plants from the database
+    search: (query: string) => Promise<any>; // Method to search for plants
     fetchTasks: () => Promise<Task[]>; // Method to fetch tasks from the database
 }
 
@@ -67,6 +68,29 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         } catch (error) {
             console.error("Error adding plant:", error);
             return false;
+        }
+    };
+  
+    /**
+     * Function to search for plants 
+     * @param query - search query
+     * @returns 
+     */
+    const search = async (query: string) => {
+        try {
+            const response = await fetch(`plant/search?query=${encodeURIComponent(query)}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const json = await response.json();
+            return json.result;
+
+        } catch (error) {
+            console.error("Error during search:", error);
+            return null;
         }
     };
 
@@ -192,11 +216,8 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     }
 
-        
-
-
     return (
-        <PlantContext.Provider value={{ plants, addPlantToProfile, fetchPlants, fetchTasks }}>
+        <PlantContext.Provider value={{ plants, addPlantToProfile, fetchPlants, fetchTasks, search }}>
             {children}
         </PlantContext.Provider>
     );
