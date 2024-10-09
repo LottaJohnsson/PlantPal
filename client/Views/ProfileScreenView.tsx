@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, CircularProgress } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 type Props = {
   todayTasks: any[];
@@ -8,6 +9,8 @@ type Props = {
   plants: any[];
   onAddNewPlant: () => void;
   loading: boolean; // Accept loading prop
+  onCompleteTask: (task: any) => void;
+  doneTasks: any[];
 };
 
 export default function ProfileScreenView({
@@ -16,7 +19,9 @@ export default function ProfileScreenView({
   upcomingTasks,
   plants,
   onAddNewPlant,
-  loading, // Destructure loading prop
+  loading, 
+  onCompleteTask,
+  doneTasks,
 }: Props) {
   return (
     <Box sx={{ padding: '24px' }}>
@@ -38,14 +43,45 @@ export default function ProfileScreenView({
                 color: '#FFF',
                 minWidth: '100px',
                 maxWidth: '400px',
-                '&:hover': {
-                  backgroundColor: 'secondary.dark',
-                  color: 'secondary.light',
-                },
+                position: 'relative',  
+                overflow: 'hidden',   
               }}
             >
-              <Typography>{task.date}</Typography>
-              <Typography>{task.taskName}</Typography>
+              {/* Darker box for the date that takes up full width and aligns to the top */}
+              <Box
+                sx={{
+                  backgroundColor: 'secondary.dark',
+                  borderRadius: '8px 8px 0 0', 
+                  padding: '4px',
+                  width: '100%',
+                  position: 'absolute', 
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                }}
+              >
+                <Typography>{task.date}</Typography>
+              </Box>
+
+              <Box sx={{ paddingTop: '40px' }}>
+                <Typography>{task.taskName}</Typography>
+              </Box>
+
+              {/* Checkmark Icon to remove the task */}
+              <CheckCircleIcon
+                onClick={() => onCompleteTask(task)}
+                sx={{
+                  color: '#FFF',
+                  fontSize: '24px',
+                  position: 'absolute',
+                  bottom: '8px',
+                  right: '8px',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    color: 'primary.dark',  
+                  },
+                }}
+              />
             </Box>
           </Grid>
         ))}
@@ -58,7 +94,7 @@ export default function ProfileScreenView({
       <Grid container spacing={2}>
         {lateTasks.map((task, index) => (
           <Grid item key={index} xs={12} sm={6} md={4}>
-            <Box
+           <Box
               sx={{
                 padding: '16px',
                 backgroundColor: '#FFB9B9',
@@ -66,14 +102,45 @@ export default function ProfileScreenView({
                 color: '#FFF',
                 minWidth: '100px',
                 maxWidth: '400px',
-                '&:hover': {
-                  backgroundColor: '#DD5656',
-                  color: '#FFB9B9',
-                },
+                position: 'relative',  
+                overflow: 'hidden',   
               }}
             >
-              <Typography>{task.date}</Typography>
-              <Typography>{task.taskName}</Typography>
+              {/* Darker box for the date that takes up full width and aligns to the top */}
+              <Box
+                sx={{
+                  backgroundColor: '#DD5656',
+                  borderRadius: '8px 8px 0 0', 
+                  padding: '4px',
+                  width: '100%',
+                  position: 'absolute', 
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                }}
+              >
+                <Typography>{task.date}</Typography>
+              </Box>
+
+              <Box sx={{ paddingTop: '40px' }}>
+                <Typography>{task.taskName}</Typography>
+              </Box>
+
+              {/* Checkmark Icon to remove the task */}
+              <CheckCircleIcon
+                onClick={() => onCompleteTask(task)}
+                sx={{
+                  color: '#FFF',
+                  fontSize: '24px',
+                  position: 'absolute',
+                  bottom: '8px',
+                  right: '8px',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    color: 'primary.dark',  
+                  },
+                }}
+              />
             </Box>
           </Grid>
         ))}
@@ -86,7 +153,66 @@ export default function ProfileScreenView({
       <Grid container spacing={2}>
         {upcomingTasks.map((task, index) => (
           <Grid item key={index} xs={12} sm={6} md={3}>
-            <Box
+           <Box
+              sx={{
+                padding: '16px',
+                backgroundColor: 'secondary.light',
+                borderRadius: '8px',
+                color: '#FFF',
+                minWidth: '100px',
+                maxWidth: '400px',
+                position: 'relative',  
+                overflow: 'hidden',   
+              }}
+            >
+              {/* Darker box for the date that takes up full width and aligns to the top */}
+              <Box
+                sx={{
+                  backgroundColor: 'secondary.dark',
+                  borderRadius: '8px 8px 0 0', 
+                  padding: '4px',
+                  width: '100%',
+                  position: 'absolute', 
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                }}
+              >
+                <Typography>{task.date}</Typography>
+              </Box>
+
+              <Box sx={{ paddingTop: '40px' }}>
+                <Typography>{task.taskName}</Typography>
+              </Box>
+
+              {/* Checkmark Icon to remove the task */}
+              <CheckCircleIcon
+                onClick={() => onCompleteTask(task)}
+                sx={{
+                  color: '#FFF',
+                  fontSize: '24px',
+                  position: 'absolute',
+                  bottom: '8px',
+                  right: '8px',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    color: 'primary.dark',  
+                  },
+                }}
+              />
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Done Tasks */}
+      <Typography variant="h5" sx={{ marginTop: '32px', marginBottom: '16px', color: '#000' }}>
+        Done Tasks
+      </Typography>
+      <Grid container spacing={2}>
+        {doneTasks.map((task, index) => (
+          <Grid item key={index} xs={12} sm={6} md={3}>
+           <Box
               sx={{
                 padding: '16px',
                 backgroundColor: 'primary.light',
@@ -94,14 +220,45 @@ export default function ProfileScreenView({
                 color: '#FFF',
                 minWidth: '100px',
                 maxWidth: '400px',
-                '&:hover': {
-                  backgroundColor: 'primary.dark',
-                  color: 'primary.light',
-                },
+                position: 'relative',  
+                overflow: 'hidden',   
               }}
             >
-              <Typography>{task.date}</Typography>
-              <Typography>{task.taskName}</Typography>
+              {/* Darker box for the date that takes up full width and aligns to the top */}
+              <Box
+                sx={{
+                  backgroundColor: 'primary.dark',
+                  borderRadius: '8px 8px 0 0', 
+                  padding: '4px',
+                  width: '100%',
+                  position: 'absolute', 
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                }}
+              >
+                <Typography>{task.date}</Typography>
+              </Box>
+
+              <Box sx={{ paddingTop: '40px' }}>
+                <Typography>{task.taskName}</Typography>
+              </Box>
+
+              {/* Checkmark Icon to remove the task */}
+              <CheckCircleIcon
+                onClick={() => onCompleteTask(task)}
+                sx={{
+                  color: '#FFF',
+                  fontSize: '24px',
+                  position: 'absolute',
+                  bottom: '8px',
+                  right: '8px',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    color: 'primary.dark',  
+                  },
+                }}
+              />
             </Box>
           </Grid>
         ))}

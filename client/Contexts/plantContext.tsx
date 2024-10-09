@@ -32,6 +32,7 @@ const PlantContext = createContext<PlantContextProps | undefined>(undefined);
 
 export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [plants, setPlants] = useState<Plant[]>([]);
+    const [tasks, setTasks] = useState<Task[]>([]);
 
     // Method to add a plant
     const addPlantToProfile = async (plantData: Plant): Promise<boolean> => { 
@@ -177,6 +178,7 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
                 console.log("Tasks fetched successfully", tasks);
 
+                setTasks(tasks);
                 return tasks;
 
             } else {
@@ -189,6 +191,8 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
 
     }
+
+        
 
 
     return (
