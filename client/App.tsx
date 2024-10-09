@@ -34,7 +34,7 @@ const App: React.FC = () => {
                     <Route element={<PrivateRoute/>}>
                         <Route path="test" element={<Button onClick={() => logoutUser()}>Logout</Button>}/> {/* Test for private route*/}
                         <Route path="upload" element={<UploadPlantScreen/>}/>
-                        <Route path="/profile" element={<ProfileScreen/>}/>
+                        <Route path="profile" element={<ProfileScreen/>}/>
                     </Route>
                 </Routes>
             </Router>

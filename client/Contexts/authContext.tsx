@@ -15,7 +15,7 @@
  * currentUser.email
  */
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface User {
   email: string;
@@ -32,20 +32,8 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    const savedAuthState = localStorage.getItem('isAuthenticated');
-    return savedAuthState ? JSON.parse(savedAuthState) : false;
-  });
-
-  const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    const savedUser = localStorage.getItem('currentUser');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('isAuthenticated', JSON.stringify(isAuthenticated));
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-  }, [isAuthenticated, currentUser]);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
 
   const loginUser = async (email: string, password: string) => {
