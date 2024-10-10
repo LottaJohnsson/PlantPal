@@ -16,6 +16,9 @@
  */
 
 import React, { createContext, useContext, useState } from 'react';
+import store from '../plantStore';
+import fetchUserPlants from '../plantStore';
+import { useDispatch } from 'react-redux';
 
 interface User {
   email: string;
@@ -35,6 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
+  const dispatch = useDispatch();
 
   const loginUser = async (email: string, password: string) => {
     try {
@@ -53,6 +57,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.loggedIn) {
         setIsAuthenticated(true);
         setCurrentUser({ email: email });
+
+        // dispatch fetchUserPlants
+        store.dispatch(fetchUserPlants());
+        
+
         return true;
       }
       return false;

@@ -13,11 +13,13 @@ import PrivateRoute from "./components/PrivateRouter";
 import {useAuth} from "./Contexts/authContext"; // Should be removed later
 import UploadPlantScreen from "./Controllers/UploadPlantScreenController";
 import ProfileScreen from "./Controllers/ProfileScreenController";
+import { Provider } from 'react-redux';
+import store from "./plantStore"
 
 const App: React.FC = () => {
     const {logoutUser} = useAuth(); // Should be removed later. Used to test logout
-
     return (
+        <Provider store={store}>
         <ThemeProvider theme={customTheme}>
             <Router>
                 <TopBar/>
@@ -39,6 +41,7 @@ const App: React.FC = () => {
                 </Routes>
             </Router>
         </ThemeProvider>
+        </Provider>
     );
 };
 

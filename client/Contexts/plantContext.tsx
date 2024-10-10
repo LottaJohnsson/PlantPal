@@ -1,13 +1,13 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {createContext, useContext, useState, useEffect} from 'react';
 import moment from 'moment';
 
 export type Plant = {
-    id: string; 
+    id: string;
     name: string;
     wateringFrequency: string;
     lastWatered: string;
-    imageURL: string; 
-    imageFile: File | null; 
+    imageURL: string;
+    imageFile: File | null;
 }
 
 // task.name is 'water + plant name'
@@ -30,20 +30,20 @@ interface PlantContextProps {
 
 const PlantContext = createContext<PlantContextProps | undefined>(undefined);
 
-export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [plants, setPlants] = useState<Plant[]>([]);
     const [tasks, setTasks] = useState<Task[]>([]);
 
     // Method to add a plant
-    const addPlantToProfile = async (plantData: Plant): Promise<boolean> => { 
-    
+    const addPlantToProfile = async (plantData: Plant): Promise<boolean> => {
+
         const formData = new FormData();
-    
+
         formData.append('plantName', plantData.name);
         formData.append('wateringFrequency', plantData.wateringFrequency);
         formData.append('lastWatered', plantData.lastWatered);
         formData.append('id', plantData.id);
-    
+
         if (plantData.imageFile) {
             formData.append('imageFile', plantData.imageFile);
         } else if (plantData.imageURL) {
@@ -55,7 +55,7 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 method: 'POST',
                 body: formData,
             });
-    
+
             const data = await response.json();
             if (data.success) {
                 console.log("Plant added successfully");
@@ -67,6 +67,26 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         } catch (error) {
             console.error("Error adding plant:", error);
             return false;
+        }
+    };
+
+
+    const search = async (query: string) => {
+
+        try {
+            const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const json = await response.json();
+            return json.result;
+
+        } catch (error) {
+            console.error("Error during search:", error);
+            return null;
         }
     };
 
@@ -160,11 +180,9 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
                     if (nextWateringDate.isSame(today, 'day')) {
                         type = 'today';
-                    }
-                    else if (nextWateringDate.isBefore(today, 'day')) {
+                    } else if (nextWateringDate.isBefore(today, 'day')) {
                         type = 'late';
-                    }
-                    else {
+                    } else {
                         type = 'upcoming';
                     }
 
@@ -192,11 +210,9 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     }
 
-        
-
 
     return (
-        <PlantContext.Provider value={{ plants, addPlantToProfile, fetchPlants, fetchTasks }}>
+        <PlantContext.Provider value={{plants, addPlantToProfile, fetchPlants, fetchTasks}}>
             {children}
         </PlantContext.Provider>
     );
