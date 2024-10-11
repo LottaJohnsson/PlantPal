@@ -7,6 +7,7 @@ import moment from 'moment';
 import axios from 'axios';
 
 // Action Types
+/*
 const FETCH_PLANTS = 'FETCH_PLANTS';
 const ADD_PLANT = 'ADD_PLANT';
 const CREATE_TASKS = 'CREATE_TASKS';
@@ -69,7 +70,6 @@ const plantReducer = (state = initialState, action) => {
 export const fetchUsersPlants = () => {
     return function (dispatch) {
       dispatch(fetchPlantsRequest())
-        
         axios
         .get(('/plants/get'))
         .then(response => {
@@ -82,7 +82,6 @@ export const fetchUsersPlants = () => {
                 imageFile: plant.image_blob,
             }));
             // response.data is the users
-        
             dispatch(fetchPlantsSuccess(plantData))
           })
           .catch(error => {
@@ -158,7 +157,7 @@ export const createTasksThunk = (plants) => (dispatch) => {
 
     dispatch(createTasks(tasks));
 };
-*/
+
 
 // Store setup
 const store = configureStore(
@@ -170,3 +169,4 @@ const store = configureStore(
 
 
 export default store;
+*/
