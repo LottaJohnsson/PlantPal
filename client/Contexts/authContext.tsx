@@ -32,8 +32,9 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+
 
   const loginUser = async (email: string, password: string) => {
     try {
@@ -51,6 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await response.json();
       if (data.loggedIn) {
         setIsAuthenticated(true);
+        setCurrentUser({ email: email });
         return true;
       }
       return false;
@@ -89,7 +91,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logoutUser = () => {
-    // Perform logout logic
+    try {
+      fetch('/auth/logout', {
+        method: 'POST'
+      });
+    } catch (error) {
+      console.log(error);
+    }
     setIsAuthenticated(false);
   };
 
