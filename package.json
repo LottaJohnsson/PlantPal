@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:dev": "tsc --watch --preserveWatchOutput",
+    "build:dev": "webpack --watch",
     "start:dev": "nodemon --watch dist --exec node dist/index.js",
     "dev": "concurrently \"npm run build:dev\" \"npm run start:dev\""
   },
@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^2.2.8",
     "@types/morgan": "^1.9.9",
     "@types/react-router-dom": "^5.3.3",
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "date-fns": "^4.1.0",
     "express": "^4.21.0",

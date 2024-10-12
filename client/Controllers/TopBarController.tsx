@@ -59,12 +59,10 @@ export default function TopBarController() {
         }
     };
 
-
     return (
         <TopBar buttonClick={buttonClick} onInputChange={onInPutChange} isAuthenticated={authContext.isAuthenticated}
                 data={data}
                 onOptionClick={onOptionClick}/>
     )
-
 
 }

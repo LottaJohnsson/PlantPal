@@ -1,6 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
 import plantReducer from './slices/plantSlice'
-import taskReducer from './slices/taskSlice'
+import userTaskReducer from './slices/userSlice'
 import careAdviceReducer from './slices/careAdviceSlice'
 import authReducer from './slices/authSlice'
 
@@ -8,7 +8,7 @@ const store = configureStore({
     reducer: {
         plant: plantReducer,
         careAdvice: careAdviceReducer,
-        task: taskReducer,
+        task: userTaskReducer,
         auth: authReducer,
     }
 })

@@ -25,12 +25,14 @@ type InitialState = {
     loading: boolean
     plants: Plant[]
     currentPlant: Plant | null
+    uploadPlant: Plant | null
     error: string
 }
 const initialState: InitialState = {
     loading: false,
     plants: [],
     currentPlant: null,
+    uploadPlant: null,
     error: ''
 }
 
@@ -46,6 +48,9 @@ const plantSlice = createSlice({
     reducers: {
         setCurrentPlant: (state, action: PayloadAction<Plant>) => {
             state.currentPlant = action.payload
+        },
+        setUploadPlant: (state, action: PayloadAction<Plant>) => {
+            state.uploadPlant = action.payload
         }
     },
     extraReducers: builder => {
