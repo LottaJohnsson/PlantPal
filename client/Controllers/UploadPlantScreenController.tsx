@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import UploadPlantScreenView from '../Views/uploadPlantScreenView';
+import UploadPlantScreenView from '../Views/UploadPlantScreenView';
 import { searchSpecies } from "../../server/Models/plantModel";
 import { usePlant, Plant } from '../Contexts/plantContext'; 
 

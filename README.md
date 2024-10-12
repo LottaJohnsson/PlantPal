@@ -45,3 +45,13 @@ Apply changes
 create database `CREATE DATABASE plantpalDB;`
 
 Done! now run `npm run dev`
+
+
+#### Deploy on gcloud
+
+
+docker build . -t plantpal --platform linux/amd64
+
+docker tag plantpal europe-west2-docker.pkg.dev/plant-pal-438113/plantpal/plantpal:latest
+
+docker push europe-west2-docker.pkg.dev/plant-pal-438113/plantpal/plantpal:latest        
