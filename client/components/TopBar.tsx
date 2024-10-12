@@ -1,13 +1,14 @@
 import React from "react";
 import {AppBar, Box, Toolbar, Typography, Button, Autocomplete, TextField} from "@mui/material";
 import LogoutPopup from "../components/PopUp"
+import {Plant} from '../redux/slices/plantSlice';
 
 interface TopBarProps {
     isAuthenticated: boolean,
     onInputChange: (query: string) => void,
-    data: any,
+    data: Plant[],
     buttonClick: (page: any) => void;
-    onOptionClick: (id: string, name: string) => void;
+    onOptionClick: (plant: Plant) => void;
 }
 
 function TopBar(
@@ -44,10 +45,9 @@ function TopBar(
                         id="free-solo-2-demo"
                         disableClearable
                         options={data ?? []}
-                        getOptionKey={(option: any) => option.id ?? null}
-                        getOptionLabel={(option: any) => option.common_name ?? option}
-                        fullWidth={true}
-                        onChange={(event, option: any) => onOptionClick(option.id, option.common_name)}
+                        getOptionKey={(option: string | Plant) => typeof option === 'string' ? option : option.id ?? null}
+                        getOptionLabel={(option: string | Plant) => typeof option === 'string' ? option : option.common_name ?? option}
+                        onChange={(event, plant: string | Plant | null) => plant && typeof plant !== 'string' ? onOptionClick(plant) : null}
                         onInputChange={(e, input: string) => {
                             onInputChange(input)
                         }}

@@ -1,42 +1,26 @@
 import React, {useEffect, useState} from 'react'
 import GeneralScreenView from "../Views/GeneralScreenView";
-import {getCareAdvice, searchSpecies} from "../../server/Models/plantModel";
-import TopBarController from "./TopBarController";
 import {useNavigate} from "react-router-dom";
+import {useAppSelector, useAppDispatch} from '../redux/hooks'
+import {fetchCareAdvice} from '../redux/slices/careAdviceSlice';
 
 type Props = {}
 
 //Get search result from Explore Page
 export default function GeneralScreenController({}: Props) {
     const [tabIndex, setTabIndex] = useState(0);
-    const [advice, setAdvice] = useState(null);
-    const [species, setSpecies] = useState(null);
     const [query, setQuery] = useState<URLSearchParams>()
     const navigate = useNavigate();
+    const dispatch = useAppDispatch()
+    const plant = useAppSelector(state => state.plant)
+    const careAdvice = useAppSelector(state => state.careAdvice)
 
+    console.log('plant ' + plant.currentPlant?.common_name)
+    console.log('plant advice ' + careAdvice.careAdvice)
     useEffect(() => {
-        const fetchData = async () => {
-            const queryParams = new URLSearchParams(window.location.search);
-            const id = queryParams.get('id');
-            const name = queryParams.get('name');
-
-            setQuery(queryParams)
-
-            if (id && name) {
-                try {
-                    const speciesData = await search(name); // Assuming search is defined elsewhere
-                    const adviceData = await careAdvice(id); // Assuming careAdvice is defined elsewhere
-
-                    setSpecies(speciesData);
-                    setAdvice(adviceData);
-
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-        };
-
-        fetchData(); // Call the async function
+        if (plant.currentPlant && plant.currentPlant.id) {
+            dispatch(fetchCareAdvice(plant.currentPlant.id))
+        }
     }, []); // Empty dependency array to run on mount only
 
     function handleTabChange(event: React.SyntheticEvent, tabindex: number) {
@@ -52,46 +36,11 @@ export default function GeneralScreenController({}: Props) {
         }
     }
 
-    const search = async (query: string) => {
-        try {
-            const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const json = await response.json();
-            return json.result;
-
-        } catch (error) {
-            console.error("Error during search:", error);
-            return null;
-        }
-    };
-    const careAdvice = async (query: string) => {
-        try {
-            const response = await fetch(`plants/care_advice?query=${encodeURIComponent(query)}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const json = await response.json();
-            return json.result;
-
-        } catch (error) {
-            console.error("Error during search:", error);
-            return null;
-        }
-    };
-
     return (
         <>
             <GeneralScreenView
-                advice={advice}
-                species={species}
+                advice={careAdvice.careAdvice}
+                species={plant.currentPlant}
                 handleTabChange={handleTabChange}
                 tabIndex={tabIndex}
                 onAddToProfile={onAddToProfile}/>

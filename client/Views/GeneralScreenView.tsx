@@ -94,7 +94,7 @@ export default function GeneralScreenView(
                         sx={{padding: "3%", flex: 1, minHeight: '300px'}}
                     >
 
-                        <img src={species[0].default_image.original_url} alt={"plant image"} style={{
+                        <img src={species.default_image.original_url} alt={"plant image"} style={{
                             height: '150px',
                             objectFit: 'contain',
                             flex: 1,
@@ -112,10 +112,10 @@ export default function GeneralScreenView(
                         sx={{paddingRight: "10%", paddingTop: "5%", flex: 1}}
                     >
                         <Typography color="secondary" variant="h2">
-                            {species[0].common_name}
+                            {species.common_name}
                         </Typography>
 
-                        <CareAdviceTabs section={advice[0].section} handleTabChange={handleTabChange}
+                        <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange}
                                         tabIndex={tabIndex}>
                         </CareAdviceTabs>
 
@@ -126,7 +126,7 @@ export default function GeneralScreenView(
                             endIcon={<AddIcon/>}>
                             Add to profile
                         </Button>
-                        <PlantTable plant={species[0]}/>
+                        <PlantTable plant={species}/>
                     </Stack>
 
 
