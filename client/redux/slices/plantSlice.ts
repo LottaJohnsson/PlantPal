@@ -21,14 +21,14 @@ export type Plant = {
     };
 };
 
-type InitialState = {
+type PlantState = {
     loading: boolean
     plants: Plant[]
     currentPlant: Plant | null
     uploadPlant: Plant | null
     error: string
 }
-const initialState: InitialState = {
+const initialState: PlantState = {
     loading: false,
     plants: [],
     currentPlant: null,

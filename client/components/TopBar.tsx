@@ -1,6 +1,5 @@
 import React from "react";
 import {AppBar, Box, Toolbar, Typography, Button, Autocomplete, TextField} from "@mui/material";
-import LogoutPopup from "../components/PopUp"
 import {Plant} from '../redux/slices/plantSlice';
 
 interface TopBarProps {

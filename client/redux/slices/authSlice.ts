@@ -1,83 +1,58 @@
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import axios from 'axios';
+import {response} from "express";
 
 interface User {
     email: string;
+}
+
+interface LoginPayload {
+    email: string;
+    password: string;
 }
 
 interface AuthState {
     isAuthenticated: boolean;
     currentUser?: User | null;
     loading: boolean;
-    error?: string | null;
+    error: string
 }
 
 const initialState: AuthState = {
     isAuthenticated: false,
     currentUser: null,
     loading: false,
-    error: null,
+    error: ''
 };
 
-// Async action to login user
-export const loginUser = createAsyncThunk(
-    'auth/loginUser',
-    async (
-        {email, password}: { email: string; password: string },
-        {rejectWithValue}
-    ) => {
-        try {
-            const response = await axios.post('/auth/login', {email, password});
-            if (response.data.loggedIn) {
-                return {email};
-            }
-            return rejectWithValue('Login failed');
-        } catch (error: any) {
-            return rejectWithValue(
-                error.response?.data?.message || 'Login failed'
-            );
-        }
-    }
-);
 
-// Async action to register user
-export const registerUser = createAsyncThunk(
-    'auth/registerUser',
-    async (
-        {email, password}: { email: string; password: string },
-        {rejectWithValue}
-    ) => {
-        try {
-            const response = await axios.post('/auth/register', {
-                email,
-                password,
-            });
-            if (response.data.registered) {
-                return {email};
-            }
-            return rejectWithValue('Registration failed');
-        } catch (error: any) {
-            return rejectWithValue(
-                error.response?.data?.message || 'Registration failed'
-            );
-        }
+export const loginUserR = createAsyncThunk(
+    "loginUser",
+    (user: LoginPayload) => {
+        return axios
+            .post('/auth/login', user)
+            .then(response => response.data)
     }
-);
+)
 
-// Async action to logout user
-export const logoutUser = createAsyncThunk(
-    'auth/logoutUser',
-    async (_, {rejectWithValue}) => {
-        try {
-            await axios.post('/auth/logout');
-            // No payload needed on successful logout
-        } catch (error: any) {
-            return rejectWithValue(
-                error.response?.data?.message || 'Logout failed'
-            );
-        }
+
+export const registerUserR = createAsyncThunk(
+    'registerUser',
+    (user: LoginPayload) => {
+        return axios
+            .post('/auth/register', user)
+            .then(response => response.data)
     }
-);
+)
+
+
+export const logoutUserR = createAsyncThunk(
+    'logout',
+    () => {
+        return axios.post('/auth/logout').then(response => response.data)
+    }
+)
+
 
 // Auth slice
 const authSlice = createSlice({
@@ -85,54 +60,52 @@ const authSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        // Login user reducers
-        builder.addCase(loginUser.pending, (state) => {
+        builder.addCase(loginUserR.pending, (state: AuthState) => {
             state.loading = true;
-            state.error = null;
         });
-        builder.addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
+        builder.addCase(loginUserR.fulfilled, (state: AuthState, action: PayloadAction<User>) => {
             state.loading = false;
             state.isAuthenticated = true;
             state.currentUser = action.payload;
-            state.error = null;
+            state.error = '';
         });
-        builder.addCase(loginUser.rejected, (state, action) => {
+        builder.addCase(loginUserR.rejected, (state: AuthState, action) => {
             state.loading = false;
             state.isAuthenticated = false;
-            state.error = action.payload as string;
+            state.error = action.error.message || 'Something went wrong';
         });
 
         // Register user reducers
-        builder.addCase(registerUser.pending, (state) => {
+        builder.addCase(registerUserR.pending, (state: AuthState) => {
             state.loading = true;
-            state.error = null;
         });
-        builder.addCase(registerUser.fulfilled, (state, action: PayloadAction<User>) => {
+        builder.addCase(registerUserR.fulfilled, (state: AuthState, action: PayloadAction<User>) => {
             state.loading = false;
             state.isAuthenticated = true;
             state.currentUser = action.payload;
-            state.error = null;
+            state.error = '';
         });
-        builder.addCase(registerUser.rejected, (state, action) => {
+        builder.addCase(registerUserR.rejected, (state: AuthState, action) => {
             state.loading = false;
             state.isAuthenticated = false;
-            state.error = action.payload as string;
+            state.error = action.error.message || 'Something went wrong';
         });
 
         // Logout user reducer
-        builder.addCase(logoutUser.pending, (state) => {
+        builder.addCase(logoutUserR.pending, (state: AuthState) => {
             state.loading = true;
-            state.error = null;
         });
-        builder.addCase(logoutUser.fulfilled, (state) => {
+        builder.addCase(logoutUserR.fulfilled, (state: AuthState) => {
+            console.log("success");
             state.isAuthenticated = false;
             state.currentUser = null;
             state.loading = false;
-            state.error = null;
+            state.error = '';
         });
-        builder.addCase(logoutUser.rejected, (state, action) => {
+        builder.addCase(logoutUserR.rejected, (state: AuthState, action) => {
+            console.log("fail");
             state.loading = false;
-            state.error = action.payload as string;
+            state.error = action.error.message || 'Something went wrong';
         });
     },
 });

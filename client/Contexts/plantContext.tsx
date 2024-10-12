@@ -71,25 +71,6 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({children
     };
 
 
-    const search = async (query: string) => {
-
-        try {
-            const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const json = await response.json();
-            return json.result;
-
-        } catch (error) {
-            console.error("Error during search:", error);
-            return null;
-        }
-    };
-
     // Method to fetch plants from the database
     const fetchPlants = async () => {
         console.log("Fetching plants");
