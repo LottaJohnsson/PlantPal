@@ -8,8 +8,10 @@ RUN npm install
 
 COPY . .
 
+RUN npm run build:prod
+
 ENV PORT=3000
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["node", "dist/index.js"]
