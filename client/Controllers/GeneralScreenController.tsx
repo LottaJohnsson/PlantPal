@@ -14,15 +14,7 @@ export default function GeneralScreenController({}: Props) {
     const dispatch = useAppDispatch()
     const plant = useAppSelector(state => state.plant)
     const careAdvice = useAppSelector(state => state.careAdvice)
-
-    console.log('plant ' + plant.currentPlant?.common_name)
-    console.log('plant advice ' + careAdvice.careAdvice)
-    useEffect(() => {
-        if (plant.currentPlant && plant.currentPlant.id) {
-            dispatch(fetchCareAdvice(plant.currentPlant.id))
-        }
-    }, []); // Empty dependency array to run on mount only
-
+    
     function handleTabChange(event: React.SyntheticEvent, tabindex: number) {
         setTabIndex(tabindex);
     }
