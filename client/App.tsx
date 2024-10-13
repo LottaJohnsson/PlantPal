@@ -27,10 +27,10 @@ const App: React.FC = () => {
                     <Route path="/"/>
                     <Route path="/home" element={<HomeScreen/>}/>
                     <Route path="/explore" element={<ExplorePage/>}/>
+                    <Route path="/myplant" element={<MyPlantInfo/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<AuthScreenController/>}/>
                     <Route path="/about" element={<AboutScreen/>}/>
-                    <Route path="/myplant" element={<MyPlantInfo/>}/>
                     {/*Private Routes*/}
                     <Route element={<PrivateRoute/>}>
                         <Route path="test" element={<Button onClick={() => logoutUser()}>Logout</Button>}/> {/* Test for private route*/}
