@@ -78,8 +78,71 @@ router.post("/add", requireAuth, upload.single('imageFile'), async (req: Request
     }
 });
 
+/**
+ * Route for deleting a plant from the user's profile.
+ */
+router.post("/delete", requireAuth, async (req: Request, res: Response) => {
+    try {
+        const {plantName} = req.body;
+        let email = "";
 
-// TODO functions below in model to remove, fetch and update plants
+        try {
+            const user = await model.findUserBySessionId(req.session.id);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            email = user.email;
+        } catch (error) {
+            console.error("Error getting email from session ID:", error);
+            return res.status(500).json({success: false, message: "Error getting email from session ID"});
+        }
+
+        const success = await Model.deletePlantFromUser(plantName, email);
+
+        if (success) {
+            return res.status(200).json({success: true, message: "Plant deleted successfully"});
+        } else {
+            return res.status(500).json({success: false, message: "Error deleting plant"});
+        }
+    } catch (error) {
+        console.error("Internal server error:", error);
+        return res.status(500).json({success: false, message: "Internal server error"});
+    }
+});
+
+/**
+ * Route for updating a plant in the user's profile.
+ */
+router.post("/update", requireAuth, async (req: Request, res: Response) => {
+    try {
+        const { plantName, lastWatered } = req.body; // Extract the plant name and last watered date
+        let email = "";
+
+        console.log('Received data:', plantName, lastWatered);
+
+        try {
+            const user = await model.findUserBySessionId(req.session.id);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            email = user.email;
+        } catch (error) {
+            console.error("Error getting email from session ID:", error);
+            return res.status(500).json({ success: false, message: "Error getting email from session ID" });
+        }
+
+        const success = await Model.updatePlantInUser(plantName, lastWatered, email);
+
+        if (success) {
+            return res.status(200).json({ success: true, message: "Plant updated successfully" });
+        } else {
+            return res.status(500).json({ success: false, message: "Error updating plant" });
+        }
+    } catch (error) {
+        console.error("Internal server error:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
 
 
 /**

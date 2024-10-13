@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ProfileScreenView from '../Views/ProfileScreenView';
 import { useNavigate } from 'react-router-dom';
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
-import {UserPlant, Task, updateTask} from '../redux/slices/userSlice'
-import { fetchUserPlantsFromDB, generateTasks } from '../redux/slices/userSlice';
+import {UserPlant, Task, completeTask} from '../redux/slices/userSlice'
+import { fetchUserPlantsFromDB, generateTasks, updatePlantInDB } from '../redux/slices/userSlice';
 
 
 export default function ProfileScreenController() {
@@ -32,6 +32,7 @@ export default function ProfileScreenController() {
     setLateTasks(userTasksLate);
     setUpcomingTasks(userTasksUpcoming);
     setDoneTasks(userTasksDone);
+
   }, [userPlants, userTasksToday, userTasksLate, userTasksUpcoming, userTasksDone]);
 
   useEffect(() => {
@@ -50,9 +51,16 @@ export default function ProfileScreenController() {
     navigate('/upload');
   };
 
-  const onCompleteTask = (completedTask: Task) => {
-    // // Update the task type to 'done' and update the state
-    dispatch(updateTask(completedTask));
+  const onCompleteTask = async (completedTask: Task) => {
+    console.log('user tasks before update', userTasksDone, userTasksToday, userTasksLate, userTasksUpcoming);
+
+
+    dispatch(completeTask(completedTask));
+
+    // update db also
+    await dispatch(updatePlantInDB(completedTask.plantName));
+
+    console.log('user tasks after update', userTasksDone, userTasksToday, userTasksLate, userTasksUpcoming);
 
   };
 

@@ -6,6 +6,7 @@ import { add } from 'date-fns';
 export type Task = {
     date: string;
     taskName: string;
+    plantName: string;
     type: string;
 }
 
@@ -71,6 +72,7 @@ const createTasks = (plants: UserPlant[]): Task[] => {
         return {
             date: nextWateringDate.format('YYYY-MM-DD'),
             taskName: `Water ${plant.name}`,
+            plantName: plant.name,
             type
         };
     });
@@ -108,6 +110,7 @@ const createTaskFromOnePlant = (plant: UserPlant): Task => {
     return {
         date: nextWateringDate.format('YYYY-MM-DD'),
         taskName: `Water ${plant.name}`,
+        plantName: plant.name,
         type
     };
 }
@@ -129,12 +132,15 @@ export const fetchUserPlantsFromDB = createAsyncThunk<UserPlant[]>('fetchUserPla
                 imageFile: plant.image_blob
             }));
 
+            console.log('Fetched user plants:', plants);
             return plants;
         });
+
+    
 });
 
 
-// Add plant to profile thunk
+// Add plant to database
 export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
     'plants/addPlantToProfile',
     async (plantData, {rejectWithValue, dispatch, getState}) => {
@@ -185,6 +191,74 @@ export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
     }
 );
 
+// Update plant in database
+export const updatePlantInDB = createAsyncThunk<boolean, string>(
+    'plants/updatePlantInProfile',
+    async (plantName, { rejectWithValue, dispatch, getState }) => {
+        // Find the plant in the state
+        const state = getState() as { task: InitialState };
+        const userPlants = state.task.userPlants;
+        const plantData = userPlants.find((p) => p.name === plantName);
+
+        if (!plantData) {
+            return rejectWithValue('The plant does not exist in your profile.');
+        }
+
+        console.log('Updating plant in database:', plantData);
+
+        // Send plant name and lastWatered date to server as JSON
+        const payload = {
+            plantName: plantData.name,
+            lastWatered: moment().format('YYYY-MM-DD'),
+        };
+
+        console.log('Payload:', payload);
+
+        return axios
+            .post(`/plants/update`, payload, {
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+            })
+            .then(response => {
+                if (response.data.success) {
+                    return true;
+                } else {
+                    return rejectWithValue('Failed to update plant');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating plant:', error);
+                return rejectWithValue(error.message || 'Error updating plant');
+            });
+    }
+);
+
+
+
+// remove plant from database
+export const removePlantFromDB = createAsyncThunk<boolean, string>(
+    'plants/removePlantFromProfile',
+    async (plantName, {rejectWithValue, dispatch, getState}) => {
+
+        console.log('Removing plant from database:', plantName);
+
+        return axios
+            .delete(`/plants/delete`, {data: {plantName}})
+            .then(response => {
+                if (response.data.success) {
+                    return true;
+                } else {
+                    return rejectWithValue('Failed to remove plant');
+                }
+            })
+            .catch(error => {
+                console.error('Error removing plant:', error);
+                return rejectWithValue(error.message || 'Error removing plant');
+            });
+    }
+);
+
 const userTaskSlice = createSlice({
     name: 'user',
     initialState,
@@ -218,66 +292,103 @@ const userTaskSlice = createSlice({
             state.userTasksDone = tasks.filter((task) => task.type === 'done');
         },
 
-        updateTask: (state, action: PayloadAction<Task>) => {
+        // updateTask: (state, action: PayloadAction<Task>) => {
+        //     const task = action.payload;
+
+        //     console.log('Updating task:', task);
+
+        //     // find the task in the correct array and update it, check by looking at the taskName
+        //     const todayIndex = state.userTasksToday.findIndex((t) => t.taskName === task.taskName);
+        //     const lateIndex = state.userTasksLate.findIndex((t) => t.taskName === task.taskName);
+        //     const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);
+        //     const doneIndex = state.userTasksDone.findIndex((t) => t.taskName === task.taskName);
+
+        //     // update the task and check if it has changed type, if so move it to the correct array and remove it from the old one
+        //     if (todayIndex !== -1) {
+        //         state.userTasksToday[todayIndex] = task;
+        //         if (task.type === 'late') {
+        //             state.userTasksLate = [...state.userTasksLate, task];
+        //             state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName); 
+        //         } else if (task.type === 'upcoming') {
+        //             state.userTasksUpcoming = [...state.userTasksUpcoming, task];
+        //             state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);
+        //         } else if (task.type === 'done') {
+        //             state.userTasksDone = [...state.userTasksDone, task];
+        //             state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);
+        //         }
+        //     } else if (lateIndex !== -1) {
+        //         state.userTasksLate[lateIndex] = task;
+        //         if (task.type === 'today') {
+        //             state.userTasksToday = [...state.userTasksToday, task];
+        //             state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
+        //         } else if (task.type === 'upcoming') {
+        //             state.userTasksUpcoming = [...state.userTasksUpcoming, task];
+        //             state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
+        //         } else if (task.type === 'done') {
+        //             state.userTasksDone = [...state.userTasksDone, task];
+        //             state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
+        //         }
+        //     } else if (upcomingIndex !== -1) {
+        //         state.userTasksUpcoming[upcomingIndex] = task;
+        //         if (task.type === 'today') {
+        //             state.userTasksToday = [...state.userTasksToday, task];
+        //             state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
+        //         } else if (task.type === 'late') {
+        //             state.userTasksLate = [...state.userTasksLate, task];
+        //             state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
+        //         } else if (task.type === 'done') {
+        //             state.userTasksDone = [...state.userTasksDone, task];
+        //             state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
+        //         }
+        //     } else if (doneIndex !== -1) {
+        //         state.userTasksDone[doneIndex] = task;
+        //         if (task.type === 'today') {
+        //             state.userTasksToday = [...state.userTasksToday, task];
+        //             state.userTasksDone = state.userTasksDone.filter((t) => t.taskName !== task.taskName);
+        //         } else if (task.type === 'late') {
+        //             state.userTasksLate = [...state.userTasksLate, task];
+        //             state.userTasksDone = state.userTasksDone.filter((t) => t.taskName !== task.taskName);
+        //         } else if (task.type === 'upcoming') {
+        //             state.userTasksUpcoming = [...state.userTasksUpcoming, task];
+        //             state.userTasksDone = state.userTasksDone.filter((t) => t.taskName !== task.taskName);
+        //         }
+        //     }
+
+        // }
+
+
+        completeTask: (state, action: PayloadAction<Task>) => {
             const task = action.payload;
-            
+
+            console.log('Completing task:', task);
+
             // find the task in the correct array and update it, check by looking at the taskName
             const todayIndex = state.userTasksToday.findIndex((t) => t.taskName === task.taskName);
             const lateIndex = state.userTasksLate.findIndex((t) => t.taskName === task.taskName);
             const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);
-            const doneIndex = state.userTasksDone.findIndex((t) => t.taskName === task.taskName);
+
+            console.log('Indexes:', todayIndex, lateIndex, upcomingIndex);
 
             // update the task and check if it has changed type, if so move it to the correct array and remove it from the old one
-            // TODO make this code nicer :)
             if (todayIndex !== -1) {
-                state.userTasksToday[todayIndex] = task;
-                if (task.type === 'late') {
-                    state.userTasksLate = [...state.userTasksLate, task];
-                    state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName); 
-                } else if (task.type === 'upcoming') {
-                    state.userTasksUpcoming = [...state.userTasksUpcoming, task];
-                    state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);
-                } else if (task.type === 'done') {
-                    state.userTasksDone = [...state.userTasksDone, task];
-                    state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);
-                }
+                console.log('Task is today');
+                state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);
             } else if (lateIndex !== -1) {
-                state.userTasksLate[lateIndex] = task;
-                if (task.type === 'today') {
-                    state.userTasksToday = [...state.userTasksToday, task];
-                    state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
-                } else if (task.type === 'upcoming') {
-                    state.userTasksUpcoming = [...state.userTasksUpcoming, task];
-                    state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
-                } else if (task.type === 'done') {
-                    state.userTasksDone = [...state.userTasksDone, task];
-                    state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
-                }
+                console.log('Task is late');
+                state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
             } else if (upcomingIndex !== -1) {
-                state.userTasksUpcoming[upcomingIndex] = task;
-                if (task.type === 'today') {
-                    state.userTasksToday = [...state.userTasksToday, task];
-                    state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
-                } else if (task.type === 'late') {
-                    state.userTasksLate = [...state.userTasksLate, task];
-                    state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
-                } else if (task.type === 'done') {
-                    state.userTasksDone = [...state.userTasksDone, task];
-                    state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
-                }
-            } else if (doneIndex !== -1) {
-                state.userTasksDone[doneIndex] = task;
-                if (task.type === 'today') {
-                    state.userTasksToday = [...state.userTasksToday, task];
-                    state.userTasksDone = state.userTasksDone.filter((t) => t.taskName !== task.taskName);
-                } else if (task.type === 'late') {
-                    state.userTasksLate = [...state.userTasksLate, task];
-                    state.userTasksDone = state.userTasksDone.filter((t) => t.taskName !== task.taskName);
-                } else if (task.type === 'upcoming') {
-                    state.userTasksUpcoming = [...state.userTasksUpcoming, task];
-                    state.userTasksDone = state.userTasksDone.filter((t) => t.taskName !== task.taskName);
-                }
+                console.log('Task is upcoming');
+                state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
             }
+
+            state.userTasksDone = [...state.userTasksDone, task];
+
+            // update plant state width new lastWatered date
+            const plantIndex = state.userPlants.findIndex((p) => p.name === task.plantName);
+            if (plantIndex !== -1) {
+                state.userPlants[plantIndex].lastWatered = moment().format('YYYY-MM-DD');
+            }
+            
 
         }
     },
@@ -318,7 +429,7 @@ const userTaskSlice = createSlice({
 });
 
 export default userTaskSlice.reducer;
-export const {addPlant, generateTasks, updateTask} = userTaskSlice.actions;
+export const {addPlant, generateTasks, completeTask} = userTaskSlice.actions;
 
 
 
