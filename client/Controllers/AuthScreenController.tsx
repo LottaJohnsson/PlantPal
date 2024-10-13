@@ -3,6 +3,8 @@ import LoginScreenView from '../Views/LoginScreenView'
 import RegisterScreenView from '../Views/RegisterScreenView'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../Contexts/authContext'
+import {useAppSelector, useAppDispatch} from '../redux/hooks'
+import {generateTasks, fetchUserPlantsFromDB} from '../redux/slices/userSlice'
 
 type Props = {}
 
@@ -15,6 +17,8 @@ export default function AuthScreenController({}: Props) {
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const { loginUser, registerUser } = useAuth()
+  const dispatch = useAppDispatch()
+
 
   function setEmailCB(email: string) {
     emailRef.current = email;
@@ -58,6 +62,12 @@ export default function AuthScreenController({}: Props) {
       }
       setLoading(false)
       navigate('/profile') //Should be changed when profile page is added
+
+      // fetch user data
+      console.log('fetching user data')
+      await dispatch(fetchUserPlantsFromDB()).unwrap()
+      dispatch(generateTasks())
+
     } catch (error) {
       setError('Wrong email or password')
       console.log(error)

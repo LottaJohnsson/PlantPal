@@ -49,7 +49,7 @@ const plantSlice = createSlice({
         setCurrentPlant: (state, action: PayloadAction<Plant>) => {
             state.currentPlant = action.payload
         },
-        setUploadPlant: (state, action: PayloadAction<Plant>) => {
+        setUploadPlant: (state, action: PayloadAction<Plant | null>) => {
             state.uploadPlant = action.payload
         }
     },
@@ -75,3 +75,4 @@ const plantSlice = createSlice({
 
 export default plantSlice.reducer
 export const {setCurrentPlant} = plantSlice.actions
+export const {setUploadPlant} = plantSlice.actions
