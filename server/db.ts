@@ -11,9 +11,8 @@ import mysql from 'mysql2/promise';
 
 // password StrongPassword123!
 const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST || '34.79.24.207', // Use the service name 'db' defined in docker-compose.yml PlantPalPassword123!
+  socketPath: '/cloudsql/plant-pal-438113:europe-west1:plantpal', // Use the service name 'db' defined in docker-compose.yml PlantPalPassword123!
   user: process.env.MYSQL_USER || 'plantpal',
-  port: 3306,
   password: process.env.MYSQL_PASSWORD || 'PlantPalPassword123!', // StrongPassword123!
   database: process.env.MYSQL_DATABASE || 'plantpalDB',
 });
