@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {Box, IconButton, Slide, Stack, Card, CardActionArea, Typography, CardMedia, Link, styled, alpha, InputBase} from "@mui/material"
 import {NavigateBefore, NavigateNext} from "@mui/icons-material"
-import SearchIcon from '@mui/icons-material/Search';
+import SearchBar from "../Controllers/SearchBarController";
 
 type Props = {
     slideDirection: "right" | "left" | undefined
@@ -22,7 +22,7 @@ export default function ExplorePageView({slideDirection, cards, currentCards, ha
                 Looking for a plant?    
             </Typography>
             <div>
-                <input type='text' placeholder='Search plants...'></input>
+                <SearchBar/>
             </div>
         </div>
 

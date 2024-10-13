@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import TopBar from '../components/TopBar'
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../Contexts/authContext";
@@ -8,6 +8,7 @@ import {setCurrentPlant} from '../redux/slices/plantSlice'
 import {Plant} from '../redux/slices/plantSlice';
 import axios from 'axios';
 import {fetchCareAdvice} from "../redux/slices/careAdviceSlice";
+import Popup from "../components/PopUp";
 
 export default function TopBarController() {
     const [data, setData] = useState([])
@@ -15,15 +16,17 @@ export default function TopBarController() {
     const isLoggedIn = false;
     const authContext = useAuth()
     const dispatch = useAppDispatch()
+    const [openPopUp, setOpenPopUp] = useState(false)
+
 
     function buttonClick(page: string) {
         if (page == "logout") {
             authContext.logoutUser();
+            setOpenPopUp(true);
             navigate('/explore')
         } else {
             navigate('/' + page);
         }
-
     }
 
     function onOptionClick(plant: Plant) {
@@ -60,9 +63,13 @@ export default function TopBarController() {
     };
 
     return (
-        <TopBar buttonClick={buttonClick} onInputChange={onInPutChange} isAuthenticated={authContext.isAuthenticated}
+        <>
+            <TopBar buttonClick={buttonClick} onInputChange={onInPutChange} isAuthenticated={authContext.isAuthenticated}
                 data={data}
                 onOptionClick={onOptionClick}/>
+            <Popup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup>
+        </>
     )
+
 
 }
