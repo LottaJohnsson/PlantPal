@@ -1,18 +1,31 @@
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
-import React from "react";
+import React, {useState} from 'react';
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 
+function LogoutPopup() {
+    // State to control the visibility of the dialog
+    const [open, setOpen] = useState(false);
 
-interface LogoutProps {
-    open: boolean,
-    handleClose: () => void;
-}
+    // Function to handle the user logging out (this could be triggered by some action in your app)
+    const handleLogout = () => {
+        // Perform your logout logic here
+        // Then, open the dialog
+        setOpen(true);
+    };
 
-function LogoutPopup(props: LogoutProps) {
+    // Function to close the dialog
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     return (
         <div>
+            <Button variant="contained" color="primary" onClick={handleLogout}>
+                Logout
+            </Button>
+
             <Dialog
-                open={props.open}
-                onClose={props.handleClose} // Close the dialog when clicking outside or pressing escape
+                open={open}
+                onClose={handleClose} // Close the dialog when clicking outside or pressing escape
                 aria-labelledby="logout-dialog-title"
                 aria-describedby="logout-dialog-description"
             >
@@ -23,11 +36,9 @@ function LogoutPopup(props: LogoutProps) {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                        <Button onClick={props.handleClose} color="primary">
-                            OK
-                        </Button>
-                    </Box>
+                    <Button onClick={handleClose} color="primary">
+                        OK
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>
