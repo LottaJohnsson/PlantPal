@@ -3,6 +3,7 @@ import ProfileScreenView from '../Views/ProfileScreenView';
 import { useNavigate } from 'react-router-dom';
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {UserPlant, Task, updateTask} from '../redux/slices/userSlice'
+import { fetchUserPlantsFromDB, generateTasks } from '../redux/slices/userSlice';
 
 
 export default function ProfileScreenController() {
@@ -25,11 +26,6 @@ export default function ProfileScreenController() {
   const userTasksUpcoming = useAppSelector(state => state.task.userTasksUpcoming);
   const userTasksDone = useAppSelector(state => state.task.userTasksDone);
 
-  // useEffect(() => {
-  //   onFetchTasks();
-  //   onFetchPlants();
-  // }, []);
-
   useEffect(() => {
     setPlants(userPlants);
     setTodayTasks(userTasksToday);
@@ -38,41 +34,17 @@ export default function ProfileScreenController() {
     setDoneTasks(userTasksDone);
   }, [userPlants, userTasksToday, userTasksLate, userTasksUpcoming, userTasksDone]);
 
-  // const onFetchTasks = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const fetchedTasks = await fetchTasks();
-  //     setTasks(fetchedTasks);
+  useEffect(() => {
+    console.log('hello hello');
+    const fetchData = async () => {
+      setLoading(true);
+      await dispatch(fetchUserPlantsFromDB());
+      dispatch(generateTasks());
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
 
-  //     const todayTasks = fetchedTasks.filter((task) => task.type === 'today');
-  //     setTodayTasks(todayTasks);
-
-  //     const lateTasks = fetchedTasks.filter((task) => task.type === 'late');
-  //     setLateTasks(lateTasks);
-
-  //     const upcomingTasks = fetchedTasks.filter((task) => task.type === 'upcoming');
-  //     setUpcomingTasks(upcomingTasks);
-
-  //     const doneTasks = fetchedTasks.filter((task) => task.type === 'done');
-  //     setDoneTasks(doneTasks); // Filter for done tasks
-  //   } catch (error) {
-  //     console.error('Error fetching tasks:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
-  // const onFetchPlants = async () => {
-  //   setLoading(true); 
-  //   try {
-  //     const fetchedPlants = await fetchPlants();
-  //     setPlants(fetchedPlants);
-  //   } catch (error) {
-  //     console.error('Error fetching plants:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleAddNewPlant = () => {
     navigate('/upload');
@@ -80,16 +52,6 @@ export default function ProfileScreenController() {
 
   const onCompleteTask = (completedTask: Task) => {
     // // Update the task type to 'done' and update the state
-    // const updatedTasks = tasks.map(task => 
-    //   task.taskName === completedTask.taskName ? { ...task, type: 'done' } : task
-    // );
-
-    // setTasks(updatedTasks);
-    // setTodayTasks(updatedTasks.filter((task) => task.type === 'today'));
-    // setLateTasks(updatedTasks.filter((task) => task.type === 'late'));
-    // setUpcomingTasks(updatedTasks.filter((task) => task.type === 'upcoming'));
-    // setDoneTasks(updatedTasks.filter((task) => task.type === 'done'));
-
     dispatch(updateTask(completedTask));
 
   };

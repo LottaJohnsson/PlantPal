@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-
 import ExplorePageView from '../Views/ExplorePageView'
 import { Card } from '@mui/material'
 

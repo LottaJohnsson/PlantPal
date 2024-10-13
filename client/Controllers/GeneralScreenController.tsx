@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import GeneralScreenView from "../Views/GeneralScreenView";
+import {getCareAdvice, searchSpecies} from "../../server/Models/plantModel";
+import TopBarController from "./TopBarController";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {fetchCareAdvice} from '../redux/slices/careAdviceSlice';
@@ -9,6 +11,8 @@ type Props = {}
 //Get search result from Explore Page
 export default function GeneralScreenController({}: Props) {
     const [tabIndex, setTabIndex] = useState(0);
+    const [advice, setAdvice] = useState(null);
+    const [species, setSpecies] = useState(null);
     const [query, setQuery] = useState<URLSearchParams>()
     const navigate = useNavigate();
     const dispatch = useAppDispatch()
@@ -27,6 +31,8 @@ export default function GeneralScreenController({}: Props) {
             navigate(`/upload?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`);
         }
     }
+
+
 
     return (
         <>

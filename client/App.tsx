@@ -10,12 +10,10 @@ import LoginScreenController from "./Controllers/LoginScreenController";
 import {ThemeProvider} from "@mui/material/styles";
 import customTheme from "./theme";
 import PrivateRoute from "./components/PrivateRouter";
-import {useAuth} from "./Contexts/authContext"; // Should be removed later
 import UploadPlantScreen from "./Controllers/UploadPlantScreenController";
 import ProfileScreen from "./Controllers/ProfileScreenController";
 
 const App: React.FC = () => {
-    const {logoutUser} = useAuth(); // Should be removed later. Used to test logout
     return (
         <ThemeProvider theme={customTheme}>
             <Router>
@@ -31,8 +29,6 @@ const App: React.FC = () => {
 
                     {/*Private Routes*/}
                     <Route element={<PrivateRoute/>}>
-                        <Route path="test" element={<Button
-                            onClick={() => logoutUser()}>Logout</Button>}/> {/* Test for private route*/}
                         <Route path="upload" element={<UploadPlantScreen/>}/>
                         <Route path="profile" element={<ProfileScreen/>}/>
                     </Route>

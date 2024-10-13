@@ -1,5 +1,4 @@
 import {Outlet, Navigate} from 'react-router-dom';
-import {useAuth} from '../Contexts/authContext';
 import React from 'react';
 import {useAppSelector} from "../redux/hooks";
 

@@ -21,7 +21,7 @@ import {combineReducers} from 'redux';
 const persistConfig = {
     key: 'root', // Key for the persisted data
     storage, // Storage engine
-    whitelist: ['plant', 'task', 'auth', 'careAdvice'], // Slices to persist
+    whitelist: ['plant', 'auth', 'careAdvice'], // Slices to persist
 };
 
 // Combine the reducers

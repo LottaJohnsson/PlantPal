@@ -2,9 +2,9 @@ import React, {useState, useRef, useEffect} from 'react';
 import LoginScreenView from '../Views/LoginScreenView';
 import RegisterScreenView from '../Views/RegisterScreenView';
 import {useNavigate} from 'react-router-dom';
-import {useAuth} from '../Contexts/authContext';
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {loginUserR, registerUserR} from "../redux/slices/authSlice";
+import { fetchUserPlantsFromDB, generateTasks } from '../redux/slices/userSlice';
 
 type Props = {}
 
@@ -16,7 +16,6 @@ export default function LoginScreenController({}: Props) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const {loginUser, registerUser} = useAuth();
 
     const dispatch = useAppDispatch();
     const auth = useAppSelector(state => state.auth);
@@ -84,13 +83,21 @@ export default function LoginScreenController({}: Props) {
         }
     }
 
+    async function fetchUserData() {
+        console.log("Fetching user data");
+        await dispatch(fetchUserPlantsFromDB());
+        await dispatch(generateTasks());
+    }
+
     useEffect(() => {
         if (auth.error) {
             setError(auth.error);
             setLoading(false);
         } else if (auth.isAuthenticated) {
             setLoading(false);
-            navigate('/profile'); // Should be changed when profile page is added
+            navigate('/profile'); 
+            fetchUserData();
+            
         }
     }, [auth, navigate]);
 

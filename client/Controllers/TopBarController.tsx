@@ -1,19 +1,21 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import TopBar from '../components/TopBar'
 import {useNavigate} from "react-router-dom";
-import {useAuth} from "../Contexts/authContext";
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {fetchPlants} from '../redux/slices/plantSlice'
 import {setCurrentPlant} from '../redux/slices/plantSlice'
 import {Plant} from '../redux/slices/plantSlice';
 import axios from 'axios';
 import {fetchCareAdvice} from "../redux/slices/careAdviceSlice";
+import Popup from "../components/PopUp";
 import {logoutUserR} from "../redux/slices/authSlice";
 
 export default function TopBarController() {
     const [data, setData] = useState([])
     const navigate = useNavigate();
     const dispatch = useAppDispatch()
+    const [openPopUp, setOpenPopUp] = useState(false)
+
     const auth = useAppSelector(state => state.auth)
 
     console.log("auth " + auth.isAuthenticated)
@@ -23,6 +25,7 @@ export default function TopBarController() {
         if (page == "logout") {
             dispatch(logoutUserR());
             navigate('/explore')
+            setOpenPopUp(true)
         } else {
             navigate('/' + page);
         }
@@ -59,9 +62,17 @@ export default function TopBarController() {
     };
 
     return (
-        <TopBar buttonClick={buttonClick} onInputChange={onInPutChange} isAuthenticated={auth.isAuthenticated}
-                data={data}
-                onOptionClick={onOptionClick}/>
+        <>
+            <TopBar 
+                buttonClick={buttonClick} 
+                isAuthenticated={auth.isAuthenticated} 
+                onInputChange={onInPutChange} 
+                data={data} 
+                onOptionClick={onOptionClick} 
+            />
+            <Popup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup>
+        </>
     )
+
 
 }
