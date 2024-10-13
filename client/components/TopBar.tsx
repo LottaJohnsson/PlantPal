@@ -67,15 +67,10 @@ function TopBar(
                         )}
                     />
                     <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-start', gap: 2}}>
-                        {isAuthenticated ? (<Button
+                        {isAuthenticated && (<Button
                             color="secondary"
                             onClick={() => buttonClick("profile")}
-                        >Profile
-                        </Button>) : (<Button
-                            color="secondary"
-                            onClick={() => buttonClick("profile")}
-                        >Log in
-                        </Button>)}
+                        >Profile</Button>)}
                         <Button color="secondary"
                                 onClick={() => buttonClick("explore")}
                         >Explore
@@ -83,13 +78,19 @@ function TopBar(
                         <Button color="secondary"
                                 onClick={() => buttonClick("about")}
                         >About</Button>
-                        {isAuthenticated &&
+                        {isAuthenticated ?
                             (<Button
                                 sx={{whiteSpace: 'nowrap'}}
                                 color="secondary"
                                 onClick={() => buttonClick("logout")}
                             >Log out
-                            </Button>)}
+                            </Button>) :
+                            <Button
+                                sx={{whiteSpace: 'nowrap'}}
+                                color="secondary"
+                                onClick={() => buttonClick("login")}>
+                                Log in
+                            </Button>}
                     </Box>
                 </Toolbar>
             </AppBar>

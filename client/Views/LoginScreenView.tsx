@@ -7,23 +7,18 @@ type Props = {
     setIsLogin: (isLogin: boolean) => void
     onEmailChange: (event: string) => void
     onPasswordChange: (password: string) => void
-    onSubmit : () => void
+    onSubmit: () => void
 }
 
-export default function LoginScreenView({error, loading, setIsLogin, onEmailChange, onPasswordChange, onSubmit}: Props) {
-    
-    function emailInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
-        onEmailChange(event.target.value)
-    }
-
-    function passwordInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
-        onPasswordChange(event.target.value)
-    } 
-
-    function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
-        event.preventDefault()
-        onSubmit()
-    }
+export default function LoginScreenView(
+    {
+        error,
+        loading,
+        setIsLogin,
+        onEmailChange,
+        onPasswordChange,
+        onSubmit
+    }: Props) {
 
     return (
         <Stack
@@ -40,7 +35,7 @@ export default function LoginScreenView({error, loading, setIsLogin, onEmailChan
                     <Typography variant='h2' color="primary">Login to save them!</Typography>
                 </div>
                 <div>
-                    <Stack spacing={2} sx={{ width: "100%"}}>
+                    <Stack spacing={2} sx={{width: "100%"}}>
                         <Typography variant='h4' color={"secondary"}>Sign in</Typography>
                         <Alert severity="error" sx={{display: error !== '' ? 'flex' : 'none'}}>{error}</Alert>
                         <TextField
@@ -49,7 +44,7 @@ export default function LoginScreenView({error, loading, setIsLogin, onEmailChan
                             label="Email"
                             type="email"
                             color="secondary"
-                            onChange={emailInputChanged}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => onEmailChange(event.target.value)}
                         />
                         <TextField
                             required
@@ -57,7 +52,7 @@ export default function LoginScreenView({error, loading, setIsLogin, onEmailChan
                             label="Password"
                             type="password"
                             color="secondary"
-                            onChange={passwordInputChanged}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => onPasswordChange(event.target.value)}
                         />
                         <Stack direction="row" justifyContent="space-between">
                             <Typography>Don’t have an account?
@@ -66,13 +61,13 @@ export default function LoginScreenView({error, loading, setIsLogin, onEmailChan
                                     setIsLogin(false);
                                 }}> Register</a>
                             </Typography>
-                            {loading ? 
-                                <CircularProgress /> :
-                                <Button 
+                            {loading ?
+                                <CircularProgress/> :
+                                <Button
                                     variant="contained"
                                     sx={{backgroundColor: 'secondary.light'}}
-                                    onClick={handleSubmit}
-                                    >Sign in
+                                    onClick={onSubmit}
+                                >Sign in
                                 </Button>
                             }
                         </Stack>

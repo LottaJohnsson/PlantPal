@@ -21,8 +21,7 @@ export default function TopBarController() {
 
     function buttonClick(page: string) {
         if (page == "logout") {
-            dispatch(logoutUserR)
-            console.log("loading " + auth.error)
+            dispatch(logoutUserR());
             navigate('/explore')
         } else {
             navigate('/' + page);
