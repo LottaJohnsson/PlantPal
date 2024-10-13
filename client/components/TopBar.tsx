@@ -68,8 +68,6 @@ function TopBar(
                             />
                         )}
                     />
-                    <SearchBar/>
-
                     <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-start', gap: 2}}>
                         {isAuthenticated ? (<Button
                             color="secondary"
