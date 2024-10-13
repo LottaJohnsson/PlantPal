@@ -2,10 +2,15 @@ import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Paper, St
 import React, { SyntheticEvent } from 'react'
 import PlantTable from "../components/PlantTable";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Plant } from '../Contexts/plantContext';
 
 interface Props {
     advice: any,
     species: any,
+    plant: Plant | undefined,
+    lateTasks: any[],
+    upcomingTasks: any[],
+    doneTasks: any[],
     handleTabChange: (event: SyntheticEvent<Element, Event>, tabindex: number) => void,
     onRemoveFromProfile: () => void,
     tabIndex: number
@@ -62,6 +67,10 @@ function CareAdviceTabs(props: any) {
 export default function MyPlantInfoView({
     species,
     advice,
+    plant,
+    lateTasks,
+    upcomingTasks,
+    doneTasks,
     handleTabChange,
     tabIndex,
     onRemoveFromProfile,
@@ -71,7 +80,7 @@ export default function MyPlantInfoView({
             
             <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
                 <Stack direction="row" alignItems={"left"} spacing={2}>
-                    <img src={species[0].default_image.original_url} alt={"plant image"} style={{
+                    <img src={plant?.imageFile && !plant?.imageURL ? `data:image/jpg;base64,${plant?.imageFile}` : plant?.imageURL} alt={"plant image"} style={{
                         height: '300px',
                         objectFit: 'contain',
                         flex: 1,
@@ -79,36 +88,35 @@ export default function MyPlantInfoView({
                     }}/>
                     <Stack direction="column" flex={4} spacing={2}>
                         <Typography color="secondary" variant="h2">
-                            {species[0].common_name}
+                            {plant?.name}
                         </Typography>
                         <Button variant="contained" color='primary' onClick={() => onRemoveFromProfile()} endIcon={<DeleteIcon/>} fullWidth={false} >
                             Remove plant
                         </Button>
                         <Typography variant='h4'>
-                            Tasks
+                            Upcoming Tasks
                         </Typography>
                         <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
-                            <Card >
-                                <CardHeader flex={1} title="Tomorrow 30/9" titleTypographyProps={{color: "info", variant: "body1"}} sx={{backgroundColor: "#B41878"}}/>
-                                <CardContent sx={{height: "100%", backgroundColor: "#F1B6DA"}}>
-                                    <Typography variant='body1'>
-                                        Water Cactus
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader flex={1} title="Today 29/9" titleTypographyProps={{color: "info", variant: "body1"}} sx={{backgroundColor: "#4DAC26"}}/>
-                                <CardContent sx={{height: "100%", backgroundColor: "#B8E186"}}>
-                                    <Typography variant='body1'>
-                                        Water Cactus
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                            <Box sx={{height: "100%", justifyContent: "end"}}>
-                            <Typography variant='body1'>
-                                Show more...
-                            </Typography>
-                            </Box>
+                            {lateTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
+                                <Card key={index}>
+                                    <CardHeader flex={1} title={task.date} titleTypographyProps={{color: "info", variant: "body1"}} sx={{backgroundColor: "#B41878"}}/>
+                                    <CardContent sx={{height: "100%", backgroundColor: "#F1B6DA"}}>
+                                        <Typography variant='body1'>
+                                            {task.taskName }
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                            {upcomingTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
+                                <Card key={index}>
+                                    <CardHeader flex={1} title={task.date} titleTypographyProps={{color: "info", variant: "body1"}} sx={{backgroundColor: "#B41878"}}/>
+                                    <CardContent sx={{height: "100%", backgroundColor: "#F1B6DA"}}>
+                                        <Typography variant='body1'>
+                                            {task.taskName}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            ))}
                         </Stack>
                     </Stack>
                 </Stack>
@@ -116,6 +124,21 @@ export default function MyPlantInfoView({
                     <CareAdviceTabs section={advice[0].section} handleTabChange={handleTabChange} tabIndex={tabIndex}>
                     </CareAdviceTabs>
                 <PlantTable  plant={species[0]}/>
+                </Stack>
+                <Typography variant='h4'>
+                    Completed Tasks
+                </Typography>
+                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
+                    {doneTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
+                        <Card key={index}>
+                            <CardHeader flex={1} title={task.date} titleTypographyProps={{color: "info", variant: "body1"}} sx={{backgroundColor: "#B41878"}}/>
+                            <CardContent sx={{height: "100%", backgroundColor: "#F1B6DA"}}>
+                                <Typography variant='body1'>
+                                    {task.taskName }
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </Stack>
             </Stack>
 
