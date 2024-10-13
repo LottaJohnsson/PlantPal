@@ -6,7 +6,7 @@ import AboutScreen from "./Controllers/AboutScreenController";
 import ExplorePage from "./Controllers/ExplorePageController";
 import TopBar from "./Controllers/TopBarController";
 import Button from '@mui/material/Button';
-import AuthScreenController from "./Controllers/AuthScreenController";
+import LoginScreenController from "./Controllers/LoginScreenController";
 import {ThemeProvider} from "@mui/material/styles";
 import customTheme from "./theme";
 import PrivateRoute from "./components/PrivateRouter";
@@ -26,12 +26,13 @@ const App: React.FC = () => {
                     <Route path="/home" element={<HomeScreen/>}/>
                     <Route path="/explore" element={<ExplorePage/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
-                    <Route path="/login" element={<AuthScreenController/>}/>
+                    <Route path="/login" element={<LoginScreenController/>}/>
                     <Route path="/about" element={<AboutScreen/>}/>
-                    
+
                     {/*Private Routes*/}
                     <Route element={<PrivateRoute/>}>
-                        <Route path="test" element={<Button onClick={() => logoutUser()}>Logout</Button>}/> {/* Test for private route*/}
+                        <Route path="test" element={<Button
+                            onClick={() => logoutUser()}>Logout</Button>}/> {/* Test for private route*/}
                         <Route path="upload" element={<UploadPlantScreen/>}/>
                         <Route path="profile" element={<ProfileScreen/>}/>
                     </Route>

@@ -1,4 +1,4 @@
-import React, {SyntheticEvent} from 'react'
+import React, {SyntheticEvent} from 'react';
 import {
     Box, CircularProgress, IconButton,
     Stack, Tab,
@@ -79,80 +79,104 @@ export default function GeneralScreenView(
         tabIndex,
         onAddToProfile,
     }: GeneralScreenViewProps) {
-    if (species && advice) {
-        return (
-            <>
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    sx={{width: '100%', '& > :not(style)': {flex: 1}}}
-                >
-                    <Stack
-                        direction="column"
-                        alignItems={"left"}
-                        justifyContent={"center"}
-                        sx={{padding: "3%", flex: 1, minHeight: '300px'}}
-                    >
 
-                        <img src={species.default_image.original_url} alt={"plant image"} style={{
-                            height: '150px',
-                            objectFit: 'contain',
-                            flex: 1,
-                            objectPosition: 'left bottom',
+    // Check loading and error states
+    const isLoading = species.loading || advice.loading;
+    const speciesError = species.error; // Adjust to your actual error structure
+    const adviceError = advice.error; // Adjust to your actual error structure
 
-                        }}/>
-
-                    </Stack>
-
-                    <Stack
-                        direction="column"
-                        alignItems={"left"}
-                        justifyContent={"center"}
-                        spacing={2}
-                        sx={{paddingRight: "10%", paddingTop: "5%", flex: 1}}
-                    >
-                        <Typography color="secondary" variant="h2">
-                            {species.common_name}
-                        </Typography>
-
-                        <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange}
-                                        tabIndex={tabIndex}>
-                        </CareAdviceTabs>
-
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => onAddToProfile()}
-                            endIcon={<AddIcon/>}>
-                            Add to profile
-                        </Button>
-                        <PlantTable plant={species}/>
-                    </Stack>
-
-
-                </Stack>
-            </>
-        )
-
-    } else {
+    if (isLoading) {
         return (
             <Box
                 sx={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    position: 'fixed', // Fix to the viewport
+                    position: 'fixed',
                     top: 0,
                     left: 0,
                     width: '100vw',
                     height: '100vh',
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
-                    zIndex: 9999, // Ensure it is on top of other content
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    zIndex: 9999,
                 }}
             >
-                <CircularProgress size={80}/> {/* You can change the size */}
+                <CircularProgress size={80}/>
             </Box>
-        )
+        );
     }
 
+    if (speciesError || adviceError) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    zIndex: 9999,
+                }}
+            >
+                <Typography variant="h4" color="error">
+                    {speciesError?.message || adviceError?.message || "An error occurred"}
+                </Typography>
+            </Box>
+        );
+    }
+
+    // Render the main content if not loading and no errors
+    return (
+        <>
+            <Stack
+                direction="row"
+                spacing={2}
+                sx={{width: '100%', '& > :not(style)': {flex: 1}}}
+            >
+                <Stack
+                    direction="column"
+                    alignItems={"left"}
+                    justifyContent={"center"}
+                    sx={{padding: "3%", flex: 1, minHeight: '300px'}}
+                >
+                    <img src={species.default_image.original_url} alt={"plant image"} style={{
+                        height: '150px',
+                        objectFit: 'contain',
+                        flex: 1,
+                        objectPosition: 'left bottom',
+                    }}/>
+                </Stack>
+
+                <Stack
+                    direction="column"
+                    alignItems={"left"}
+                    justifyContent={"center"}
+                    spacing={2}
+                    sx={{paddingRight: "10%", paddingTop: "5%", flex: 1}}
+                >
+                    <Typography color="secondary" variant="h2">
+                        {species.common_name}
+                    </Typography>
+
+                    <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange}
+                                    tabIndex={tabIndex}>
+                    </CareAdviceTabs>
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={onAddToProfile}
+                        endIcon={<AddIcon/>}
+                    >
+                        Add to profile
+                    </Button>
+                    <PlantTable plant={species}/>
+                </Stack>
+            </Stack>
+        </>
+    );
 }
