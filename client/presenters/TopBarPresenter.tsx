@@ -67,7 +67,7 @@ export default function TopBarPresenter() {
                 data={data}
                 onOptionClick={onOptionClick}
             />
-            <Popup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup>
+            <Popup.LogoutPopup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup.LogoutPopup>
         </>
     )
 

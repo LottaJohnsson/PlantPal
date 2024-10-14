@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import GeneralScreenView from "../views/GeneralScreenView";
-import {getCareAdvice, searchSpecies} from "../../server/models/plantModel";
+import GeneralScreenView from "../views/DetailScreenView";
 import TopBarPresenter from "./TopBarPresenter";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
@@ -36,8 +35,8 @@ export default function DetailScreenPresenter({}: Props) {
     return (
         <>
             <GeneralScreenView
-                advice={careAdvice.careAdvice}
-                species={plant.currentPlant}
+                advice={careAdvice}
+                species={plant}
                 handleTabChange={handleTabChange}
                 tabIndex={tabIndex}
                 onAddToProfile={onAddToProfile}/>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, CircularProgress } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import moment from 'moment'; // Ensure moment is imported if you use it
 import { Task, UserPlant } from '../redux/slices/userSlice';
 
 type Props = {
@@ -215,7 +214,7 @@ export default function ProfileScreenView({
 
           {/* Done Tasks */}
           <Typography variant="h5" sx={{ marginTop: '32px', marginBottom: '16px', color: '#000' }}>
-            Done Tasks
+            Today's Completed Tasks
           </Typography>
           <Grid container spacing={2}>
             {doneTasks.map((task, index) => (
@@ -283,7 +282,7 @@ export default function ProfileScreenView({
           <Grid container spacing={2}>
             {plants.length > 0 ? (
               plants.map((plant, index) => {
-                const imageSrc = plant.imageFile && !plant.imageURL ? `data:image/jpg;base64,${plant.imageFile}` : plant.imageURL;
+                const imageSrc = plant.imageFile && !plant.imageURL ? plant.imageFile : plant.imageURL;
 
                 return (
                   <Grid item key={index} xs={6} sm={4} md={3} >

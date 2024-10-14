@@ -11,7 +11,15 @@ type Props = {
     onSubmit : () => void
 }
 
+
 export default function RegisterScreenView({error, loading, setIsLogin, onEmailChange, onPasswordChange, onConfirmPassswordChange, onSubmit }: Props) {
+    
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+        if (event.key === 'Enter') {
+            onSubmit();
+        }
+    };
+
     function emailInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
         onEmailChange(event.target.value)
     }
@@ -50,6 +58,7 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
                     noValidate
                     autoComplete="off"
                     sx={{flex: 1, '& > :not(style)': {width: '100%'}, marginLeft: '2%'}}
+                    onKeyDown={handleKeyDown}
                 >
                     <div style={{marginBottom: '10%', marginTop: '10%'}}>
                         <Typography variant='h2'>Are your plants dying?</Typography>

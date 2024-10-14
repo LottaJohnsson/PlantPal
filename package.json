@@ -6,6 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:": "tsc --watch --preserveWatchOutput",
     "build:dev": "webpack --watch",
+    "build:prod": "tsc && webpack --mode production",
     "start:dev": "nodemon --watch dist --exec node dist/index.js",
     "dev": "concurrently \"npm run build:dev\" \"npm run start:dev\"",
     "rebuild": "concurrently \"npm run build:\" \"npm run start:dev\""

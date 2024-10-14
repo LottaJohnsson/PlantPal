@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ProfileScreenView from '../Views/ProfileScreenView';
+import ProfileScreenView from '../views/ProfileScreenView';
 import { useNavigate } from 'react-router-dom';
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {UserPlant, Task, completeTask} from '../redux/slices/userSlice'
@@ -10,13 +10,11 @@ export default function ProfileScreenController() {
 
   const [plants, setPlants] = useState<UserPlant[]>([]);
   const [loading, setLoading] = useState<boolean>(false); 
-  //const { fetchPlants, fetchTasks } = usePlant();
   const navigate = useNavigate();
-  //const [tasks, setTasks] = useState<Task[]>([]);
   const [todayTasks, setTodayTasks] = useState<Task[]>([]);
   const [lateTasks, setLateTasks] = useState<Task[]>([]);
   const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([]);
-  const [doneTasks, setDoneTasks] = useState<Task[]>([]); // New state for done tasks
+  const [doneTasks, setDoneTasks] = useState<Task[]>([]); 
 
   // redux
   const dispatch = useAppDispatch();
@@ -51,15 +49,9 @@ export default function ProfileScreenController() {
   };
 
   const onCompleteTask = async (completedTask: Task) => {
-    console.log('user tasks before update', userTasksDone, userTasksToday, userTasksLate, userTasksUpcoming);
-
     dispatch(completeTask(completedTask));
-
     // update db also
     await dispatch(updatePlantInDB(completedTask.plantName));
-
-    console.log('user tasks after update', userTasksDone, userTasksToday, userTasksLate, userTasksUpcoming);
-
   };
 
   const navigatToPlant = (plant: UserPlant) => {

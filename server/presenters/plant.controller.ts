@@ -3,6 +3,7 @@ import model from "../model";
 import Model from "../model";
 import multer from "multer";
 import {getCareAdvice, searchSpecies} from "../models/plantModel"
+import requireAuth from "../presenters/auth.controller";
 
 
 const router = express.Router();
@@ -17,28 +18,6 @@ const upload = multer({storage: storage});
  * @param res response
  * @param next next function
  */
-const requireAuth = (req: Request, res: Response, next: Function) => {
-    if (model.findUserBySessionId(req.session.id)) {
-        next();
-    } else {
-        res.status(401).json({message: "Unauthorized"});
-    }
-};
-
-/**
- * Route for checking if a user is authenticated.
- */
-router.get("/isAuthenticated", (req: Request, res: Response) => {
-    try {
-        if (Model.findUserBySessionId(req.session.id)) {
-            res.status(200).json({authenticated: true});
-        } else {
-            res.status(401).json({authenticated: false});
-        }
-    } catch (error) {
-        res.status(500).json({message: "Internal server error"});
-    }
-});
 
 /**
  * Route for adding a plant to the user's profile.
@@ -118,8 +97,6 @@ router.post("/update", requireAuth, async (req: Request, res: Response) => {
         const { plantName, lastWatered } = req.body; // Extract the plant name and last watered date
         let email = "";
 
-        console.log('Received data:', plantName, lastWatered);
-
         try {
             const user = await model.findUserBySessionId(req.session.id);
             if (!user) {
@@ -186,9 +163,7 @@ router.get("/get", requireAuth, async (req: Request, res: Response) => {
 
 router.get("/search", async (req: Request, res: Response) => {
     const {query} = req.query;
-    console.log("getting info from server");
     try {
-        console.log("getting info from server");
         const result = await searchSpecies(query as string);
         res.status(200).json({result});
     } catch (e) {
@@ -201,7 +176,6 @@ router.get("/care_advice", async (req: Request, res: Response) => {
     const {query} = req.query;
     try {
         const result = await getCareAdvice(undefined, query as string);
-        console.log(result);
         res.status(200).json({result: result});
     } catch (e) {
         console.error("Error in /care advice:", e);
