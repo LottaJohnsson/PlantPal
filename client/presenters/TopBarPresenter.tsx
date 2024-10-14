@@ -10,17 +10,14 @@ import {fetchCareAdvice} from "../redux/slices/careAdviceSlice";
 import Popup from "../components/PopUp";
 import {logoutUserR} from "../redux/slices/authSlice";
 
-export default function TopBarController() {
+export default function TopBarPresenter() {
     const [data, setData] = useState([])
     const navigate = useNavigate();
     const dispatch = useAppDispatch()
     const [openPopUp, setOpenPopUp] = useState(false)
 
     const auth = useAppSelector(state => state.auth)
-
-    console.log("auth " + auth.isAuthenticated)
-    console.log("loading " + auth.error)
-
+    
     function buttonClick(page: string) {
         if (page == "logout") {
             dispatch(logoutUserR());
@@ -63,12 +60,12 @@ export default function TopBarController() {
 
     return (
         <>
-            <TopBar 
-                buttonClick={buttonClick} 
-                isAuthenticated={auth.isAuthenticated} 
-                onInputChange={onInPutChange} 
-                data={data} 
-                onOptionClick={onOptionClick} 
+            <TopBar
+                buttonClick={buttonClick}
+                isAuthenticated={auth.isAuthenticated}
+                onInputChange={onInPutChange}
+                data={data}
+                onOptionClick={onOptionClick}
             />
             <Popup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup>
         </>

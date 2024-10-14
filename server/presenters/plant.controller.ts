@@ -2,7 +2,7 @@ import express, {Request, Response} from "express";
 import model from "../model";
 import Model from "../model";
 import multer from "multer";
-import {getCareAdvice, searchSpecies} from "../Models/plantModel"
+import {getCareAdvice, searchSpecies} from "../models/plantModel"
 
 
 const router = express.Router();
