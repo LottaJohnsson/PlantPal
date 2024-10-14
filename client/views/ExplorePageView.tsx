@@ -15,7 +15,7 @@ import {
     InputBase
 } from "@mui/material"
 import {NavigateBefore, NavigateNext} from "@mui/icons-material"
-import SearchBar from "../Controllers/SearchBarController";
+import SearchBar from "../presenters/SearchBarController";
 
 type Props = {
     slideDirection: "right" | "left" | undefined
@@ -31,13 +31,13 @@ export default function ExplorePageView({slideDirection, cards, currentCards, ha
         <Stack spacing={2} justifyContent="space-between" sx={{height: '90vh', padding: 0, margin: 0}}>
             <div style={{marginLeft: '2%', marginTop: '2%'}}>
 
-            <Typography variant='h2'>
-                Looking for a plant?    
-            </Typography>
-            <div>
-                <SearchBar/>
+                <Typography variant='h2'>
+                    Looking for a plant?
+                </Typography>
+                <div>
+                    <SearchBar/>
+                </div>
             </div>
-        </div>
 
             <div style={{marginLeft: '2%'}}>
                 <Typography variant='h5' color='primary.dark'>

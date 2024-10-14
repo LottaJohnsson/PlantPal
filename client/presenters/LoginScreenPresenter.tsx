@@ -1,14 +1,14 @@
 import React, {useState, useRef, useEffect} from 'react';
-import LoginScreenView from '../Views/LoginScreenView';
-import RegisterScreenView from '../Views/RegisterScreenView';
+import LoginScreenView from '../views/LoginScreenView';
+import RegisterScreenView from '../views/RegisterScreenView';
 import {useNavigate} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {loginUserR, registerUserR} from "../redux/slices/authSlice";
-import { fetchUserPlantsFromDB, generateTasks } from '../redux/slices/userSlice';
+import {fetchUserPlantsFromDB, generateTasks} from '../redux/slices/userSlice';
 
 type Props = {}
 
-export default function LoginScreenController({}: Props) {
+export default function LoginScreenPresenter({}: Props) {
     const [isLogin, setIsLogin] = useState(true);
     const emailRef = useRef('');
     const passwordRef = useRef('');
@@ -95,9 +95,9 @@ export default function LoginScreenController({}: Props) {
             setLoading(false);
         } else if (auth.isAuthenticated) {
             setLoading(false);
-            navigate('/profile'); 
+            navigate('/profile');
             fetchUserData();
-            
+
         }
     }, [auth, navigate]);
 
