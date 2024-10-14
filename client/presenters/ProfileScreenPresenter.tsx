@@ -10,13 +10,11 @@ export default function ProfileScreenController() {
 
   const [plants, setPlants] = useState<UserPlant[]>([]);
   const [loading, setLoading] = useState<boolean>(false); 
-  //const { fetchPlants, fetchTasks } = usePlant();
   const navigate = useNavigate();
-  //const [tasks, setTasks] = useState<Task[]>([]);
   const [todayTasks, setTodayTasks] = useState<Task[]>([]);
   const [lateTasks, setLateTasks] = useState<Task[]>([]);
   const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([]);
-  const [doneTasks, setDoneTasks] = useState<Task[]>([]); // New state for done tasks
+  const [doneTasks, setDoneTasks] = useState<Task[]>([]); 
 
   // redux
   const dispatch = useAppDispatch();
