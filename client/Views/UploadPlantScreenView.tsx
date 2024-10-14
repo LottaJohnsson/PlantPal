@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Box, Button, TextField, MenuItem, CircularProgress } from '@mui/material';
-import { format } from 'date-fns';
-import { useDropzone } from 'react-dropzone';
-import { Plant } from '../Contexts/plantContext';
+import { format } from 'date-fns'; // change to moment?
+import {useAppSelector, useAppDispatch} from '../redux/hooks'
+import {UserPlant} from '../redux/slices/userSlice'
 
 type Props = {
     image: File | null;
@@ -10,18 +10,22 @@ type Props = {
     searchResult: any[];
     loading: boolean;
     formVisible: boolean;
-    formData: Plant;
+    formData: UserPlant;
     handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSelectPlant: (plant: any) => void;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onDrop: (acceptedFiles: File[]) => void;
     isDragActive: boolean;
-    onAddPlant: (plantData: Plant) => Promise<{ success: boolean; exists: boolean }>;
+    onAddPlant: () => Promise<void>;
     selectedApiPlantId: string | null;
-    isPlantSelected: boolean;
+    //isPlantSelected: boolean;
     handleRemoveImage: () => void;
     handleUseDefaultImage: () => void;
     usingDefaultImage: boolean;
+    errorMessage: string | null;
+    successMessage: string | null;
+    getRootProps: any;
+    getInputProps: any;
 };
 
 export default function UploadPlantScreenView({
@@ -38,62 +42,16 @@ export default function UploadPlantScreenView({
     isDragActive,
     onAddPlant,
     selectedApiPlantId,
-    isPlantSelected,
+    //isPlantSelected,
     handleRemoveImage,
     handleUseDefaultImage,
     usingDefaultImage,
+    errorMessage,
+    successMessage,
+    getRootProps,
+    getInputProps,
 }: Props) {
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [plantAlreadyExists, setPlantAlreadyExists] = useState<boolean>(false);
-
-    // Validation function to check if all fields are filled
-    const isFormValid = () => {
-        return (
-            (image !== null || usingDefaultImage) &&
-            formData.name.trim() !== '' &&
-            formData.lastWatered.trim() !== '' &&
-            formData.wateringFrequency.trim() !== ''
-        );
-    };
-
-    const handleAddPlant = async () => {
-        // Clear previous messages
-        setErrorMessage(null);
-        setSuccessMessage(null);
-        setPlantAlreadyExists(false);
-    
-        // Validate the form before adding the plant
-        if (!isFormValid()) {
-            setErrorMessage("You need to fill in everything to add the plant!");
-            return;
-        }
-    
-        const plantData: Plant = {
-            id: formData.id,
-            name: formData.name,
-            lastWatered: formData.lastWatered,
-            wateringFrequency: formData.wateringFrequency,
-            imageURL: formData.imageURL,
-            imageFile: formData.imageFile,
-        };
-    
-        const { success, exists } = await onAddPlant(plantData); // Get the result from the controller
-    
-        if (exists) {
-            // If the plant already exists, show an error message
-            setErrorMessage("Plant name already exists in profile, please choose another name.");
-            setPlantAlreadyExists(true);
-        } else if (success) {
-            // If the plant was added successfully, show a success message
-            setSuccessMessage("Plant added successfully!");
-        } else {
-            // Handle any other errors
-            setErrorMessage("Something went wrong. Please try again.");
-        }
-    };
-    
+    const selectedPlant = useAppSelector(state => state.plant.uploadPlant);
 
     return (
         <Box
@@ -190,7 +148,7 @@ export default function UploadPlantScreenView({
                 </Box>
             ) : (
                 searchResult.length === 0 &&
-                !isPlantSelected &&
+                !selectedPlant &&
                 searchQuery &&
                 !loading && (
                     <Box sx={{ marginBottom: '16px' }}>
@@ -391,7 +349,7 @@ export default function UploadPlantScreenView({
                     {/* Add plant button */}
                     <Button
                         variant="contained"
-                        onClick={handleAddPlant}
+                        onClick={onAddPlant}
                         sx={{
                             backgroundColor: 'secondary.light',
                             color: 'secondary.dark',

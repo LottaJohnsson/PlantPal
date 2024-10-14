@@ -1,6 +1,6 @@
-const API_KEY = 'sk-cPs166f55590d72357015'; //change to your API key
+//const API_KEY = 'sk-cPs166f55590d72357015'; //change to your API key
 //const API_KEY = 'sk-oqF366f96d7b858e57046'; //change to your API key
-//const API_KEY = 'sk-nubU66f96ebfc123b7048'; //change to your API key
+const API_KEY = 'sk-nubU66f96ebfc123b7048'; //change to your API key
 //const API_KEY = 'sk-eq1J66f98ad25fe9f7050'; //change to your API key
 //const API_KEY = 'sk-UQ5B67039d8a080357150'; //change to your API key
 //const API_KEY = 'sk-kae2670640bf0a6d27184'; //change to your API key
@@ -30,10 +30,11 @@ class Plant {
 
 //returns a list of plants matching the search phrase
 export async function searchSpecies(searchPhrase: string): Promise<any> {
+    console.log(`${baseUrl}species-list?key=${API_KEY}&page=1&q=${searchPhrase}`);
     const response = await fetch(`${baseUrl}species-list?key=${API_KEY}&page=1&q=${searchPhrase}`);
 
     if (!response.ok) {
-        throw new Error('Failed to fetch species data');
+        throw new Error('Failed to fetch species data from API');
     }
 
     const json = await response.json();

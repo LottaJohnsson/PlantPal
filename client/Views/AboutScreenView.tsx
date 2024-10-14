@@ -1,5 +1,5 @@
 import React from 'react'
-import {Typography, Box } from '@mui/material'
+import {Typography, Box} from '@mui/material'
 
 type Props = {}
 
@@ -10,14 +10,14 @@ export default function AboutScreenView({}: Props) {
                 {/* Background Image */}
                 <Box
                     component="img"
-                    src="aboutPageImage.jpg" 
+                    src="aboutPageImage.jpg"
                     alt="Plant Background"
                     sx={{
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
                         position: 'absolute',
-                        zIndex: -1, 
+                        zIndex: -1,
                         opacity: 0.9,
                     }}
                 />
@@ -27,7 +27,7 @@ export default function AboutScreenView({}: Props) {
                     <Box display='flex' alignItems='center' marginBottom='50px'>
                         <Box
                             component="img"
-                            src="/logo.png" 
+                            src="/logo.png"
                             alt="PlantPal Logo"
                             width='170px'
                             height='170px'

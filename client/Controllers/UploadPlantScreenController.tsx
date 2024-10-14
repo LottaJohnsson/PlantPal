@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UploadPlantScreenView from '../Views/uploadPlantScreenView';
-import { searchSpecies } from "../../server/Models/plantModel";
-import { usePlant, Plant } from '../Contexts/plantContext'; 
+import {useAppSelector, useAppDispatch} from '../redux/hooks'
+import {addPlantsToDB, addPlant} from '../redux/slices/userSlice'
+import {setUploadPlant} from '../redux/slices/plantSlice'
+import {UserPlant} from '../redux/slices/userSlice'
+import { useDropzone } from 'react-dropzone';
 
 type Props = {};
 
 export default function UploadPlantScreenController({}: Props) {
-    const { addPlantToProfile, fetchPlants } = usePlant(); 
-    const [isPlantSelected, setIsPlantSelected] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResult, setSearchResult] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -23,9 +24,22 @@ export default function UploadPlantScreenController({}: Props) {
     const [selectedApiPlantId, setSelectedApiPlantId] = useState<string | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [image, setImage] = useState<string | null>(null);
-    const [selectedPlant, setSelectedPlant] = useState<any>(null);
     const [usingDefaultImage, setUsingDefaultImage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const dispatch = useAppDispatch();
+    const selectedPlant = useAppSelector(state => state.plant.uploadPlant);
+    const errorUserSlice = useAppSelector(state => state.task.error);
+    const successUserSlice = useAppSelector(state => state.task.success);
 
+    useEffect(() => {
+        if (errorUserSlice) {
+            setErrorMessage(errorUserSlice); 
+        }
+        if (successUserSlice) {
+            setSuccessMessage(successUserSlice);
+        }
+    }, [errorUserSlice, successUserSlice]);
 
     const onDrop = (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -35,6 +49,8 @@ export default function UploadPlantScreenController({}: Props) {
             setFormData({ ...formData, imageURL: '', imageFile: file });
         }
     };
+
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -66,15 +82,22 @@ export default function UploadPlantScreenController({}: Props) {
     const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         setSearchQuery(query);
-        setIsPlantSelected(false);
+        //setIsPlantSelected(false);
         setFormVisible(false);
         if (query.length > 2) {
             setLoading(true);
             try {
-                const result = await searchSpecies(query);
-                setSearchResult(result.slice(0, 5));
+                const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                const json = await response.json();
+                setSearchResult(json.result.slice(0,5));
+    
             } catch (error) {
-                console.error('Error fetching plant data:', error);
+                console.error("Error during search:", error);
                 setSearchResult([]);
             } finally {
                 setLoading(false);
@@ -85,11 +108,12 @@ export default function UploadPlantScreenController({}: Props) {
         }
     };
 
+    // function to handle selecting a plant after searching
     const handleSelectPlant = (plant: any) => {
         setFormVisible(true);
         if (plant.id) {
             setSelectedApiPlantId(plant.id);
-            setSelectedPlant(plant); // Store the selected plant details 
+            //setSelectedPlant(plant); // Store the selected plant details 
             setFormData({
                 id: plant.id,
                 name: plant.common_name || plant.scientific_name || '',
@@ -98,10 +122,11 @@ export default function UploadPlantScreenController({}: Props) {
                 imageURL: plant.default_image.small_url || '',
                 imageFile: null,
             });
-            setIsPlantSelected(true);
+            //setIsPlantSelected(true);
+            dispatch(setUploadPlant(plant));
         } else {
             setSelectedApiPlantId(null);
-            setSelectedPlant(null); // Reset selected plant
+            //setSelectedPlant(null); // Reset selected plant
             setFormData({
                 id: '',
                 name: '',
@@ -110,7 +135,8 @@ export default function UploadPlantScreenController({}: Props) {
                 imageURL: '',
                 imageFile: null,
             });
-            setIsPlantSelected(false);
+            //setIsPlantSelected(false);
+            dispatch(setUploadPlant(null));
         }
         setSearchResult([]);
     };
@@ -130,30 +156,45 @@ export default function UploadPlantScreenController({}: Props) {
         }
     };
 
-    const onAddPlant = async (plantData: Plant): Promise<{ success: boolean, exists: boolean }> => {
-        try {
-            setLoading(true); 
-            const fetchedPlants = await fetchPlants(); // Assuming this fetches all plants from the DB
+
+    // TODO fix loading in redux
+    // function to add plant using redux
+    const onAddPlant = async (): Promise<void> => {
+
+        // Clear previous messages
+        setErrorMessage(null);
+        setSuccessMessage(null);
     
-            // Check if the plant already exists in the database
-            const plantExists = fetchedPlants.some(
-                (p) => p.name.toLowerCase() === plantData.name.toLowerCase()
-            );
-    
-            if (plantExists) {
-                return { success: false, exists: true }; // Return that the plant exists
-            }
-    
-            const success = await addPlantToProfile(plantData); // Add the plant if it doesn't exist
-            return { success: success, exists: false };
-        } catch (error) {
-            console.error("Error adding plant:", error);
-            return { success: false, exists: false };
-        } finally {
-            setLoading(false);
+        // Validate the form before adding the plant
+        if (!isFormValid()) {
+            setErrorMessage("You need to fill in everything to add the plant!");
+            return;
         }
-    };
     
+        const plantData: UserPlant = {
+            id: formData.id,
+            name: formData.name,
+            lastWatered: formData.lastWatered,
+            wateringFrequency: formData.wateringFrequency,
+            imageURL: formData.imageURL,
+            imageFile: formData.imageFile,
+        };
+
+        // Add the plant to db and get the action result
+        await dispatch(addPlantsToDB(plantData));
+        
+    };
+
+
+    // Validation function to check if all fields are filled
+    const isFormValid = () => {
+        return (
+            (image !== null || usingDefaultImage) &&
+            formData.name.trim() !== '' &&
+            formData.lastWatered.trim() !== '' &&
+            formData.wateringFrequency.trim() !== ''
+        );
+    };
 
     const isDragActive = image !== null;
 
@@ -172,10 +213,14 @@ export default function UploadPlantScreenController({}: Props) {
             isDragActive={isDragActive}
             onAddPlant={onAddPlant}
             selectedApiPlantId={selectedApiPlantId}
-            isPlantSelected={isPlantSelected}
+            //isPlantSelected={isPlantSelected}
             handleRemoveImage={handleRemoveImage}
             handleUseDefaultImage={handleUseDefaultImage}
             usingDefaultImage={usingDefaultImage}
+            errorMessage={errorMessage}
+            successMessage={successMessage}
+            getRootProps={getRootProps}
+            getInputProps={getInputProps}
         />
     );
 }
