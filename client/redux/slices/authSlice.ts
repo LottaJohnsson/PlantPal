@@ -53,8 +53,6 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-
-        asdasdasd
     },
     extraReducers: (builder) => {
         builder.addCase(loginUserR.pending, (state: AuthState) => {
