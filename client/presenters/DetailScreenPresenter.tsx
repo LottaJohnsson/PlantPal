@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import GeneralScreenView from "../views/GeneralScreenView";
-import {getCareAdvice, searchSpecies} from "../../server/models/plantModel";
+import GeneralScreenView from "../Views/GeneralScreenView";
 import TopBarPresenter from "./TopBarPresenter";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector, useAppDispatch} from '../redux/hooks'

@@ -20,8 +20,7 @@ const App: React.FC = () => {
                 <TopBar/>
                 <Routes>
                     {/*Public Routes*/}
-                    <Route path="/"/>
-                    <Route path="/home" element={<HomeScreen/>}/>
+                    <Route path="/" element={<HomeScreen/>}/>
                     <Route path="/explore" element={<ExplorePage/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<LoginScreenPresenter/>}/>

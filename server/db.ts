@@ -11,9 +11,9 @@ import mysql from 'mysql2/promise';
 
 // password StrongPassword123!
 const pool = mysql.createPool({
-  socketPath: '/cloudsql/plant-pal-438113:europe-west1:plantpal', // Use the service name 'db' defined in docker-compose.yml PlantPalPassword123!
+  socketPath: process.env.MYSQL_HOST, // Use the service name 'db' defined in docker-compose.yml PlantPalPassword123!
   user: process.env.MYSQL_USER || 'plantpal',
-  password: process.env.MYSQL_PASSWORD || 'PlantPalPassword123!', // StrongPassword123!
+  password: process.env.MYSQL_PASSWORD || 'StrongPassword123!', // StrongPassword123!
   database: process.env.MYSQL_DATABASE || 'plantpalDB',
 });
 
@@ -33,7 +33,7 @@ export async function initializeDatabase() {
     // create users table if not exists
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
-        email VARCHAR(255) UNIQUE NOT NULL,
+        email VARCHAR(255) PRIMARY KEY,
         password VARCHAR(255) NOT NULL
       )
     `);
