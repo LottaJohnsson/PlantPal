@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import MyPlantInfoView from '../Views/MyPlantInfoView'
 import { usePlant } from '../Contexts/plantContext';
-import { UserPlant, Task, fetchUserPlantsFromDB, generateTasks } from '../redux/slices/userSlice';
+import { UserPlant, Task, fetchUserPlantsFromDB, generateTasks, removePlantFromDB } from '../redux/slices/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { fetchPlants, setCurrentPlant } from '../redux/slices/plantSlice';
 import { fetchCareAdvice } from '../redux/slices/careAdviceSlice';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {}
 
@@ -31,6 +32,8 @@ export default function MyPlantInfoPresenter({}: Props) {
 
   const queryParams = new URLSearchParams(window.location.search)
   const plant_name = queryParams.get('plantname')
+
+  const navigate = useNavigate();
 
   // Called at the start
   useEffect(() => {
@@ -102,8 +105,14 @@ export default function MyPlantInfoPresenter({}: Props) {
     setTabIndex(tabindex);
   }
 
-  function onRemoveFromProfile() {
-    
+  const onRemoveFromProfile = async () => {
+    if(plant) {
+      console.log('remove plant: %s',plant.name)
+      await dispatch(removePlantFromDB(plant.name))
+      navigate('/profile')
+    } else {
+      console.error("Cannot find plant")
+    }
   }
 
   return (
