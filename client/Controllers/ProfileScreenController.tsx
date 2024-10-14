@@ -51,15 +51,10 @@ export default function ProfileScreenController() {
   };
 
   const onCompleteTask = async (completedTask: Task) => {
-    console.log('user tasks before update', userTasksDone, userTasksToday, userTasksLate, userTasksUpcoming);
-
     dispatch(completeTask(completedTask));
 
     // update db also
     await dispatch(updatePlantInDB(completedTask.plantName));
-
-    console.log('user tasks after update', userTasksDone, userTasksToday, userTasksLate, userTasksUpcoming);
-
   };
 
   return (

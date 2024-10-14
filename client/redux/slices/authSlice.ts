@@ -22,30 +22,42 @@ const initialState: AuthState = {
 
 export const loginUserR = createAsyncThunk(
     "loginUser",
-    (user: LoginPayload) => {
-        return axios
-            .post('/auth/login', user)
-            .then(response => response.data);
+    async (user: LoginPayload, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('/auth/login', user);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response.data);
+        }
     }
-)
+);
+
 
 
 export const registerUserR = createAsyncThunk(
     'registerUser',
-    (user: LoginPayload) => {
-        return axios
-            .post('/auth/register', user)
-            .then(response => response.data);
+    async (user: LoginPayload, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('/auth/register', user);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response.data);
+        }
     }
-)
+);
 
 
 export const logoutUserR = createAsyncThunk(
     'logout',
-    () => {
-        return axios.post('/auth/logout').then(response => response.data);
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('/auth/logout');
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response.data);
+        }
     }
-)
+);
 
 
 // Auth slice
@@ -55,6 +67,7 @@ const authSlice = createSlice({
     reducers: {
     },
     extraReducers: (builder) => {
+        // Login user reducers
         builder.addCase(loginUserR.pending, (state: AuthState) => {
             state.loading = true;
         });
@@ -66,7 +79,7 @@ const authSlice = createSlice({
         builder.addCase(loginUserR.rejected, (state: AuthState, action: PayloadAction<any>) => {
             state.loading = false;
             state.isAuthenticated = false;
-            state.error = action.payload.message || 'Something went wrong';
+            state.error = action.payload?.message || 'Something went wrong';
         });
 
         // Register user reducers
@@ -89,13 +102,11 @@ const authSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(logoutUserR.fulfilled, (state: AuthState) => {
-            console.log("success");
             state.isAuthenticated = false;
             state.loading = false;
             state.error = '';
         });
         builder.addCase(logoutUserR.rejected, (state: AuthState, action: PayloadAction<any>) => {
-            console.log("fail");
             state.loading = false;
             state.error = action.payload.message || 'Something went wrong';
         });

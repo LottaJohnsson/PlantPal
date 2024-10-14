@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import GeneralScreenView from "../views/GeneralScreenView";
+import GeneralScreenView from "../Views/GeneralScreenView";
 import {getCareAdvice, searchSpecies} from "../../server/models/plantModel";
 import TopBarPresenter from "./TopBarPresenter";
 import {useNavigate} from "react-router-dom";

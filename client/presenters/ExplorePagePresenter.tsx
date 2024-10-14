@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import ExplorePageView from '../views/ExplorePageView'
+import ExplorePageView from '../Views/ExplorePageView'
 import {Card} from '@mui/material'
 
 type Props = {}
@@ -25,16 +25,12 @@ export default function ExplorePagePresenter({}: Props) {
 
     function handleNext() {
         setSlideDirection("left")
-        console.log('prev: %d', currentCards)
         setCurrentCards((prevCards) => (prevCards + 1) % (pages))
-        console.log('prevAfter: %d', currentCards)
     }
 
     function handlePrev() {
         setSlideDirection("right")
-        console.log('prev: %d', currentCards)
         setCurrentCards((prevCards) => ((prevCards - 1) % (pages) + pages) % pages)
-        console.log('prevAfter: %d', currentCards)
     }
 
 

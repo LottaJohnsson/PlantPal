@@ -9,7 +9,7 @@ export default function SearchBarController() {
     const {search} = usePlant();
 
 
-    async function onInPutChange(query: string) {
+    async function onInputChange(query: string) {
         const data = await search(query);
         setData(data);
     }
@@ -21,6 +21,6 @@ export default function SearchBarController() {
     }
 
     return (
-        <SearchBar onInputChange={onInPutChange} data={data} onOptionClick={onOptionClick}/>
+        <SearchBar onInputChange={onInputChange} data={data} onOptionClick={onOptionClick}/>
     )
 }
