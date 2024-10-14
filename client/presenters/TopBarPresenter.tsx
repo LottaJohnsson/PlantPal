@@ -9,6 +9,8 @@ import axios from 'axios';
 import {fetchCareAdvice} from "../redux/slices/careAdviceSlice";
 import Popup from "../components/PopUp";
 import {logoutUserR} from "../redux/slices/authSlice";
+import {persistor} from "../redux/store";
+import {response} from "express";
 
 export default function TopBarPresenter() {
     const [data, setData] = useState([])
@@ -27,6 +29,8 @@ export default function TopBarPresenter() {
             setPopUpMessage("You have been successfully logged out");
             setPopUpHeader("Logged out")
             setOpenPopUp(true)
+            persistor.purge(); // This will clear all persisted data in localStorage
+
         } else {
             navigate('/' + page);
         }
@@ -44,37 +48,27 @@ export default function TopBarPresenter() {
         setData(data);
     }
 
+
     const search = async (query: string) => {
+
         try {
-            const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+            const response = await axios.get(`plants/search?query=${encodeURIComponent(query)}`);
+            return response.data.data;
 
-            const json = await response.json();
-            if (!response.ok) {
-                setPopUpMessage(json.error);
-                setOpenPopUp(true);
-                setPopUpHeader("ERROR!!!")
-                return null;
-            }
-            return json.result;
-
-        } catch (error) {
-            console.error("Error during search:", error);
+        } catch (error: any) {
+            setPopUpHeader("Error");
+            setPopUpMessage(error.message)
+            setOpenPopUp(true);
             return null;
         }
     };
-
     return (
         <>
             <TopBar
                 buttonClick={buttonClick}
                 isAuthenticated={auth.isAuthenticated}
                 onInputChange={onInPutChange}
-                data={data}
+                data={data || []}
                 onOptionClick={onOptionClick}
             />
             <Popup.LogoutPopup open={openPopUp} message={popupMessage} header={popupHeader}

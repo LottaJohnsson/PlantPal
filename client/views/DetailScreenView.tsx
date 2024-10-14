@@ -80,14 +80,11 @@ export default function GeneralScreenView(
         onAddToProfile,
     }: GeneralScreenViewProps) {
 
-    // Check loading and error states
-    const isLoading = species.loading || advice.loading;
-    const speciesError = species.error; // Adjust to your actual error structure
-    const adviceError = advice.error; // Adjust to your actual error structure
+    console.log(advice.error)
+    console.log("care advice " + advice.careAdvice);
 
-
-    console.log(advice.careAdvice)
-    if (isLoading) {
+    if (species.loading || advice.loading) {
+        console.log("loading")
         return (
             <Box
                 sx={{
@@ -108,7 +105,7 @@ export default function GeneralScreenView(
         );
     }
 
-    if (speciesError || adviceError) {
+    if (advice.error != '') {
         return (
             <Box
                 sx={{
@@ -125,12 +122,12 @@ export default function GeneralScreenView(
                 }}
             >
                 <Typography variant="h4" color="error">
-                    {speciesError?.message || adviceError?.message || "An error occurred"}
+                    {advice.error || "An error occurred"}
                 </Typography>
             </Box>
         );
     }
-
+    
     // Render the main content if not loading and no errors
     return (
         <>
