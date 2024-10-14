@@ -4,7 +4,9 @@ import React from "react";
 
 interface LogoutProps {
     open: boolean,
-    handleClose: () => void;
+    handleClose: () => void,
+    message: string,
+    header: string,
 }
 
 interface addPlantProps {
@@ -21,10 +23,10 @@ function LogoutPopup(props: LogoutProps) {
                 aria-labelledby="logout-dialog-title"
                 aria-describedby="logout-dialog-description"
             >
-                <DialogTitle id="logout-dialog-title">Logged Out</DialogTitle>
+                <DialogTitle id="logout-dialog-title">{props.header}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="logout-dialog-description">
-                        You have successfully logged out.
+                        {props.message}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

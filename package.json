@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:": "tsc --watch --preserveWatchOutput",
+    "build": "tsc --watch --preserveWatchOutput",
     "build:dev": "webpack --watch",
     "build:prod": "tsc && webpack --mode production",
     "start:dev": "nodemon --watch dist --exec node dist/index.js",

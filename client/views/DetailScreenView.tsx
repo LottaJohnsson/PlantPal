@@ -85,6 +85,8 @@ export default function GeneralScreenView(
     const speciesError = species.error; // Adjust to your actual error structure
     const adviceError = advice.error; // Adjust to your actual error structure
 
+
+    console.log(advice.careAdvice)
     if (isLoading) {
         return (
             <Box
@@ -143,7 +145,7 @@ export default function GeneralScreenView(
                     justifyContent={"center"}
                     sx={{padding: "3%", flex: 1, minHeight: '300px'}}
                 >
-                    <img src={species.default_image.original_url} alt={"plant image"} style={{
+                    <img src={species.currentPlant.default_image.original_url} alt={"plant image"} style={{
                         height: '150px',
                         objectFit: 'contain',
                         flex: 1,
@@ -159,10 +161,10 @@ export default function GeneralScreenView(
                     sx={{paddingRight: "10%", paddingTop: "5%", flex: 1}}
                 >
                     <Typography color="secondary" variant="h2">
-                        {species.common_name}
+                        {species.currentPlant.common_name}
                     </Typography>
 
-                    <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange}
+                    <CareAdviceTabs section={advice.careAdvice.section} handleTabChange={handleTabChange}
                                     tabIndex={tabIndex}>
                     </CareAdviceTabs>
 
@@ -174,7 +176,7 @@ export default function GeneralScreenView(
                     >
                         Add to profile
                     </Button>
-                    <PlantTable plant={species}/>
+                    <PlantTable plant={species.currentPlant}/>
                 </Stack>
             </Stack>
         </>

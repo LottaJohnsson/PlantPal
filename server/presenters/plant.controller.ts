@@ -3,7 +3,7 @@ import model from "../model";
 import Model from "../model";
 import multer from "multer";
 import {getCareAdvice, searchSpecies} from "../models/plantModel"
-import requireAuth from "../presenters/auth.controller";
+import {AxiosError} from "axios";
 
 
 const router = express.Router();
@@ -18,6 +18,28 @@ const upload = multer({storage: storage});
  * @param res response
  * @param next next function
  */
+const requireAuth = (req: Request, res: Response, next: Function) => {
+    if (model.findUserBySessionId(req.session.id)) {
+        next();
+    } else {
+        res.status(401).json({message: "Unauthorized"});
+    }
+};
+
+/**
+ * Route for checking if a user is authenticated.
+ */
+router.get("/isAuthenticated", (req: Request, res: Response) => {
+    try {
+        if (Model.findUserBySessionId(req.session.id)) {
+            res.status(200).json({authenticated: true});
+        } else {
+            res.status(401).json({authenticated: false});
+        }
+    } catch (error) {
+        res.status(500).json({message: "Internal server error"});
+    }
+});
 
 /**
  * Route for adding a plant to the user's profile.
@@ -163,23 +185,68 @@ router.get("/get", requireAuth, async (req: Request, res: Response) => {
 
 router.get("/search", async (req: Request, res: Response) => {
     const {query} = req.query;
+
     try {
-        const result = await searchSpecies(query as string);
-        res.status(200).json({result});
-    } catch (e) {
-        console.error("Error in /search: pls help", e);
-        res.status(500).json({result: null});
+        const response = await searchSpecies(query as string);
+        const status = response.status;
+        const result = response.data;
+
+        if (status === 200) {
+            return res.status(status).json({result});
+        } else if (status === 429) {
+            return res.status(status).json({error: "Code: 429 Too many requests with this API key"});
+        } else {
+            return res.status(status).json({error: `Code: ${status} Something went wrong`});
+        }
+    } catch (error: any) {
+        if (error.response) {
+            // Error from the server
+            const status = error.response.status;
+            const errorMessage = error.response.data?.error || "An error occurred";
+
+            return res.status(status).json({error: `Code: ${status} ${errorMessage}`});
+        } else if (error.code === 'ECONNABORTED') {
+            // Handle axios timeout specifically
+            console.log(error);
+            return res.status(408).json({error: "Code 408: API request taking too long"});
+        } else {
+            // Other unknown errors
+            console.error("Error in /search: ", error.message);
+            return res.status(500).json({error: "Code 500: Internal server error"});
+        }
     }
 });
 
 router.get("/care_advice", async (req: Request, res: Response) => {
     const {query} = req.query;
+
     try {
-        const result = await getCareAdvice(undefined, query as string);
-        res.status(200).json({result: result});
-    } catch (e) {
-        console.error("Error in /care advice:", e);
-        res.status(500).json({result: null});
+        const response = await getCareAdvice(undefined, query as string);
+
+        const status = response.status;
+        const result = response.data;
+
+        if (status === 200) {
+            return res.status(status).json({result});
+        } else if (status === 429) {
+            return res.status(status).json({error: "Code: 429 Too many requests with this API key"});
+        } else {
+            return res.status(status).json({error: `Code: ${status} Something went wrong`});
+        }
+    } catch (error: any) {
+        if (error.response) {
+            const status = error.response.status;
+            const errorMessage = error.response.data?.error || "An error occurred";
+
+            return res.status(status).json({error: `Code: ${status} ${errorMessage}`});
+        } else if (error.code === 'ECONNABORTED') {
+            // Handle axios timeout specifically
+            return res.status(408).json({error: "Code 408: API request taking too long"});
+        } else {
+            // Other unknown errors
+            console.error("Error in /care_advice: ", error.message);
+            return res.status(500).json({error: "Code 500: Internal server error"});
+        }
     }
 });
 
