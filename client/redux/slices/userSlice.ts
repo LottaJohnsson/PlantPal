@@ -44,7 +44,6 @@ const initialState: InitialState = {
 // create tasks from user plants
 const createTasks = (plants: UserPlant[]): Task[] => {
     return plants.map((plant: UserPlant): Task => {
-        console.log('createTasks:');
         const lastWatered = moment(plant.lastWatered);
         const wateringFrequency = plant.wateringFrequency;
 
@@ -65,7 +64,6 @@ const createTasks = (plants: UserPlant[]): Task[] => {
 
         // set type depending on the nextWateringDate, if latestWatered is today set it as done
         if (lastWatered.isSame(today, 'day')) {
-            console.log('lastWatered is today', plant);
             type = 'done';
         } else if (nextWateringDate.isSame(today, 'day')) {
             type = 'today';
@@ -137,8 +135,6 @@ export const fetchUserPlantsFromDB = createAsyncThunk<UserPlant[]>('fetchUserPla
                 imageURL: plant.image_url,
                 imageFile: plant.image_blob
             }));
-
-            console.log('Fetched user plants:', plants);
             return plants;
         });
 
@@ -150,9 +146,6 @@ export const fetchUserPlantsFromDB = createAsyncThunk<UserPlant[]>('fetchUserPla
 export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
     'plants/addPlantToProfile',
     async (plantData, {rejectWithValue, dispatch, getState}) => {
-
-        console.log('Adding plant to database:', plantData,);
-
         const state = getState() as { task: InitialState }; // Access current state
         const userPlants = state.task.userPlants;
 
@@ -210,8 +203,6 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
             return rejectWithValue('The plant does not exist in your profile.');
         }
 
-        console.log('Updating plant in database:', plantData);
-
         // Send plant name and lastWatered date to server as JSON
         const payload = {
             plantName: plantData.name,
@@ -244,9 +235,6 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
 export const removePlantFromDB = createAsyncThunk<boolean, string>(
     'plants/removePlantFromProfile',
     async (plantName, {rejectWithValue, dispatch, getState}) => {
-
-        console.log('Removing plant from database:', plantName);
-
         return axios
             .delete(`/plants/delete`, {data: {plantName}})
             .then(response => {
@@ -268,9 +256,6 @@ const userTaskSlice = createSlice({
     initialState,
     reducers: {
         addPlant: (state, action: PayloadAction<UserPlant>) => {
-
-            console.log('Adding plant to state:', action.payload);
-
             state.userPlants = [...state.userPlants, action.payload]
             state.error = null;
             // add task for the new plant
@@ -288,7 +273,6 @@ const userTaskSlice = createSlice({
         },
 
         generateTasks: (state) => {
-            console.log('Generating tasks');
             const tasks = createTasks(state.userPlants);  
             state.userTasksToday = tasks.filter((task) => task.type === 'today');
             state.userTasksLate = tasks.filter((task) => task.type === 'late');
@@ -364,24 +348,17 @@ const userTaskSlice = createSlice({
         completeTask: (state, action: PayloadAction<Task>) => {
             const task = action.payload;
 
-            console.log('Completing task:', task);
-
             // find the task in the correct array and update it, check by looking at the taskName
             const todayIndex = state.userTasksToday.findIndex((t) => t.taskName === task.taskName);
             const lateIndex = state.userTasksLate.findIndex((t) => t.taskName === task.taskName);
             const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);
 
-            console.log('Indexes:', todayIndex, lateIndex, upcomingIndex);
-
             // update the task and check if it has changed type, if so move it to the correct array and remove it from the old one
             if (todayIndex !== -1) {
-                console.log('Task is today');
                 state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);
             } else if (lateIndex !== -1) {
-                console.log('Task is late');
                 state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
             } else if (upcomingIndex !== -1) {
-                console.log('Task is upcoming');
                 state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
             }
 

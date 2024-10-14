@@ -61,10 +61,8 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
             const data = await response.json();
             if (data.success) {
-                console.log("Plant added successfully");
                 return true;
             } else {
-                console.log("Failed to add plant");
                 return false;
             }
         } catch (error) {
@@ -98,7 +96,6 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     // Method to fetch plants from the database
     const fetchPlants = async () => {
-        console.log("Fetching plants");
 
         try {
             const response = await fetch('/plants/get');
@@ -118,13 +115,8 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                         imageFile: plant.image_blob
                     };
                 });
-
-                console.log("Plants fetched successfully", plants);
-
                 return plants;
 
-            } else {
-                console.log("Failed to fetch plants");
             }
         } catch (error) {
             console.error("Error fetching plants:", error);
@@ -133,9 +125,6 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     const fetchTasks = async () => {
-
-        console.log("Fetching tasks");
-
         try {
             const response = await fetch('/plants/get');
             const data = await response.json();
@@ -164,12 +153,8 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
                     // calculate next watering date depening on wateringFrequency
                     let nextWateringDate = lastWatered;
-
-                    console.log("lastWatered", lastWatered.format('YYYY-MM-DD'));
-                    console.log("wateringFrequency", wateringFrequency);
                     if (wateringFrequency === 'Every Day') {
                         nextWateringDate = lastWatered.add(1, 'days');
-                        console.log("nextWateringDate should be on 8th??", nextWateringDate.format('YYYY-MM-DD'));
                     } else if (wateringFrequency === 'every second day') {
                         nextWateringDate = lastWatered.add(2, 'days');
                     } else if (wateringFrequency === 'weekly') {
@@ -180,8 +165,6 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
                     const today = moment();
 
-                    console.log("nextWateringDate", nextWateringDate.format('YYYY-MM-DD'));
-                    console.log("today", today.format('YYYY-MM-DD'));
                     let type = '';
 
                     if (nextWateringDate.isSame(today, 'day')) {
@@ -201,14 +184,8 @@ export const PlantProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                     };
                 });
 
-
-                console.log("Tasks fetched successfully", tasks);
-
                 setTasks(tasks);
                 return tasks;
-
-            } else {
-                console.log("Failed to fetch tasks");
             }
         } catch (error) {
             console.error("Error fetching tasks:", error);

@@ -22,7 +22,6 @@ const initialState: InitialState = {
 
 // Generates pending, fulfilled and rejected action types
 export const fetchCareAdvice = createAsyncThunk('fetchCareAdvice', (id: string) => {
-    console.log('fetching care advice');
     return axios
         .get(`plants/care_advice?query=${encodeURIComponent(id)}`)
         .then(response => response.data.result[0])

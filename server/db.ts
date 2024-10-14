@@ -36,7 +36,7 @@ export async function initializeDatabase() {
     // create users table if not exists
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
-        email VARCHAR(255) UNIQUE NOT NULL,
+        email VARCHAR(255) PRIMARY KEY,
         password VARCHAR(255) NOT NULL
       )
     `);
