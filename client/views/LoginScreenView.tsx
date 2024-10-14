@@ -45,6 +45,9 @@ export default function LoginScreenView(
                             type="email"
                             color="secondary"
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => onEmailChange(event.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key == 'Enter') onSubmit()
+                            }}
                         />
                         <TextField
                             required
@@ -53,6 +56,9 @@ export default function LoginScreenView(
                             type="password"
                             color="secondary"
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => onPasswordChange(event.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key == 'Enter') onSubmit()
+                            }}
                         />
                         <Stack direction="row" justifyContent="space-between">
                             <Typography>Don’t have an account?
@@ -66,7 +72,7 @@ export default function LoginScreenView(
                                 <Button
                                     variant="contained"
                                     sx={{backgroundColor: 'secondary.light'}}
-                                    onClick={onSubmit}
+                                    onClick={() => onSubmit()}
                                 >Sign in
                                 </Button>
                             }

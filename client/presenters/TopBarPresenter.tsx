@@ -15,13 +15,17 @@ export default function TopBarPresenter() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch()
     const [openPopUp, setOpenPopUp] = useState(false)
+    const [popupMessage, setPopUpMessage] = useState<string>('')
+    const [popupHeader, setPopUpHeader] = useState<string>('')
 
     const auth = useAppSelector(state => state.auth)
-    
+
     function buttonClick(page: string) {
         if (page == "logout") {
             dispatch(logoutUserR());
             navigate('/explore')
+            setPopUpMessage("You have been successfully logged out");
+            setPopUpHeader("Logged out")
             setOpenPopUp(true)
         } else {
             navigate('/' + page);
@@ -50,6 +54,12 @@ export default function TopBarPresenter() {
             });
 
             const json = await response.json();
+            if (!response.ok) {
+                setPopUpMessage(json.error);
+                setOpenPopUp(true);
+                setPopUpHeader("ERROR!!!")
+                return null;
+            }
             return json.result;
 
         } catch (error) {
@@ -67,7 +77,8 @@ export default function TopBarPresenter() {
                 data={data}
                 onOptionClick={onOptionClick}
             />
-            <Popup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup>
+            <Popup open={openPopUp} message={popupMessage} header={popupHeader}
+                   handleClose={() => setOpenPopUp(false)}></Popup>
         </>
     )
 

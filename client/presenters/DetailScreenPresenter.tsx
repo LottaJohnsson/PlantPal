@@ -6,16 +6,10 @@ import {useNavigate} from "react-router-dom";
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {fetchCareAdvice} from '../redux/slices/careAdviceSlice';
 
-type Props = {}
-
-//Get search result from Explore Page
-export default function DetailScreenPresenter({}: Props) {
+export default function DetailScreenPresenter() {
     const [tabIndex, setTabIndex] = useState(0);
-    const [advice, setAdvice] = useState(null);
-    const [species, setSpecies] = useState(null);
     const [query, setQuery] = useState<URLSearchParams>()
     const navigate = useNavigate();
-    const dispatch = useAppDispatch()
     const plant = useAppSelector(state => state.plant)
     const careAdvice = useAppSelector(state => state.careAdvice)
 
@@ -36,8 +30,8 @@ export default function DetailScreenPresenter({}: Props) {
     return (
         <>
             <GeneralScreenView
-                advice={careAdvice.careAdvice}
-                species={plant.currentPlant}
+                advice={careAdvice}
+                species={plant}
                 handleTabChange={handleTabChange}
                 tabIndex={tabIndex}
                 onAddToProfile={onAddToProfile}/>

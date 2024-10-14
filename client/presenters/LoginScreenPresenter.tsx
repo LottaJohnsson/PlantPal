@@ -84,7 +84,6 @@ export default function LoginScreenPresenter({}: Props) {
     }
 
     async function fetchUserData() {
-        console.log("Fetching user data");
         await dispatch(fetchUserPlantsFromDB());
         await dispatch(generateTasks());
     }
