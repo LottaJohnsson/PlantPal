@@ -133,6 +133,55 @@ class Model {
         }
     }
 
+  /**
+   * Function to remove a plant from the user's profile
+   */
+  async deletePlantFromUser(plantName: string, email: string): Promise<boolean> {
+    try {
+        const query = `
+            DELETE FROM plants
+            WHERE plant_name = ? AND user_email = ?
+        `;
+
+        await pool.query(query, [plantName, email]);
+        return true;
+    } catch (error) {
+        console.error("Error removing plant from user:", error);
+        return false;
+    }
+  }
+
+  /**
+   * Function to update a plant in the user's profile
+   * @param plantName Name of the plant
+   * @param latestWatered Latest watered date
+   * @param email User email
+   * @returns true if the plant was updated successfully
+   */
+  async updatePlantInUser(
+    plantName: string, 
+    latestWatered: string, 
+    email: string,
+  ): Promise<boolean> {
+
+    console.log("Updating plant in model!");
+    console.log("plant data:", plantName, latestWatered, email);
+      try {
+          const query = `
+              UPDATE plants
+              SET latest_watered = ?
+              WHERE plant_name = ? AND user_email = ?
+          `;
+
+          await pool.query(query, [latestWatered, plantName, email]);
+          return true;
+      } catch (error) {
+          console.error("Error updating plant in user:", error);
+          return false;
+      }
+  }
+  
+
 
 }
 

@@ -30,70 +30,88 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
     }
 
     return (
-        <Stack
-            direction="row"
-            sx={{height: '100vh', padding: 0}}
+        <div
+            style={{
+                height: '100vh',
+                width: '100vw',
+                background: 'linear-gradient(to right, white, #DFE0E2)', 
+            }}
         >
             <Stack
-                component="form"
-                spacing={2}
-                noValidate
-                autoComplete="off"
-                sx={{flex: 1, '& > :not(style)': {width: '100%'}, marginLeft: '2%'}}
+                direction="row"
+                sx={{
+                    height: '100vh',
+                    padding: '0',
+                }}
             >
-                <div style={{marginBottom: '10%', marginTop: '10%'}}>
-                    <Typography variant='h2'>Are your plants dying?</Typography>
-                    <Typography variant='h2' color="primary">Login to save them!</Typography>
-                </div>
-                <div>
-                    <Stack spacing={2}>
-                        <Typography variant='h4' color="secondary">Register</Typography>
-                        <Alert severity="error" sx={{display: error !== '' ? 'flex' : 'none'}}>{error}</Alert>
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Email"
-                            type='email'
-                            color="secondary"
-                            onChange={emailInputChanged}
-                        />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Password"
-                            type='password'
-                            color="secondary"
-                            onChange={passwordInputChanged}
-                        />
-                        <TextField
-                            required
-                            id="outlined-required"
-                            label="Confirm Password"
-                            type='password'
-                            color="secondary"
-                            onChange={confirmPasswordInputChanged}
-                        />
-                        <Stack direction="row" justifyContent="space-between">
-                            <Typography>Already have an account?
-                                <a href="#" onClick={(e) => {
-                                    e.preventDefault();
-                                    setIsLogin(true);
-                                }}> Login</a>
-                            </Typography>
-                            {loading ? 
-                                <CircularProgress /> : 
-                                <Button 
-                                    variant="contained" 
-                                    sx={{backgroundColor: "secondary.light"}} 
-                                    onClick={handleSubmit}>Register
-                                </Button>
-                        }
+                <Stack
+                    component="form"
+                    spacing={2}
+                    noValidate
+                    autoComplete="off"
+                    sx={{flex: 1, '& > :not(style)': {width: '100%'}, marginLeft: '2%'}}
+                >
+                    <div style={{marginBottom: '10%', marginTop: '10%'}}>
+                        <Typography variant='h2'>Are your plants dying?</Typography>
+                        <Typography variant='h2' color="primary.dark">Register to save them!</Typography>
+                    </div>
+                    <div>
+                        <Stack spacing={2}>
+                            <Typography variant='h4' color="secondary">Register</Typography>
+                            <Alert severity="error" sx={{display: error !== '' ? 'flex' : 'none'}}>{error}</Alert>
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Email"
+                                type='email'
+                                color="secondary"
+                                onChange={emailInputChanged}
+                            />
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Password"
+                                type='password'
+                                color="secondary"
+                                onChange={passwordInputChanged}
+                            />
+                            <TextField
+                                required
+                                id="outlined-required"
+                                label="Confirm Password"
+                                type='password'
+                                color="secondary"
+                                onChange={confirmPasswordInputChanged}
+                            />
+                            <Stack direction="row" justifyContent="space-between">
+                                <Typography>Already have an account?
+                                    <a href="#" style={{color: '#B41878'}} onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsLogin(true);
+                                    }}> Login</a>
+                                </Typography>
+                                {loading ? 
+                                    <CircularProgress /> : 
+                                    <Button 
+                                        variant="contained" 
+                                        sx={{
+                                            backgroundColor: "secondary.light",
+                                            color: "secondary.dark",
+                                            '&:hover': {
+                                                backgroundColor: 'secondary.dark',
+                                                color: 'secondary.light'
+                                            }
+                                        }} 
+                                        onClick={handleSubmit}>Register
+                                    </Button>
+                            }
+                            </Stack>
                         </Stack>
-                    </Stack>
-                </div>
+                    </div>
+                </Stack>
+                <img style={{height: '100vh', width: '100%', objectFit: 'contain', flex: 1, objectPosition: 'right bottom'}}
+                    src='elle-lumiere-Dze_6fnPIKk-unsplash.jpg' alt='Plant Image'></img>
             </Stack>
-            <img style={{height: '100vh', width: '100%', objectFit: 'contain', flex: 1, objectPosition: 'right bottom'}}
-                 src='elle-lumiere-Dze_6fnPIKk-unsplash.jpg' alt='Plant Image'></img>
-        </Stack>
+        </div>
     )
 }

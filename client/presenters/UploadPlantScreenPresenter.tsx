@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import UploadPlantScreenView from '../views/uploadPlantScreenView';
+import UploadPlantScreenView from '../Views/uploadPlantScreenView';
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {addPlantsToDB, addPlant} from '../redux/slices/userSlice'
 import {setUploadPlant} from '../redux/slices/plantSlice'
@@ -33,6 +33,16 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const successUserSlice = useAppSelector(state => state.task.success);
 
     useEffect(() => {
+        if (errorUserSlice) {
+            setErrorMessage(null);
+        }
+        if (successUserSlice) {
+            setSuccessMessage(null);
+        }
+    });
+
+    useEffect(() => {
+        
         if (errorUserSlice) {
             setErrorMessage(errorUserSlice);
         }
