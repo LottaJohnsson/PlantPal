@@ -144,8 +144,6 @@ export const fetchUserPlantsFromDB = createAsyncThunk<UserPlant[]>('fetchUserPla
                 imageURL: plant.image_url,
                 imageFile: `data:image/jpg;base64,${plant.image_blob}`,
             }));
-
-            console.log('Fetched user plants:', plants);
             return plants;
         });
 
@@ -157,9 +155,6 @@ export const fetchUserPlantsFromDB = createAsyncThunk<UserPlant[]>('fetchUserPla
 export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
     'plants/addPlantToProfile',
     async (plantData, {rejectWithValue, dispatch, getState}) => {
-
-        console.log('Adding plant to database:', plantData,);
-
         const state = getState() as { task: InitialState }; // Access current state
         const userPlants = state.task.userPlants;
 
@@ -216,8 +211,6 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
             return rejectWithValue('The plant does not exist in your profile.');
         }
 
-        console.log('Updating plant in database:', plantData);
-
         // Send plant name and lastWatered date to server as JSON
         const payload = {
             plantName: plantData.name,
@@ -250,9 +243,6 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
 export const removePlantFromDB = createAsyncThunk<boolean, string>(
     'plants/removePlantFromProfile',
     async (plantName, {rejectWithValue, dispatch, getState}) => {
-
-        console.log('Removing plant from database:', plantName);
-
         return axios
             .delete(`/plants/delete`, {data: {plantName}})
             .then(response => {
@@ -274,9 +264,6 @@ const userTaskSlice = createSlice({
     initialState,
     reducers: {
         addPlant: (state, action: PayloadAction<UserPlant>) => {
-
-            console.log('Adding plant to state:', action.payload);
-
             state.userPlants = [...state.userPlants, action.payload]
             // add task for the new plant
             const newTask = createTaskFromOnePlant(action.payload);
@@ -291,7 +278,6 @@ const userTaskSlice = createSlice({
         },
 
         generateTasks: (state) => {
-            console.log('Generating tasks');
             const tasks = createTasks(state.userPlants);  
             state.userTasksToday = tasks.filter((task) => task.type === 'today');
             state.userTasksLate = tasks.filter((task) => task.type === 'late');

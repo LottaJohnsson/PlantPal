@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import UploadPlantScreenView from '../Views/uploadPlantScreenView';
+import UploadPlantScreenView from '../views/UploadPlantScreenView';
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {addPlantsToDB, updateMessages} from '../redux/slices/userSlice'
 import {setUploadPlant} from '../redux/slices/plantSlice'
@@ -71,8 +71,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 setImageFile(null);
                 setImage(defaultImageUrl);
             }
-        } else {
-            console.log('No plant selected to use default image.');
         }
     };
 

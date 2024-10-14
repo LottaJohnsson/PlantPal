@@ -25,16 +25,12 @@ export default function ExplorePagePresenter({}: Props) {
 
     function handleNext() {
         setSlideDirection("left")
-        console.log('prev: %d', currentCards)
         setCurrentCards((prevCards) => (prevCards + 1) % (pages))
-        console.log('prevAfter: %d', currentCards)
     }
 
     function handlePrev() {
         setSlideDirection("right")
-        console.log('prev: %d', currentCards)
         setCurrentCards((prevCards) => ((prevCards - 1) % (pages) + pages) % pages)
-        console.log('prevAfter: %d', currentCards)
     }
 
 

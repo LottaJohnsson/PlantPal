@@ -1,5 +1,7 @@
 # PlantPal
 
+## Start local development
+
 ### Installation
 
 Install with
@@ -10,12 +12,15 @@ Run server and client with
 
 `npm run dev`
 
+If needed, rebuild with
+
+`npm run build:prod`
+
 ### MySQL Database setup
 
-Just follow steps, copy paste :D
-
 #### Installation
-Must install MySQL first
+
+Must install MySQL first. Use script mysql_setup.sh by running `./mysql_setup.sh` in termnial. Need to have brew. If that does not work, do a manual installation as follows
 
 `brew install mysql`
 

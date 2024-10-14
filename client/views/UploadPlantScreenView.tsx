@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Typography, Box, Button, TextField, MenuItem, CircularProgress } from '@mui/material';
 import { format } from 'date-fns'; // change to moment?
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
@@ -19,7 +19,6 @@ type Props = {
     isDragActive: boolean;
     onAddPlant: () => Promise<void>;
     selectedApiPlantId: string | null;
-    //isPlantSelected: boolean;
     handleRemoveImage: () => void;
     handleUseDefaultImage: () => void;
     usingDefaultImage: boolean;
@@ -40,11 +39,8 @@ export default function UploadPlantScreenView({
     handleSearchChange,
     handleSelectPlant,
     handleChange,
-    onDrop,
-    isDragActive,
     onAddPlant,
     selectedApiPlantId,
-    //isPlantSelected,
     handleRemoveImage,
     handleUseDefaultImage,
     usingDefaultImage,
