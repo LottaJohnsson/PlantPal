@@ -2,16 +2,18 @@ import React from 'react';
 import { Box, Typography, Grid, Button, CircularProgress } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import moment from 'moment'; // Ensure moment is imported if you use it
+import { UserPlant } from '../redux/slices/userSlice';
 
 type Props = {
   todayTasks: any[];
   lateTasks: any[];
   upcomingTasks: any[];
-  plants: any[];
+  plants: UserPlant[];
   onAddNewPlant: () => void;
   loading: boolean; // Accept loading prop
   onCompleteTask: (task: any) => void;
   doneTasks: any[];
+  onClickPlant: (plant: UserPlant) => void;
 };
 
 export default function ProfileScreenView({
@@ -23,6 +25,7 @@ export default function ProfileScreenView({
   loading,
   onCompleteTask,
   doneTasks,
+  onClickPlant,
 }: Props) {
   return (
     <Box sx={{ padding: '24px' }}>
@@ -283,8 +286,8 @@ export default function ProfileScreenView({
                 const imageSrc = plant.imageFile && !plant.imageURL ? `data:image/jpg;base64,${plant.imageFile}` : plant.imageURL;
 
                 return (
-                  <Grid item key={index} xs={6} sm={4} md={3}>
-                    <Box sx={{ textAlign: 'center', marginTop: '16px' }}>
+                  <Grid item key={index} xs={6} sm={4} md={3} >
+                    <Box sx={{ textAlign: 'center', marginTop: '16px', cursor: 'pointer' }} onClick={() => onClickPlant(plant)} >
                       {imageSrc ? (
                         <img
                           src={imageSrc}
