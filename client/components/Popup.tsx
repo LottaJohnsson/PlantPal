@@ -7,6 +7,11 @@ interface LogoutProps {
     handleClose: () => void;
 }
 
+interface addPlantProps {
+    open: boolean,
+    handleClose: () => void;
+}
+
 function LogoutPopup(props: LogoutProps) {
     return (
         <div>
@@ -34,4 +39,34 @@ function LogoutPopup(props: LogoutProps) {
     );
 }
 
-export default LogoutPopup;
+
+function AddPlantPopUp(props: addPlantProps) {
+    return (
+        <div>
+            <Dialog
+                open={props.open}
+                onClose={props.handleClose} // Close the dialog when clicking outside or pressing escape
+                aria-labelledby="logout-dialog-title"
+                aria-describedby="logout-dialog-description"
+            >
+                <DialogTitle id="logout-dialog-title">Added Plant</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="logout-dialog-description">
+                        You have successfully added the plant!
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                        <Button onClick={props.handleClose} color="primary">
+                            OK
+                        </Button>
+                    </Box>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
+}
+
+
+
+export default {LogoutPopup, AddPlantPopUp};

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Typography, Box, Button, TextField, MenuItem, CircularProgress } from '@mui/material';
 import { format } from 'date-fns'; // change to moment?
-import { useAppSelector } from '../redux/hooks'
-import { UserPlant } from '../redux/slices/userSlice'
+import {useAppSelector, useAppDispatch} from '../redux/hooks'
+import {UserPlant} from '../redux/slices/userSlice'
+import {Plant} from '../redux/slices/plantSlice'
 
 type Props = {
     image: File | null;
@@ -25,6 +26,7 @@ type Props = {
     successMessage: string | null;
     getRootProps: any;
     getInputProps: any;
+    selectedPlant: Plant | null;
 };
 
 export default function UploadPlantScreenView({
@@ -46,8 +48,8 @@ export default function UploadPlantScreenView({
     successMessage,
     getRootProps,
     getInputProps,
+    selectedPlant,
 }: Props) {
-    const selectedPlant = useAppSelector(state => state.plant.uploadPlant);
 
     return (
         <Box
@@ -88,6 +90,22 @@ export default function UploadPlantScreenView({
                 onChange={handleSearchChange}
                 sx={{ marginBottom: '16px', maxWidth: '600px' }}
             />
+
+            <Button
+                variant="contained"
+                onClick={() => handleSelectPlant({})}
+                sx={{
+                    backgroundColor: 'secondary.light',
+                    color: 'secondary.dark',
+                    margin: '8px',
+                    '&:hover': {
+                        backgroundColor: 'secondary.dark',
+                        color: 'secondary.light',
+                    },
+                }}
+            >
+                Add plant manually
+            </Button>
 
             {loading && <CircularProgress sx={{ marginBottom: '16px', color: 'secondary.dark' }} />}
 
@@ -151,21 +169,6 @@ export default function UploadPlantScreenView({
                         <Typography variant="body1">
                             Sorry, we don't recognize that plant...please add it manually!
                         </Typography>
-                        <Button
-                            variant="contained"
-                            onClick={() => handleSelectPlant({})}
-                            sx={{
-                                backgroundColor: 'secondary.light',
-                                color: 'secondary.dark',
-                                margin: '8px',
-                                '&:hover': {
-                                    backgroundColor: 'secondary.dark',
-                                    color: 'secondary.light',
-                                },
-                            }}
-                        >
-                            Add plant manually
-                        </Button>
                     </Box>
                 )
             )}
@@ -254,13 +257,13 @@ export default function UploadPlantScreenView({
                         ) : (
                             <>
                                 <Typography variant="body1">
-                                    Drag & drop or click to select an image {selectedApiPlantId && ' or use default image'}
+                                    Drag & drop or click to select an image {selectedApiPlantId && selectedPlant?.default_image?.small_url && ' or use default image'}
                                 </Typography>
                             </>
                         )}
                     </Box>
 
-                    {selectedApiPlantId && !usingDefaultImage && (
+                    {selectedApiPlantId && selectedPlant?.default_image?.small_url && !usingDefaultImage && (
                         <Button
                             variant="outlined"
                             onClick={handleUseDefaultImage}
@@ -359,8 +362,7 @@ export default function UploadPlantScreenView({
                     </Button>
 
                     {/* Error or success messages */}
-                    {errorMessage && <Typography color="error" sx={{ marginTop: '16px' }}>{errorMessage}</Typography>}
-                    {successMessage && <Typography color="success" sx={{ marginTop: '16px' }}>{successMessage}</Typography>}
+                    {errorMessage && <Typography color="red" sx={{ marginTop: '16px' }}>{errorMessage}</Typography>}
                 </Box>
             )}
         </Box>

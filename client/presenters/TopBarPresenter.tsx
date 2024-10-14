@@ -7,7 +7,7 @@ import {setCurrentPlant} from '../redux/slices/plantSlice'
 import {Plant} from '../redux/slices/plantSlice';
 import axios from 'axios';
 import {fetchCareAdvice} from "../redux/slices/careAdviceSlice";
-import Popup from "../components/Popup";
+import Popup from "../components/PopUp";
 import {logoutUserR} from "../redux/slices/authSlice";
 
 export default function TopBarPresenter() {
@@ -67,7 +67,7 @@ export default function TopBarPresenter() {
                 data={data}
                 onOptionClick={onOptionClick}
             />
-            <Popup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup>
+            <Popup.LogoutPopup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup.LogoutPopup>
         </>
     )
 
