@@ -5,7 +5,7 @@ import GeneralScreen from "./presenters/DetailScreenPresenter";
 import AboutScreen from "./presenters/AboutScreenPresenter";
 import ExplorePage from "./presenters/ExplorePagePresenter";
 import TopBar from "./presenters/TopBarPresenter";
-import MyPlantInfo from "./Controllers/MyPlantInfoController";
+import MyPlantInfo from "./presenters/MyPlantInfoPresenter";
 import Button from '@mui/material/Button';
 import LoginScreenPresenter from "./presenters/LoginScreenPresenter";
 import {ThemeProvider} from "@mui/material/styles";

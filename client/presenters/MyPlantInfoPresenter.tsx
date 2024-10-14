@@ -4,7 +4,7 @@ import { usePlant, Plant, Task } from '../Contexts/plantContext';
 
 type Props = {}
 
-export default function MyPlantInfoController({}: Props) {
+export default function MyPlantInfoPresenter({}: Props) {
   const [advice, setAdvice] = useState(null)
   const [species, setSpecies] = useState(null)
   const {search, fetchPlants, fetchTasks} = usePlant()
