@@ -16,6 +16,11 @@ const customTheme = createTheme({
         },
         info: {
             main: '#F7F7F7',
+        },
+        warning: {
+            main: '#DD5656',
+            light: '#FFB9B9',
+            dark: '#DD5656'
         }
 
     },
