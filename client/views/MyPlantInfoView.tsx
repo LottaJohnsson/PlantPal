@@ -80,7 +80,7 @@ export default function MyPlantInfoView({
             
             <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
                 <Stack direction="row" alignItems={"left"} spacing={2}>
-                    <img src={plant?.imageFile && !plant?.imageURL ? `data:image/jpg;base64,${plant?.imageFile}` : plant?.imageURL} alt={"plant image"} style={{
+                    <img src={plant?.imageFile && !plant?.imageURL ? plant?.imageFile : plant?.imageURL} alt={plant?.name} style={{
                         height: '300px',
                         objectFit: 'contain',
                         flex: 1,

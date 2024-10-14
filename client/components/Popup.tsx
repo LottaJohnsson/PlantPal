@@ -67,6 +67,33 @@ function AddPlantPopUp(props: addPlantProps) {
     );
 }
 
+function RemovePlantPopUp(props: addPlantProps) {
+    return (
+        <div>
+            <Dialog
+                open={props.open}
+                onClose={props.handleClose} // Close the dialog when clicking outside or pressing escape
+                aria-labelledby="remove-dialog-title"
+                aria-describedby="remove-dialog-description"
+            >
+                <DialogTitle id="remove-dialog-title">Removed Plant</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="remove-dialog-description">
+                        You have successfully removed the plant
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Box sx={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                        <Button onClick={props.handleClose} color="primary">
+                            OK
+                        </Button>
+                    </Box>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
+}
 
 
-export default {LogoutPopup, AddPlantPopUp};
+
+export default {LogoutPopup, AddPlantPopUp, RemovePlantPopUp};

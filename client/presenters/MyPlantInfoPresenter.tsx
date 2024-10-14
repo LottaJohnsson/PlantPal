@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { fetchPlants, setCurrentPlant } from '../redux/slices/plantSlice';
 import { fetchCareAdvice } from '../redux/slices/careAdviceSlice';
 import { useNavigate } from 'react-router-dom';
+import Popup from "../components/PopUp";
 
 type Props = {}
 
@@ -18,6 +19,8 @@ export default function MyPlantInfoPresenter({}: Props) {
   const [lateTasks, setLateTasks] = useState<Task[]>([])
   const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([])
   const [doneTasks, setDoneTasks] = useState<Task[]>([])
+
+  const [openPopUp, setOpenPopUp] = useState(false)
 
   // Redux
   const dispatch = useAppDispatch()
@@ -38,23 +41,23 @@ export default function MyPlantInfoPresenter({}: Props) {
   // Called at the start
   useEffect(() => {
     fetchPlantData();
-    // fetchSpeciesData();
   }, [])
+
+  useEffect(() => {
+    setPlant(userPlants.find((plant) => plant.name === plant_name))
+  }, [userPlants])
+
+  useEffect(() => {
+    fetchSpeciesData()
+  }, [plant])
 
   // Called when there is a change in userTasksToday, userTasksLate, userTasksUpcoming or userTasksDone
   useEffect(() => {
-    setPlant(userPlants.find((plant) => plant.name === plant_name))
     setLateTasks(userTasksLate);
     setUpcomingTasks(userTasksToday.concat(userTasksUpcoming));
     setDoneTasks(userTasksDone);
 
-  }, [userPlants, userTasksToday, userTasksLate, userTasksUpcoming, userTasksDone])
-
-  useEffect(() => {
-    
-
-  }, [species, advice])
-
+  }, [userTasksToday, userTasksLate, userTasksUpcoming, userTasksDone])
 
   const fetchPlantData = async () => {
     if (userPlants.length === 0) {
@@ -69,12 +72,43 @@ export default function MyPlantInfoPresenter({}: Props) {
   }
 
   const fetchSpeciesData = async () => {
-    const id = queryParams.get('id')
-    const name = queryParams.get('name')
 
     console.log("fetching species data")
 
-    if (id && name) {
+    if (plant?.id.length !== 0 && plant !== undefined) {
+      console.log('Plant has id: %s', plant?.id)
+
+      if (plant.id !==species.currentPlant?.id) {
+        console.log("Id does not matched saved species")
+
+        try {
+          console.log("Try to fetch specific species info through id")
+          const response = await fetch(`plants/search?query=${encodeURIComponent(plant.id)}`, {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json"
+              }
+          });
+
+          const json = await response.json();
+          console.log("received result");
+          console.log(response.status)
+          console.log(JSON.stringify(json))
+          const currentPlant = json.result.find((res: { id: { toString: () => string; }; }) => res.id.toString() === plant.id);
+
+          console.log(currentPlant)
+
+          dispatch(setCurrentPlant(currentPlant[0]))
+          dispatch(fetchCareAdvice(currentPlant[0].id))
+        } catch (error) {
+          console.error("Error fetching species data in fetchSpeciesData():", error);
+        }
+      } else {
+        console.log("Id does match current save species")
+      }
+    }
+
+    /* if (id && name) {
       console.log("ID and Name in url")
       if (id !== species.currentPlant?.id ) {
         console.log("Id does not matched saved species")
@@ -98,7 +132,7 @@ export default function MyPlantInfoPresenter({}: Props) {
           console.error("Error fetching species data in fetchSpeciesData():", error);
         }
       }
-    }
+    } */
   }
 
   function handleTabChange(event: React.SyntheticEvent, tabindex: number) {
@@ -109,22 +143,31 @@ export default function MyPlantInfoPresenter({}: Props) {
     if(plant) {
       console.log('remove plant: %s',plant.name)
       await dispatch(removePlantFromDB(plant.name))
-      navigate('/profile')
+      setOpenPopUp(true)
     } else {
       console.error("Cannot find plant")
     }
   }
 
+  function handlePopupClose() {
+    setOpenPopUp(false)
+    console.log("Close popup")
+    navigate('/profile')
+  } 
+
   return (
-    <MyPlantInfoView 
-      species={species} 
-      advice={advice} 
-      plant={plant}
-      upcomingTasks={upcomingTasks}
-      lateTasks={lateTasks}
-      doneTasks={doneTasks}
-      handleTabChange={handleTabChange} 
-      tabIndex={tabIndex} 
-      onRemoveFromProfile={onRemoveFromProfile}/>
+    <>
+      <MyPlantInfoView 
+        species={species} 
+        advice={advice} 
+        plant={plant}
+        upcomingTasks={upcomingTasks}
+        lateTasks={lateTasks}
+        doneTasks={doneTasks}
+        handleTabChange={handleTabChange} 
+        tabIndex={tabIndex} 
+        onRemoveFromProfile={onRemoveFromProfile}/>
+      <Popup.RemovePlantPopUp open={openPopUp} handleClose={handlePopupClose}></Popup.RemovePlantPopUp>
+    </>
   )
 }
