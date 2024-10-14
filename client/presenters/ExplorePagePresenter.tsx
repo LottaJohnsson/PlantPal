@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import ExplorePageView from '../Views/ExplorePageView'
+import ExplorePageView from '../views/ExplorePageView'
 import {Card} from '@mui/material'
 
 type Props = {}

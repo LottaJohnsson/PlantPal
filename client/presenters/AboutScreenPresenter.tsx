@@ -1,5 +1,5 @@
 import React from 'react'
-import AboutScreenView from "../Views/AboutScreenView";
+import AboutScreenView from "../views/AboutScreenView";
 
 type Props = {}
 
