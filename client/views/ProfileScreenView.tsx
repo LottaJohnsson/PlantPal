@@ -2,17 +2,17 @@ import React from 'react';
 import { Box, Typography, Grid, Button, CircularProgress } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import moment from 'moment'; // Ensure moment is imported if you use it
-import { UserPlant } from '../redux/slices/userSlice';
+import { Task, UserPlant } from '../redux/slices/userSlice';
 
 type Props = {
-  todayTasks: any[];
-  lateTasks: any[];
-  upcomingTasks: any[];
+  todayTasks: Task[];
+  lateTasks: Task[];
+  upcomingTasks: Task[];
   plants: UserPlant[];
   onAddNewPlant: () => void;
   loading: boolean; // Accept loading prop
   onCompleteTask: (task: any) => void;
-  doneTasks: any[];
+  doneTasks: Task[];
   onClickPlant: (plant: UserPlant) => void;
 };
 
