@@ -2,12 +2,12 @@ import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Paper, St
 import React, { SyntheticEvent } from 'react'
 import PlantTable from "../components/PlantTable";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Plant } from '../Contexts/plantContext';
+import { UserPlant } from '../redux/slices/userSlice';
 
 interface Props {
     advice: any,
     species: any,
-    plant: Plant | undefined,
+    plant: UserPlant | undefined,
     lateTasks: any[],
     upcomingTasks: any[],
     doneTasks: any[],
@@ -16,7 +16,7 @@ interface Props {
     tabIndex: number
 }
 
-interface TabPanelProps {
+/* interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
@@ -62,7 +62,7 @@ function CareAdviceTabs(props: any) {
             ))}
         </Box>
     )
-}
+} */
 
 export default function MyPlantInfoView({
     species,
@@ -120,11 +120,11 @@ export default function MyPlantInfoView({
                         </Stack>
                     </Stack>
                 </Stack>
-                <Stack direction="row" spacing={5}>
-                    <CareAdviceTabs section={advice[0].section} handleTabChange={handleTabChange} tabIndex={tabIndex}>
+                {/* <Stack direction="row" spacing={5}>
+                    <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange} tabIndex={tabIndex}>
                     </CareAdviceTabs>
-                <PlantTable  plant={species[0]}/>
-                </Stack>
+                <PlantTable  plant={species}/>
+                </Stack> */}
                 <Typography variant='h4'>
                     Completed Tasks
                 </Typography>
