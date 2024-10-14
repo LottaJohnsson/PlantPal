@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import MyPlantInfoView from '../Views/MyPlantInfoView'
 import { usePlant } from '../Contexts/plantContext';
-import { UserPlant, Task, fetchUserPlantsFromDB, generateTasks, removePlantFromDB } from '../redux/slices/userSlice';
+import { UserPlant, Task, fetchUserPlantsFromDB, generateTasks, removePlantFromDB, completeTask, updatePlantInDB } from '../redux/slices/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { fetchPlants, setCurrentPlant } from '../redux/slices/plantSlice';
 import { fetchCareAdvice } from '../redux/slices/careAdviceSlice';
@@ -155,6 +155,12 @@ export default function MyPlantInfoPresenter({}: Props) {
     navigate('/profile')
   } 
 
+  const onCompleteTask = async (completedTask: Task) => {
+    dispatch(completeTask(completedTask));
+    // update db also
+    await dispatch(updatePlantInDB(completedTask.plantName));
+  }
+
   return (
     <>
       <MyPlantInfoView 
@@ -166,7 +172,9 @@ export default function MyPlantInfoPresenter({}: Props) {
         doneTasks={doneTasks}
         handleTabChange={handleTabChange} 
         tabIndex={tabIndex} 
-        onRemoveFromProfile={onRemoveFromProfile}/>
+        onRemoveFromProfile={onRemoveFromProfile}
+        onCompleteTask={onCompleteTask}
+      />
       <Popup.RemovePlantPopUp open={openPopUp} handleClose={handlePopupClose}></Popup.RemovePlantPopUp>
     </>
   )

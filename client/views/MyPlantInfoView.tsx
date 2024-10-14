@@ -2,18 +2,20 @@ import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Paper, St
 import React, { SyntheticEvent } from 'react'
 import PlantTable from "../components/PlantTable";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { UserPlant } from '../redux/slices/userSlice';
+import { Task, UserPlant } from '../redux/slices/userSlice';
+import TaskBox from '../components/TaskBox'
 
 interface Props {
     advice: any,
     species: any,
     plant: UserPlant | undefined,
-    lateTasks: any[],
-    upcomingTasks: any[],
-    doneTasks: any[],
+    lateTasks: Task[],
+    upcomingTasks: Task[],
+    doneTasks: Task[],
     handleTabChange: (event: SyntheticEvent<Element, Event>, tabindex: number) => void,
     onRemoveFromProfile: () => void,
-    tabIndex: number
+    tabIndex: number,
+    onCompleteTask: (task: Task) => void;
 }
 
 /* interface TabPanelProps {
@@ -74,6 +76,7 @@ export default function MyPlantInfoView({
     handleTabChange,
     tabIndex,
     onRemoveFromProfile,
+    onCompleteTask,
 }: Props) {
     if (species && advice) {
         return (
@@ -93,30 +96,27 @@ export default function MyPlantInfoView({
                         <Button variant="contained" color='primary' onClick={() => onRemoveFromProfile()} endIcon={<DeleteIcon/>} fullWidth={false} >
                             Remove plant
                         </Button>
-                        <Typography variant='h4'>
-                            Upcoming Tasks
-                        </Typography>
-                        <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
-                            {lateTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                                <Card key={index}>
-                                    <CardHeader flex={1} title={task.date} titleTypographyProps={{color: "info", variant: "body1"}} sx={{backgroundColor: "#B41878"}}/>
-                                    <CardContent sx={{height: "100%", backgroundColor: "#F1B6DA"}}>
-                                        <Typography variant='body1'>
-                                            {task.taskName }
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                            {upcomingTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                                <Card key={index}>
-                                    <CardHeader flex={1} title={task.date} titleTypographyProps={{color: "info", variant: "body1"}} sx={{backgroundColor: "#B41878"}}/>
-                                    <CardContent sx={{height: "100%", backgroundColor: "#F1B6DA"}}>
-                                        <Typography variant='body1'>
-                                            {task.taskName}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            ))}
+                        <Stack direction="row" spacing={2}>
+                            <Stack  direction="column" flex={4} spacing={2}>
+                                <Typography variant='h4'>
+                                    Late Tasks
+                                </Typography>
+                                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
+                                    {lateTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
+                                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
+                                    ))}
+                                </Stack>
+                            </Stack>
+                            <Stack  direction="column" flex={4} spacing={2}>
+                                <Typography variant='h4'>
+                                    UpcomingTasks
+                                </Typography>
+                                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
+                                    {upcomingTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
+                                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
+                                    ))}
+                                </Stack>
+                            </Stack>
                         </Stack>
                     </Stack>
                 </Stack>
@@ -130,14 +130,7 @@ export default function MyPlantInfoView({
                 </Typography>
                 <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
                     {doneTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                        <Card key={index}>
-                            <CardHeader flex={1} title={task.date} titleTypographyProps={{color: "info", variant: "body1"}} sx={{backgroundColor: "#B41878"}}/>
-                            <CardContent sx={{height: "100%", backgroundColor: "#F1B6DA"}}>
-                                <Typography variant='body1'>
-                                    {task.taskName }
-                                </Typography>
-                            </CardContent>
-                        </Card>
+                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
                     ))}
                 </Stack>
             </Stack>
