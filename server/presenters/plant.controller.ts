@@ -128,14 +128,14 @@ router.get("/search", async (req: Request, res: Response) => {
     try {
         console.log("Starting to search");
         const response = await searchSpecies(query as string);
-        console.log("Response status: " + response.status);
+        console.log("Response " + response);
 
         const status = response.status;
         const result = response.data;
 
         if (status === 200) {
             console.log(result);
-            return res.status(status).json({result});
+            return res.status(status).json(result);
         } else if (status === 429) {
             return res.status(status).json({error: "Code: 429 Too many requests with this API key"});
         } else {
@@ -143,6 +143,7 @@ router.get("/search", async (req: Request, res: Response) => {
         }
     } catch (error: any) {
         if (error.response) {
+            console.log(error)
             // Error from the server
             const status = error.response.status;
             const errorMessage = error.response.data?.error || "An error occurred";
@@ -171,7 +172,7 @@ router.get("/care_advice", async (req: Request, res: Response) => {
 
         if (status === 200) {
             console.log(result);
-            return res.status(status).json({result});
+            return res.status(status).json(result);
         } else if (status === 429) {
             return res.status(status).json({error: "Code: 429 Too many requests with this API key"});
         } else {

@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import GeneralScreenView from "../views/GeneralScreenView";
-import {getCareAdvice, searchSpecies} from "../../server/models/plantModel";
-import TopBarPresenter from "./TopBarPresenter";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {fetchCareAdvice} from '../redux/slices/careAdviceSlice';
+import {setUploadPlant} from "../redux/slices/plantSlice";
 
 export default function DetailScreenPresenter() {
     const [tabIndex, setTabIndex] = useState(0);
@@ -12,7 +11,8 @@ export default function DetailScreenPresenter() {
     const navigate = useNavigate();
     const plant = useAppSelector(state => state.plant)
     const careAdvice = useAppSelector(state => state.careAdvice)
-
+    const dispatch = useAppDispatch();
+    
     function handleTabChange(event: React.SyntheticEvent, tabindex: number) {
         setTabIndex(tabindex);
     }
@@ -21,8 +21,8 @@ export default function DetailScreenPresenter() {
         if (query != null) {
             const id = query.get('id') as string;
             const name = query.get('name') as string;
-
-            navigate(`/upload?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`);
+            dispatch(setUploadPlant(plant.currentPlant));
+            navigate(`/upload`);
         }
     }
 

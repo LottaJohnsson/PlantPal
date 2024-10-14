@@ -39,7 +39,7 @@ const initialState: PlantState = {
 export const fetchPlants = createAsyncThunk('fetchPlants', (query: string) => {
     return axios
         .get(`plants/search?query=${encodeURIComponent(query)}`)
-        .then(response => response.data.result)
+        .then(response => response.data)
 })
 
 const plantSlice = createSlice({
@@ -47,6 +47,7 @@ const plantSlice = createSlice({
     initialState,
     reducers: {
         setCurrentPlant: (state, action: PayloadAction<Plant>) => {
+            console.log("setting current plant");
             state.currentPlant = action.payload
         },
         setUploadPlant: (state, action: PayloadAction<Plant | null>) => {
