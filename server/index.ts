@@ -1,9 +1,9 @@
 import express, {Request, Response, NextFunction} from "express";
 import session from "express-session";
 import path from "path";
-import authRouter from "./Controllers/auth.controller";
+import authRouter from "./presenters/auth.controller";
 import morgan from "morgan";
-import plantRouter from "./Controllers/plant.controller";
+import plantRouter from "./presenters/plant.controller";
 
 
 const app = express();

@@ -1,13 +1,14 @@
 import React from "react";
 import {AppBar, Box, Toolbar, Typography, Button, Autocomplete, TextField} from "@mui/material";
 import {Plant} from '../redux/slices/plantSlice';
+
 //import SearchBar from "../Controllers/SearchBarController";
 
 interface TopBarProps {
     isAuthenticated: boolean,
     onInputChange: (query: string) => void,
     data: Plant[],
-    buttonClick: (page: any) => void;
+    buttonClick: (page: string) => void;
     onOptionClick: (plant: Plant) => void;
 }
 
@@ -34,7 +35,6 @@ function TopBar(
                     >
                     </img>
 
-
                     <Typography variant="h3" component="div" color="primary.dark" sx={{flexGrow: 1}}>
                         PlantPal
                     </Typography>
@@ -54,7 +54,7 @@ function TopBar(
                         renderInput={(params) => (
                             <TextField
                                 sx={{
-                                    width: "300px",
+                                    width: "400px",
                                 }}
                                 {...params}
                                 label="Search for a plant"
@@ -67,7 +67,7 @@ function TopBar(
                             />
                         )}
                     />
-                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-start', gap: 2}}>
+                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-end', gap: 2}}>
                         {isAuthenticated && (<Button
                             color="secondary"
                             onClick={() => buttonClick("profile")}

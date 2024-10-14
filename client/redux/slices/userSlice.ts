@@ -2,6 +2,7 @@ import axios from 'axios'
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 import moment from "moment/moment";
 import { add } from 'date-fns';
+import { LastPageSharp } from '@mui/icons-material';
 
 export type Task = {
     date: string;
@@ -43,6 +44,7 @@ const initialState: InitialState = {
 // create tasks from user plants
 const createTasks = (plants: UserPlant[]): Task[] => {
     return plants.map((plant: UserPlant): Task => {
+        console.log('createTasks:');
         const lastWatered = moment(plant.lastWatered);
         const wateringFrequency = plant.wateringFrequency;
 
@@ -61,13 +63,18 @@ const createTasks = (plants: UserPlant[]): Task[] => {
         const today = moment();
         let type = '';
 
-        if (nextWateringDate.isSame(today, 'day')) {
+        // set type depending on the nextWateringDate, if latestWatered is today set it as done
+        if (lastWatered.isSame(today, 'day')) {
+            console.log('lastWatered is today', plant);
+            type = 'done';
+        } else if (nextWateringDate.isSame(today, 'day')) {
             type = 'today';
         } else if (nextWateringDate.isBefore(today, 'day')) {
             type = 'late';
-        } else {
+        } else if (nextWateringDate.isAfter(today, 'day')) {
             type = 'upcoming';
         }
+
 
         return {
             date: nextWateringDate.format('YYYY-MM-DD'),
@@ -118,7 +125,6 @@ const createTaskFromOnePlant = (plant: UserPlant): Task => {
 
 // Fetch user plants 
 export const fetchUserPlantsFromDB = createAsyncThunk<UserPlant[]>('fetchUserPlants', () => {
-    console.log('Fetching user plants');
     return axios
         .get(`/plants/get`)
         .then(response => {
@@ -211,8 +217,6 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
             plantName: plantData.name,
             lastWatered: moment().format('YYYY-MM-DD'),
         };
-
-        console.log('Payload:', payload);
 
         return axios
             .post(`/plants/update`, payload, {
@@ -388,7 +392,7 @@ const userTaskSlice = createSlice({
             if (plantIndex !== -1) {
                 state.userPlants[plantIndex].lastWatered = moment().format('YYYY-MM-DD');
             }
-            
+
 
         }
     },

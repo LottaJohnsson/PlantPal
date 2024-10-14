@@ -52,7 +52,8 @@ export const logoutUserR = createAsyncThunk(
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+    },
     extraReducers: (builder) => {
         builder.addCase(loginUserR.pending, (state: AuthState) => {
             state.loading = true;
