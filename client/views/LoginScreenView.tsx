@@ -20,6 +20,25 @@ export default function LoginScreenView(
         onSubmit
     }: Props) {
 
+        const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+            if (event.key === 'Enter') {
+                onSubmit();
+            }
+        };
+
+        function emailInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
+            onEmailChange(event.target.value)
+        }
+    
+        function passwordInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
+            onPasswordChange(event.target.value)
+        } 
+    
+        function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+            event.preventDefault()
+            onSubmit()
+        }
+
         return (
             <div
                 style={{
@@ -40,6 +59,7 @@ export default function LoginScreenView(
                         noValidate
                         autoComplete="off"
                         sx={{ flex: 1, '& > :not(style)': { width: '100%' }, marginLeft: '2%' }}
+                        onKeyDown={handleKeyDown}
                     >
                         <div style={{ marginBottom: '10%', marginTop: '10%' }}>
                             <Typography variant='h2'>Are your plants dying?</Typography>
@@ -55,7 +75,7 @@ export default function LoginScreenView(
                                     label="Email"
                                     type="email"
                                     color="secondary"
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => onEmailChange(event.target.value)}
+                                    onChange={emailInputChanged}
                                 />
                                 <TextField
                                     required
@@ -63,7 +83,7 @@ export default function LoginScreenView(
                                     label="Password"
                                     type="password"
                                     color="secondary"
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => onPasswordChange(event.target.value)}
+                                    onChange={passwordInputChanged}
                                 />
                                 <Stack direction="row" justifyContent="space-between">
                                     <Typography>Don’t have an account?
@@ -84,7 +104,7 @@ export default function LoginScreenView(
                                                     color: 'secondary.light'
                                                 }
                                             }}
-                                            onClick={onSubmit}
+                                            onClick={handleSubmit}
                                         >
                                             Sign in
                                         </Button>

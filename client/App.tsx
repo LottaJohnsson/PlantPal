@@ -1,6 +1,5 @@
 import React from "react";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import HomeScreen from "./presenters/HomeScreenPresenter";
 import GeneralScreen from "./presenters/DetailScreenPresenter";
 import AboutScreen from "./presenters/AboutScreenPresenter";
 import ExplorePage from "./presenters/ExplorePagePresenter";
@@ -21,7 +20,6 @@ const App: React.FC = () => {
                 <Routes>
                     {/*Public Routes*/}
                     <Route path="/"/>
-                    <Route path="/home" element={<HomeScreen/>}/>
                     <Route path="/explore" element={<ExplorePage/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<LoginScreenPresenter/>}/>
