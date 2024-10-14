@@ -12,17 +12,18 @@ import {
     Link,
     styled,
     alpha,
-    InputBase
+    InputBase, Grid, TextField, CircularProgress, Button
 } from "@mui/material"
 import {NavigateBefore, NavigateNext} from "@mui/icons-material"
 import SearchBar from "../presenters/SearchBarController";
 
 type Props = {
     slideDirection: "right" | "left" | undefined
-    cards: Array<React.ReactElement>
+    cards: any
     currentCards: number
     handleNext: () => void
     handlePrev: () => void
+    searchResult: any
 }
 
 export default function ExplorePageView({slideDirection, cards, currentCards, handleNext, handlePrev}: Props) {
@@ -64,26 +65,119 @@ export default function ExplorePageView({slideDirection, cards, currentCards, ha
                     justifyContent: "center",
                     overflow: 'hidden'
                 }}>
+
+
+                    {/* Search bar */}
+                    <TextField
+                        label="Search for a plant"
+                        variant="outlined"
+                        fullWidth
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        sx={{ marginBottom: '16px', maxWidth: '600px' }}
+                    />
+
+                    {loading && <CircularProgress sx={{ marginBottom: '16px', color: 'secondary.dark' }} />}
+
+                    {searchResult.length > 0 ? (
+                        <Box sx={{ marginBottom: '16px', width: '100%', maxWidth: '600px' }}>
+                            {searchResult.map((plant: any) => (
+                                <Box
+                                    key={plant.id}
+                                    sx={{
+                                        marginBottom: '16px',
+                                        marginTop: '16px',
+                                        borderRadius: '8px',
+                                        padding: '16px',
+                                        backgroundColor: 'info.main',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Typography variant="h5">
+                                        {plant.common_name || plant.scientific_name}
+                                    </Typography>
+                                    {plant.default_image?.original_url && (
+                                        <img
+                                            src={plant.default_image.original_url}
+                                            alt={plant.common_name || plant.scientific_name}
+                                            style={{
+                                                width: '100px',
+                                                height: '100px',
+                                                objectFit: 'cover',
+                                                marginBottom: '8px',
+                                                marginTop: '8px',
+                                                border: '2px solid #B41878',
+                                            }}
+                                        />
+                                    )}
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => handleSelectPlant(plant)}
+                                        sx={{
+                                            backgroundColor: 'secondary.light',
+                                            color: 'secondary.dark',
+                                            margin: '8px',
+                                            '&:hover': {
+                                                backgroundColor: 'secondary.dark',
+                                                color: 'secondary.light',
+                                            },
+                                        }}
+                                    >
+                                        Use this plant
+                                    </Button>
+                                </Box>
+                            ))}
+                        </Box>
+                    ) : (
+                        searchResult.length === 0 &&
+                        !selectedPlant &&
+                        searchQuery &&
+                        !loading && (
+                            <Box sx={{ marginBottom: '16px' }}>
+                                <Typography variant="body1">
+                                    Sorry, we don't recognize that plant...please add it manually!
+                                </Typography>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => handleSelectPlant({})}
+                                    sx={{
+                                        backgroundColor: 'secondary.light',
+                                        color: 'secondary.dark',
+                                        margin: '8px',
+                                        '&:hover': {
+                                            backgroundColor: 'secondary.dark',
+                                            color: 'secondary.light',
+                                        },
+                                    }}
+                                >
+                                    Add plant manually
+                                </Button>
+                            </Box>
+                        )
+                    </Grid>
                     <Stack direction="row" spacing={2}>
-                        {cards.map((card, index) => (
-                            <Slide key={`card-${index}`} direction={slideDirection}
-                                   in={(index >= currentCards * 4 && index <= currentCards * 4 + 4 - 1)} appear={false}>
+                        {cards.map((card: any) => (
+                            <Slide key={`card-${card.index}`} direction={slideDirection}
+                                   in={(card.index >= currentCards * 4 && card.index <= currentCards * 4 + 4 - 1)}
+                                   appear={false}>
                                 <Box sx={{
                                     textAlign: "center",
-                                    display: (index >= currentCards * 4 && index <= currentCards * 4 + 4 - 1) ? "block" : "none",
+                                    display: (card.index >= currentCards * 4 && card.index <= currentCards * 4 + 4 - 1) ? "block" : "none",
                                     overflow: 'hidden'
                                 }}>
                                     <Card variant="outlined" sx={{borderColor: '#B41878', borderRadius: 0}}>
                                         <CardActionArea>
                                             <CardMedia component="img"
-                                                       image="https://www.w3schools.com/images/w3schools_green.jpg"
+                                                       image={card.image}
                                                        alt="green iguana"/>
                                         </CardActionArea>
                                     </Card>
 
                                     <Link sx={{color: 'secondary.main', cursor: "pointer"}} variant='body1'
                                           underline='hover'>
-                                        Plant {index}
+                                        {card.name}
                                     </Link>
                                 </Box>
                             </Slide>
