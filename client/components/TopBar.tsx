@@ -54,7 +54,7 @@ function TopBar(
                         renderInput={(params) => (
                             <TextField
                                 sx={{
-                                    width: "300px",
+                                    width: "400px",
                                 }}
                                 {...params}
                                 label="Search for a plant"
@@ -67,7 +67,7 @@ function TopBar(
                             />
                         )}
                     />
-                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-start', gap: 2}}>
+                    <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-end', gap: 2}}>
                         {isAuthenticated && (<Button
                             color="secondary"
                             onClick={() => buttonClick("profile")}
