@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import UploadPlantScreenView from '../Views/uploadPlantScreenView';
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
-import {addPlantsToDB, resetMessages} from '../redux/slices/userSlice'
+import {addPlantsToDB, updateMessages} from '../redux/slices/userSlice'
 import {setUploadPlant} from '../redux/slices/plantSlice'
 import {UserPlant} from '../redux/slices/userSlice'
 import {useDropzone} from 'react-dropzone';
 import Popup from "../components/PopUp";
 import {useNavigate} from "react-router-dom";
+import { unwrapResult } from '@reduxjs/toolkit';
+
 
 
 type Props = {};
@@ -28,7 +30,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [image, setImage] = useState<string | null>(null);
     const [usingDefaultImage, setUsingDefaultImage] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    //const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const dispatch = useAppDispatch();
     const selectedPlant = useAppSelector(state => state.plant.uploadPlant);
     const errorUserSlice = useAppSelector(state => state.task.error);
@@ -161,7 +163,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
 
         // Validate the form before adding the plant
         if (!isFormValid()) {
-            setErrorMessage("You need to fill in everything to add the plant!");
+            dispatch(updateMessages({error: "You need to fill in everything to add the plant!"}));
             return;
         }
 
@@ -174,16 +176,17 @@ export default function UploadPlantScreenPresenter({}: Props) {
             imageFile: formData.imageFile,
         };
 
-        // Add the plant to db and get the action result
-        await dispatch(addPlantsToDB(plantData));
-
-        // PopUp
-        setOpenPopUp(true);
-
-        // navigate to profile page
-        navigate('/profile');
-        
-
+        try {
+            // Dispatch the action and unwrap the result to catch any errors
+            const resultAction = await dispatch(addPlantsToDB(plantData));
+            const result = unwrapResult(resultAction);
+    
+            // If successful, show the popup
+            setOpenPopUp(true);
+        } catch (error) {
+            // If there's an error, dispatch the appropriate error message
+            console.log('Error adding plant:', error);
+        }
     };
 
 
@@ -224,7 +227,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 getInputProps={getInputProps}
                 selectedPlant={selectedPlant}
             />
-            <Popup open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup>
+            <Popup.AddPlantPopUp open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup.AddPlantPopUp>
         </>
     );
 }

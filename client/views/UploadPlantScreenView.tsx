@@ -367,7 +367,6 @@ export default function UploadPlantScreenView({
 
                     {/* Error or success messages */}
                     {errorMessage && <Typography color="red" sx={{ marginTop: '16px' }}>{errorMessage}</Typography>}
-                    {successMessage && <Typography color="success" sx={{ marginTop: '16px' }}>{successMessage}</Typography>}
                 </Box>
             )}
         </Box>

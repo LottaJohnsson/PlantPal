@@ -300,50 +300,47 @@ const userTaskSlice = createSlice({
         },
 
         completeTask: (state, action: PayloadAction<Task>) => {
-            const task = action.payload;
-
+            let task = action.payload;
+        
             console.log('Completing task:', task);
-
-            // find the task in the correct array and update it, check by looking at the taskName
+        
+            // Find the task in the correct array and remove it
             const todayIndex = state.userTasksToday.findIndex((t) => t.taskName === task.taskName);
             const lateIndex = state.userTasksLate.findIndex((t) => t.taskName === task.taskName);
             const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);
-
+        
             console.log('Indexes:', todayIndex, lateIndex, upcomingIndex);
-
-            // update the task and check if it has changed type, if so move it to the correct array and remove it from the old one
+        
             if (todayIndex !== -1) {
-                console.log('Task is today');
                 state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);
             } else if (lateIndex !== -1) {
-                console.log('Task is late');
                 state.userTasksLate = state.userTasksLate.filter((t) => t.taskName !== task.taskName);
             } else if (upcomingIndex !== -1) {
-                console.log('Task is upcoming');
                 state.userTasksUpcoming = state.userTasksUpcoming.filter((t) => t.taskName !== task.taskName);
             }
-
-            // check so that if it already conists in the done array, it does not get added again
+        
+            // Check if the task already exists in the done array
             const doneIndex = state.userTasksDone.findIndex((t) => t.taskName === task.taskName);
             if (doneIndex !== -1) {
                 return;
             }
-            // change date to today
-            task.date = moment().format('YYYY-MM-DD');
-            state.userTasksDone = [...state.userTasksDone, task];
-
-            // update plant state width new lastWatered date
+        
+            // Make a shallow copy of the task and modify the date
+            const updatedTask = { ...task, date: moment().format('YYYY-MM-DD') };
+            state.userTasksDone = [...state.userTasksDone, updatedTask];
+        
+            // Update plant state with the new lastWatered date
             const plantIndex = state.userPlants.findIndex((p) => p.name === task.plantName);
             if (plantIndex !== -1) {
                 state.userPlants[plantIndex].lastWatered = moment().format('YYYY-MM-DD');
             }
         },
-
-        // Action to reset error and success messages
-        resetMessages: (state) => {
-            state.error = null;
-            state.success = null;
+        
+        // Action to update error and success messages	
+        updateMessages: (state, action: PayloadAction<{ error: string }>) => {
+            state.error = action.payload.error;
         }
+        
     },
     extraReducers: builder => {
         // Fetch user plants cases
@@ -382,7 +379,7 @@ const userTaskSlice = createSlice({
 });
 
 export default userTaskSlice.reducer;
-export const {addPlant, generateTasks, completeTask, resetMessages} = userTaskSlice.actions;
+export const {addPlant, generateTasks, completeTask, updateMessages} = userTaskSlice.actions;
 
 
 
