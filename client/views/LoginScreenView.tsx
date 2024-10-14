@@ -120,9 +120,11 @@ export default function LoginScreenView(
                             objectFit: 'contain',
                             flex: 1,
                             objectPosition: 'right bottom',
+                            maskImage: 'linear-gradient(to right, transparent 30%, black 40%)',
+                            WebkitMaskImage: 'linear-gradient(to right, transparent 30%, black 40%)', 
                         }}
                         src='elle-lumiere-Dze_6fnPIKk-unsplash.jpg'
-                        alt='Plant Image'
+                        alt='Smoothly Blended Image'
                     />
                 </Stack>
             </div>

@@ -52,7 +52,7 @@ function AddPlantPopUp(props: addPlantProps) {
                 <DialogTitle id="logout-dialog-title">Added Plant</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="logout-dialog-description">
-                        You have successfully added the plant!
+                        You have successfully added the plant to your profile!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
