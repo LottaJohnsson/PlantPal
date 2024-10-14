@@ -93,7 +93,7 @@ export default function MyPlantInfoView({
                         <Typography color="secondary" variant="h2">
                             {plant?.name}
                         </Typography>
-                        <Button variant="contained" color='primary' onClick={() => onRemoveFromProfile()} endIcon={<DeleteIcon/>} fullWidth={false} >
+                        <Button variant="contained" color='warning' onClick={() => onRemoveFromProfile()} endIcon={<DeleteIcon/>} sx={{width: '200px'}} >
                             Remove plant
                         </Button>
                         <Stack direction="row" spacing={2}>
