@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import UploadPlantScreenView from '../Views/uploadPlantScreenView';
+import React, {useState, useEffect} from 'react';
+import UploadPlantScreenView from '../views/uploadPlantScreenView';
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {addPlantsToDB, addPlant} from '../redux/slices/userSlice'
 import {setUploadPlant} from '../redux/slices/plantSlice'
 import {UserPlant} from '../redux/slices/userSlice'
-import { useDropzone } from 'react-dropzone';
+import {useDropzone} from 'react-dropzone';
 
 type Props = {};
 
-export default function UploadPlantScreenController({}: Props) {
+export default function UploadPlantScreenPresenter({}: Props) {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResult, setSearchResult] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -34,7 +34,7 @@ export default function UploadPlantScreenController({}: Props) {
 
     useEffect(() => {
         if (errorUserSlice) {
-            setErrorMessage(errorUserSlice); 
+            setErrorMessage(errorUserSlice);
         }
         if (successUserSlice) {
             setSuccessMessage(successUserSlice);
@@ -46,22 +46,22 @@ export default function UploadPlantScreenController({}: Props) {
         if (file) {
             setImageFile(file);
             setImage(URL.createObjectURL(file));
-            setFormData({ ...formData, imageURL: '', imageFile: file });
+            setFormData({...formData, imageURL: '', imageFile: file});
         }
     };
 
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
-    
+    const {getRootProps, getInputProps} = useDropzone({onDrop});
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        const {name, value} = e.target;
+        setFormData({...formData, [name]: value});
     };
 
     const handleRemoveImage = () => {
         setImageFile(null);
         setImage(null);
         setUsingDefaultImage(false);
-        setFormData({ ...formData, imageURL: '', imageFile: null }); 
+        setFormData({...formData, imageURL: '', imageFile: null});
     };
 
     const handleUseDefaultImage = () => {
@@ -70,7 +70,7 @@ export default function UploadPlantScreenController({}: Props) {
             const defaultImageUrl = selectedPlant.default_image?.original_url;
 
             if (defaultImageUrl) {
-                setFormData({ ...formData, imageURL: defaultImageUrl });
+                setFormData({...formData, imageURL: defaultImageUrl});
                 setImageFile(null);
                 setImage(defaultImageUrl);
             }
@@ -94,8 +94,8 @@ export default function UploadPlantScreenController({}: Props) {
                     }
                 });
                 const json = await response.json();
-                setSearchResult(json.result.slice(0,5));
-    
+                setSearchResult(json.result.slice(0, 5));
+
             } catch (error) {
                 console.error("Error during search:", error);
                 setSearchResult([]);
@@ -144,15 +144,15 @@ export default function UploadPlantScreenController({}: Props) {
     const mapWateringFrequency = (frequency: string) => {
         switch (frequency) {
             case 'Frequent':
-                return 'every second day'; 
+                return 'every second day';
             case 'Average':
-                return 'weekly'; 
+                return 'weekly';
             case 'Minimum':
                 return 'monthly';
             case 'None':
-                return 'none'; 
+                return 'none';
             default:
-                return ''; 
+                return '';
         }
     };
 
@@ -164,13 +164,13 @@ export default function UploadPlantScreenController({}: Props) {
         // Clear previous messages
         setErrorMessage(null);
         setSuccessMessage(null);
-    
+
         // Validate the form before adding the plant
         if (!isFormValid()) {
             setErrorMessage("You need to fill in everything to add the plant!");
             return;
         }
-    
+
         const plantData: UserPlant = {
             id: formData.id,
             name: formData.name,
@@ -182,7 +182,7 @@ export default function UploadPlantScreenController({}: Props) {
 
         // Add the plant to db and get the action result
         await dispatch(addPlantsToDB(plantData));
-        
+
     };
 
 
