@@ -18,7 +18,7 @@ interface Props {
     onCompleteTask: (task: Task) => void;
 }
 
-/* interface TabPanelProps {
+interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
@@ -64,7 +64,58 @@ function CareAdviceTabs(props: any) {
             ))}
         </Box>
     )
-} */
+}
+
+interface tasksRowProps {
+    plant: UserPlant | undefined,
+    lateTasks: Task[],
+    upcomingTasks: Task[],
+    doneTasks: Task[],
+    onCompleteTask: (task: Task) => void;
+}
+
+function TasksRow({
+    plant,
+    lateTasks,
+    upcomingTasks,
+    doneTasks,
+    onCompleteTask,
+}: tasksRowProps) {
+    return (
+        <Stack direction="row" spacing={2}>
+            <Stack  direction="column" flex={4} spacing={2}>
+                <Typography variant='h4'>
+                    Late Tasks
+                </Typography>
+                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
+                    {lateTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
+                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
+                    ))}
+                </Stack>
+            </Stack>
+            <Stack  direction="column" flex={4} spacing={2}>
+                <Typography variant='h4'>
+                    UpcomingTasks
+                </Typography>
+                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
+                    {upcomingTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
+                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
+                    ))}
+                </Stack>
+            </Stack>
+            <Stack  direction="column" flex={4} spacing={2}>
+                <Typography variant='h4'>
+                    Completed Tasks
+                </Typography>
+                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
+                    {doneTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
+                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
+                    ))}
+                </Stack>
+            </Stack>
+        </Stack>
+    )
+}
 
 export default function MyPlantInfoView({
     species,
@@ -78,9 +129,8 @@ export default function MyPlantInfoView({
     onRemoveFromProfile,
     onCompleteTask,
 }: Props) {
-    if (species && advice) {
+    if (plant && species.currentPlant && advice.careAdvice) {
         return (
-            
             <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
                 <Stack direction="row" alignItems={"left"} spacing={2}>
                     <img src={plant?.imageFile && !plant?.imageURL ? plant?.imageFile : plant?.imageURL} alt={plant?.name} style={{
@@ -96,45 +146,65 @@ export default function MyPlantInfoView({
                         <Button variant="contained" color='warning' onClick={() => onRemoveFromProfile()} endIcon={<DeleteIcon/>} sx={{width: '200px'}} >
                             Remove plant
                         </Button>
-                        <Stack direction="row" spacing={2}>
-                            <Stack  direction="column" flex={4} spacing={2}>
-                                <Typography variant='h4'>
-                                    Late Tasks
-                                </Typography>
-                                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
-                                    {lateTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
-                                    ))}
-                                </Stack>
-                            </Stack>
-                            <Stack  direction="column" flex={4} spacing={2}>
-                                <Typography variant='h4'>
-                                    UpcomingTasks
-                                </Typography>
-                                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
-                                    {upcomingTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
-                                    ))}
-                                </Stack>
-                            </Stack>
-                        </Stack>
+                        <TasksRow plant={plant} lateTasks={lateTasks} upcomingTasks={upcomingTasks} doneTasks={doneTasks} onCompleteTask={onCompleteTask}></TasksRow>
                     </Stack>
                 </Stack>
-                {/* <Stack direction="row" spacing={5}>
+                <Stack direction="row" spacing={5}>
                     <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange} tabIndex={tabIndex}>
                     </CareAdviceTabs>
-                <PlantTable  plant={species}/>
-                </Stack> */}
-                <Typography variant='h4'>
-                    Completed Tasks
-                </Typography>
-                <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
-                    {doneTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
-                    ))}
+                    <PlantTable  plant={species}/>
                 </Stack>
             </Stack>
+        )
 
+    }  else if (plant && plant.id.length !== 0) {
+        return(
+            <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
+                <Stack direction="row" alignItems={"left"} spacing={2}>
+                    <img src={plant?.imageFile && !plant?.imageURL ? plant?.imageFile : plant?.imageURL} alt={plant?.name} style={{
+                        height: '300px',
+                        objectFit: 'contain',
+                        flex: 1,
+                        objectPosition: 'left bottom',
+                    }}/>
+                    <Stack direction="column" flex={4} spacing={2}>
+                        <Typography color="secondary" variant="h2">
+                            {plant?.name}
+                        </Typography>
+                        <Button variant="contained" color='warning' onClick={() => onRemoveFromProfile()} endIcon={<DeleteIcon/>} sx={{width: '200px'}} >
+                            Remove plant
+                        </Button>
+                        <TasksRow plant={plant} lateTasks={lateTasks} upcomingTasks={upcomingTasks} doneTasks={doneTasks} onCompleteTask={onCompleteTask}></TasksRow>
+                    </Stack>
+                </Stack>
+                <Stack sx={{padding: "5%", flex: 2, alignContent: 'center'}}>
+                    <Typography align='center' variant='h4' color='warning.dark'> 
+                        Failed to get species information 
+                    </Typography>
+                </Stack>
+            </Stack>
+        )
+    } else if (plant) {
+        return (            
+            <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
+                <Stack direction="row" alignItems={"left"} spacing={2}>
+                    <img src={plant?.imageFile && !plant?.imageURL ? plant?.imageFile : plant?.imageURL} alt={plant?.name} style={{
+                        height: '300px',
+                        objectFit: 'contain',
+                        flex: 1,
+                        objectPosition: 'left bottom',
+                    }}/>
+                    <Stack direction="column" flex={4} spacing={2}>
+                        <Typography color="secondary" variant="h2">
+                            {plant?.name}
+                        </Typography>
+                        <Button variant="contained" color='warning' onClick={() => onRemoveFromProfile()} endIcon={<DeleteIcon/>} sx={{width: '200px'}} >
+                            Remove plant
+                        </Button>
+                        <TasksRow plant={plant} lateTasks={lateTasks} upcomingTasks={upcomingTasks} doneTasks={doneTasks} onCompleteTask={onCompleteTask}></TasksRow>
+                    </Stack>
+                </Stack>
+            </Stack>
         )
     } else {
         return (
