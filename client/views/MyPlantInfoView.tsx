@@ -117,6 +117,57 @@ function TasksRow({
     )
 }
 
+interface speciesInfoProps {
+    advice: any,
+    species: any,
+    handleTabChange: (event: SyntheticEvent<Element, Event>, tabindex: number) => void,
+    tabIndex: number,
+}
+
+function SpeciesInfo({
+    advice,
+    species,
+    handleTabChange,
+    tabIndex,
+}: speciesInfoProps) {
+    if (advice.loading || species.loading) {
+     return(
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'fixed', // Fix to the viewport
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
+                zIndex: 9999, // Ensure it is on top of other content
+            }}
+        >
+            <CircularProgress size={80}/>
+        </Box>
+     )   
+    } else if (species.currentPlant && advice.careAdvice) {
+        return (
+            <Stack direction="row" spacing={5}>
+                <CareAdviceTabs section={advice.careAdvice.section} handleTabChange={handleTabChange} tabIndex={tabIndex}>
+                </CareAdviceTabs>
+                <PlantTable  plant={species.currentPlant}/>
+            </Stack>
+        )
+    } else {
+        return (
+            <Stack sx={{padding: "5%", flex: 2, alignContent: 'center'}}>
+                <Typography align='center' variant='h4' color='warning.dark'> 
+                    Failed to get species information 
+                </Typography>
+            </Stack>
+        )
+    }
+}
+
 export default function MyPlantInfoView({
     species,
     advice,
@@ -129,7 +180,7 @@ export default function MyPlantInfoView({
     onRemoveFromProfile,
     onCompleteTask,
 }: Props) {
-    if (plant && species.currentPlant && advice.careAdvice) {
+    if (plant  && plant.id.length !== 0) {
         return (
             <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
                 <Stack direction="row" alignItems={"left"} spacing={2}>
@@ -149,41 +200,10 @@ export default function MyPlantInfoView({
                         <TasksRow plant={plant} lateTasks={lateTasks} upcomingTasks={upcomingTasks} doneTasks={doneTasks} onCompleteTask={onCompleteTask}></TasksRow>
                     </Stack>
                 </Stack>
-                <Stack direction="row" spacing={5}>
-                    <CareAdviceTabs section={advice.section} handleTabChange={handleTabChange} tabIndex={tabIndex}>
-                    </CareAdviceTabs>
-                    <PlantTable  plant={species}/>
-                </Stack>
+                <SpeciesInfo advice={advice} species={species} handleTabChange={handleTabChange} tabIndex={tabIndex}></SpeciesInfo>
             </Stack>
         )
 
-    }  else if (plant && plant.id.length !== 0) {
-        return(
-            <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
-                <Stack direction="row" alignItems={"left"} spacing={2}>
-                    <img src={plant?.imageFile && !plant?.imageURL ? plant?.imageFile : plant?.imageURL} alt={plant?.name} style={{
-                        height: '300px',
-                        objectFit: 'contain',
-                        flex: 1,
-                        objectPosition: 'left bottom',
-                    }}/>
-                    <Stack direction="column" flex={4} spacing={2}>
-                        <Typography color="secondary" variant="h2">
-                            {plant?.name}
-                        </Typography>
-                        <Button variant="contained" color='warning' onClick={() => onRemoveFromProfile()} endIcon={<DeleteIcon/>} sx={{width: '200px'}} >
-                            Remove plant
-                        </Button>
-                        <TasksRow plant={plant} lateTasks={lateTasks} upcomingTasks={upcomingTasks} doneTasks={doneTasks} onCompleteTask={onCompleteTask}></TasksRow>
-                    </Stack>
-                </Stack>
-                <Stack sx={{padding: "5%", flex: 2, alignContent: 'center'}}>
-                    <Typography align='center' variant='h4' color='warning.dark'> 
-                        Failed to get species information 
-                    </Typography>
-                </Stack>
-            </Stack>
-        )
     } else if (plant) {
         return (            
             <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
@@ -213,13 +233,9 @@ export default function MyPlantInfoView({
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    position: 'fixed', // Fix to the viewport
-                    top: 0,
-                    left: 0,
-                    width: '100vw',
-                    height: '100vh',
+                    width: '100%',
+                    height: '100%',
                     backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
-                    zIndex: 9999, // Ensure it is on top of other content
                 }}
             >
                 <CircularProgress size={80}/>
