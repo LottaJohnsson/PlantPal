@@ -2,10 +2,12 @@
 //const API_KEY = 'sk-oqF366f96d7b858e57046'; //change to your API key
 //const API_KEY = 'sk-nubU66f96ebfc123b7048'; //change to your API key
 //const API_KEY = 'sk-eq1J66f98ad25fe9f7050'; //change to your API key
+
+import axios from "axios";
+
 //const API_KEY = 'sk-UQ5B67039d8a080357150'; //change to your API key
 const API_KEY = 'sk-Zplm670e2e9e8972b7258'; //change to your API key
 
-const API_KEY = 'sk-UQ5B67039d8a080357150'; //change to your API key
 //const API_KEY = 'sk-kae2670640bf0a6d27184'; //change to your API key
 const baseUrl = 'https://perenual.com/api/'
 
