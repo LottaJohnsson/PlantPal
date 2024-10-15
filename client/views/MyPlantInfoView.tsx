@@ -132,22 +132,25 @@ function SpeciesInfo({
 }: speciesInfoProps) {
     if (advice.loading || species.loading) {
      return(
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'fixed', // Fix to the viewport
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
-                zIndex: 9999, // Ensure it is on top of other content
-            }}
-        >
-            <CircularProgress size={80}/>
-        </Box>
+        <div style={{ 
+            display: 'flex',      
+            flexDirection: 'column', 
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: "5%",
+        }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
+                }}
+            >
+                <CircularProgress size={80}/>
+            </Box>
+        </div>
      )   
     } else if (species.currentPlant && advice.careAdvice) {
         return (
