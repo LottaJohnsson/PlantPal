@@ -7,7 +7,7 @@ import {setCurrentPlant} from '../redux/slices/plantSlice'
 import {Plant} from '../redux/slices/plantSlice';
 import axios from 'axios';
 import {fetchCareAdvice} from "../redux/slices/careAdviceSlice";
-import Popup from "../components/PopUp";
+import PopUp from "../components/Popup";
 import {logoutUserR} from "../redux/slices/authSlice";
 import {persistor} from "../redux/store";
 import {response} from "express";
