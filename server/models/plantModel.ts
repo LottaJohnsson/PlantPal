@@ -7,7 +7,6 @@
 const API_KEY = 'sk-jlEU670e3f131fd967261'
 
 import axios from "axios";
-
 //const API_KEY = 'sk-kae2670640bf0a6d27184'; //change to your API key
 const baseUrl = 'https://perenual.com/api/'
 
