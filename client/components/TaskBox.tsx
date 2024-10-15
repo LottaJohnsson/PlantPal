@@ -6,18 +6,24 @@ import { Task } from "../redux/slices/userSlice";
 interface Props {
     task: Task
     onCompleteTask: (task: any) => void
+    darkcolor: string,
+    lightcolor: string,
+    completable: boolean
 }
 
 export default function TaskBox({
     task,
     onCompleteTask,
+    darkcolor,
+    lightcolor,
+    completable
 }: Props) {
     return (
         <Grid item xs={12} sm={6} md={4}>
         <Box
             sx={{
             padding: '16px',
-            backgroundColor: task.type === 'late'? 'warning.light' : task.type === 'done'? 'primary.light' : 'secondary.light',
+            backgroundColor: lightcolor,
             borderRadius: '8px',
             color: '#FFF',
             minWidth: '100px',
@@ -29,7 +35,7 @@ export default function TaskBox({
             {/* Darker box for the date that takes up full width and aligns to the top */}
             <Box
             sx={{
-                backgroundColor: task.type === 'late'? 'warning.dark' : task.type === 'done'? 'primary.dark' : 'secondary.dark',
+                backgroundColor: darkcolor,
                 borderRadius: '8px 8px 0 0',
                 padding: '4px',
                 width: '100%',
@@ -59,7 +65,7 @@ export default function TaskBox({
                 '&:hover': {
                 color: 'primary.dark',
                 },
-                display: task.type === 'done'? 'none' : 'initial'
+                display: completable? 'initial' : 'none'
             }}
             />
         </Box>

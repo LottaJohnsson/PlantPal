@@ -71,8 +71,11 @@ export default function TopBarPresenter() {
                 data={data || []}
                 onOptionClick={onOptionClick}
             />
-            <PopUp.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
-                   handleClose={() => setOpenPopUp(false)}></PopUp.PopUp>
+            <Popup.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
+                   handleClose={() => {
+                    setOpenPopUp(false);
+                    (document.activeElement as HTMLElement)?.blur();
+                    }}></Popup.PopUp>
         </>
     )
 
