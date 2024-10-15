@@ -1,45 +1,34 @@
 import React, {useEffect, useState} from 'react'
-import GeneralScreenView from "../views/DetailScreenView";
-import TopBarPresenter from "./TopBarPresenter";
+import DetailsScreenView from "../views/DetailScreenView";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {fetchCareAdvice} from '../redux/slices/careAdviceSlice';
+import {setUploadPlant} from "../redux/slices/plantSlice";
 
-type Props = {}
-
-//Get search result from Explore Page
-export default function DetailScreenPresenter({}: Props) {
+export default function DetailScreenPresenter() {
     const [tabIndex, setTabIndex] = useState(0);
-    const [advice, setAdvice] = useState(null);
-    const [species, setSpecies] = useState(null);
-    const [query, setQuery] = useState<URLSearchParams>()
     const navigate = useNavigate();
-    const dispatch = useAppDispatch()
     const plant = useAppSelector(state => state.plant)
     const careAdvice = useAppSelector(state => state.careAdvice)
+    const dispatch = useAppDispatch();
 
     function handleTabChange(event: React.SyntheticEvent, tabindex: number) {
         setTabIndex(tabindex);
     }
 
     function onAddToProfile() {
-        if (query != null) {
-            const id = query.get('id') as string;
-            const name = query.get('name') as string;
-
-            navigate(`/upload?id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}`);
-        }
+        dispatch(setUploadPlant(plant.currentPlant));
+        navigate(`/upload`);   
     }
 
 
     return (
-        <>
-            <GeneralScreenView
-                advice={careAdvice}
-                species={plant}
-                handleTabChange={handleTabChange}
-                tabIndex={tabIndex}
-                onAddToProfile={onAddToProfile}/>
-        </>
+        <DetailsScreenView
+            advice={careAdvice}
+            species={plant}
+            handleTabChange={handleTabChange}
+            tabIndex={tabIndex}
+            onAddToProfile={onAddToProfile}/>
+
     );
 }

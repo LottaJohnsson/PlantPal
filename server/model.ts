@@ -90,6 +90,7 @@ class Model {
     async addPlantToUser(
         apiPlantId: string,
         plantName: string,
+        apiPlantName: string,
         wateringFrequency: string,
         latestWatered: string,
         imageURL: string,
@@ -98,11 +99,11 @@ class Model {
     ): Promise<boolean> {
         try {
             const query = `
-              INSERT INTO plants (plant_id, plant_name, watering_frequency, latest_watered, image_url, image_blob, user_email)
-              VALUES (?, ?, ?, ?, ?, ?, ?)
+              INSERT INTO plants (plant_id, plant_name, api_plant_name, watering_frequency, latest_watered, image_url, image_blob, user_email)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
           `;
             // Execute query
-            await pool.query(query, [apiPlantId, plantName, wateringFrequency, latestWatered, imageURL, imageFile, email]);
+            await pool.query(query, [apiPlantId, plantName, apiPlantName, wateringFrequency, latestWatered, imageURL, imageFile, email]);
 
             return true;
         } catch (error) {
@@ -120,7 +121,7 @@ class Model {
     async fetchPlantsForUser(email: string): Promise<RowDataPacket[]> {
         try {
             const query = `
-            SELECT plant_id, plant_name, watering_frequency, latest_watered, image_url, image_blob
+            SELECT plant_id, plant_name, api_plant_name, watering_frequency, latest_watered, image_url, image_blob
             FROM plants
             WHERE user_email = ?
         `;

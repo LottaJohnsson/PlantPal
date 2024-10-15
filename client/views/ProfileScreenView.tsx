@@ -39,6 +39,8 @@ export default function ProfileScreenView({
           <Typography variant="h5" sx={{ marginBottom: '16px', color: '#000' }}>
             Today's Tasks
           </Typography>
+          {/* check if todayTasks is empty */}
+          {todayTasks.length === 0 && <Typography sx={{color: 'secondary.dark'}}>Take some rest, you don't have any tasks today!</Typography>}
           <Grid container spacing={2}>
             {todayTasks.map((task, index) => (
               <Grid item key={index} xs={12} sm={6} md={4}>
@@ -98,6 +100,7 @@ export default function ProfileScreenView({
           <Typography variant="h5" sx={{ marginTop: '32px', marginBottom: '16px', color: '#000' }}>
             Late Tasks
           </Typography>
+          {lateTasks.length === 0 && <Typography sx={{color: 'secondary.dark'}}>Good work, you don't have any late tasks!</Typography>}
           <Grid container spacing={2}>
             {lateTasks.map((task, index) => (
               <Grid item key={index} xs={12} sm={6} md={4}>
@@ -157,6 +160,7 @@ export default function ProfileScreenView({
           <Typography variant="h5" sx={{ marginTop: '32px', marginBottom: '16px', color: '#000' }}>
             Upcoming Tasks
           </Typography>
+          {upcomingTasks.length === 0 && <Typography sx={{color: 'secondary.dark'}}>You don't have any upcoming tasks!</Typography>}
           <Grid container spacing={2}>
             {upcomingTasks.map((task, index) => (
               <Grid item key={index} xs={12} sm={6} md={3}>
@@ -216,6 +220,7 @@ export default function ProfileScreenView({
           <Typography variant="h5" sx={{ marginTop: '32px', marginBottom: '16px', color: '#000' }}>
             Today's Completed Tasks
           </Typography>
+          {doneTasks.length === 0 && <Typography sx={{color: 'secondary.dark'}}>You don't have any completed tasks today!</Typography>}
           <Grid container spacing={2}>
             {doneTasks.map((task, index) => (
               <Grid item key={index} xs={12} sm={6} md={3}>
@@ -261,7 +266,7 @@ export default function ProfileScreenView({
           </Typography>
 
           {/* Add New Plant Button */}
-          <Box sx={{ marginTop: '16px', textAlign: 'left' }}>
+          <Box sx={{ marginTop: '16px', textAlign: 'left', marginBottom: '16px' }}>
             <Button
               variant="contained"
               onClick={onAddNewPlant}
@@ -278,6 +283,8 @@ export default function ProfileScreenView({
               Add New Plant
             </Button>
           </Box>
+
+
 
           <Grid container spacing={2}>
             {plants.length > 0 ? (

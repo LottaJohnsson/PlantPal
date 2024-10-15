@@ -21,8 +21,8 @@ const App: React.FC = () => {
                 <Routes>
                     {/*Public Routes*/}
                     <Route path="/"/>
-                    <Route path="/explore" element={<ExplorePage/>}/>
                     <Route path="/myplant" element={<MyPlantInfo/>}/>
+                    <Route path="/" element={<ExplorePage/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<LoginScreenPresenter/>}/>
                     <Route path="/about" element={<AboutScreen/>}/>

@@ -62,6 +62,12 @@ export default function LoginScreenPresenter({}: Props) {
             setError('Please fill in all fields');
             return;
         }
+
+        if (passwordRef.current !== confirmPasswordRef.current) {
+            setError('Password and confirm password do not match');
+            return;
+        }
+
         if (!validateEmail(emailRef.current)) {
             setError('Email is not in a valid format');
             return;

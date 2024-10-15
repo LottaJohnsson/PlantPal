@@ -8,15 +8,8 @@ import { fetchUserPlantsFromDB, generateTasks, updatePlantInDB } from '../redux/
 
 export default function ProfileScreenController() {
 
-  const [plants, setPlants] = useState<UserPlant[]>([]);
   const [loading, setLoading] = useState<boolean>(false); 
   const navigate = useNavigate();
-  const [todayTasks, setTodayTasks] = useState<Task[]>([]);
-  const [lateTasks, setLateTasks] = useState<Task[]>([]);
-  const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([]);
-  const [doneTasks, setDoneTasks] = useState<Task[]>([]); 
-
-  // redux
   const dispatch = useAppDispatch();
   const userPlants = useAppSelector(state => state.task.userPlants);
   const userTasksToday = useAppSelector(state => state.task.userTasksToday);
@@ -24,15 +17,7 @@ export default function ProfileScreenController() {
   const userTasksUpcoming = useAppSelector(state => state.task.userTasksUpcoming);
   const userTasksDone = useAppSelector(state => state.task.userTasksDone);
 
-  useEffect(() => {
-    setPlants(userPlants);
-    setTodayTasks(userTasksToday);
-    setLateTasks(userTasksLate);
-    setUpcomingTasks(userTasksUpcoming);
-    setDoneTasks(userTasksDone);
-
-  }, [userPlants, userTasksToday, userTasksLate, userTasksUpcoming, userTasksDone]);
-
+  // Fetch user plants and generate tasks
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -50,7 +35,6 @@ export default function ProfileScreenController() {
 
   const onCompleteTask = async (completedTask: Task) => {
     dispatch(completeTask(completedTask));
-    // update db also
     await dispatch(updatePlantInDB(completedTask.plantName));
   };
 
@@ -64,11 +48,11 @@ export default function ProfileScreenController() {
 
   return (
     <ProfileScreenView
-      todayTasks={todayTasks}
-      lateTasks={lateTasks}
-      upcomingTasks={upcomingTasks}
-      doneTasks={doneTasks}
-      plants={plants}
+      todayTasks={userTasksToday}
+      lateTasks={userTasksLate}
+      upcomingTasks={userTasksUpcoming}
+      doneTasks={userTasksDone}
+      plants={userPlants}
       onAddNewPlant={handleAddNewPlant}
       loading={loading}
       onCompleteTask={onCompleteTask}

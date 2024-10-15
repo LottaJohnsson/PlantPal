@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import UploadPlantScreenView from '../views/UploadPlantScreenView';
+import React, {useState, useEffect} from 'react'
+import UploadPlantScreenView from '../views/UploadPlantScreenView'
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {addPlantsToDB, updateMessages} from '../redux/slices/userSlice'
 import {setUploadPlant} from '../redux/slices/plantSlice'
 import {UserPlant} from '../redux/slices/userSlice'
 import {useDropzone} from 'react-dropzone';
+import axios from 'axios';
 import Popup from "../components/PopUp";
-import {useNavigate} from "react-router-dom";
 import { unwrapResult } from '@reduxjs/toolkit';
 
 
@@ -21,6 +21,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const [formData, setFormData] = useState({
         id: '',
         name: '',
+        api_name: '',
         lastWatered: '',
         wateringFrequency: '',
         imageURL: '',
@@ -30,13 +31,19 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [image, setImage] = useState<string | null>(null);
     const [usingDefaultImage, setUsingDefaultImage] = useState(false);
-    //const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const dispatch = useAppDispatch();
     const selectedPlant = useAppSelector(state => state.plant.uploadPlant);
     const errorUserSlice = useAppSelector(state => state.task.error);
     const successUserSlice = useAppSelector(state => state.task.success);
     const [openPopUp, setOpenPopUp] = useState(false)
-    const navigate = useNavigate();
+    const [popupMessage, setPopUpMessage] = useState<string>('')
+    const [popupHeader, setPopUpHeader] = useState<string>('')
+
+    useEffect(() => {
+        if (selectedPlant) {
+            handleSelectPlant(selectedPlant);
+        }
+    }, [selectedPlant]);
 
     const onDrop = (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -49,7 +56,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
 
     const {getRootProps, getInputProps} = useDropzone({onDrop});
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setFormData({...formData, [name]: value});
     };
@@ -77,22 +84,19 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         setSearchQuery(query);
-        //setIsPlantSelected(false);
         setFormVisible(false);
         if (query.length > 2) {
             setLoading(true);
             try {
-                const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-                const json = await response.json();
-                setSearchResult(json.result.slice(0, 5));
+                const response = await axios.get(`plants/search?query=${encodeURIComponent(query)}`);
+                // check so search result exists before setting it
+                if (response.data.data) {
+                    setSearchResult(response.data.data.slice(0, 5));
+                } else {
+                    setSearchResult([]);
+                }
 
-            } catch (error) {
-                console.error("Error during search:", error);
+            } catch (error: any) {
                 setSearchResult([]);
             } finally {
                 setLoading(false);
@@ -103,10 +107,8 @@ export default function UploadPlantScreenPresenter({}: Props) {
         }
     };
 
-    // function to handle selecting a plant after searching
     const handleSelectPlant = (plant: any) => {
         setFormVisible(true);
-        console.log('selectedPlant', selectedPlant);
         if (plant.id) {
             setSelectedApiPlantId(plant.id);
 
@@ -114,10 +116,12 @@ export default function UploadPlantScreenPresenter({}: Props) {
             const imageUrl = plant.default_image?.small_url || '';
             const plantName = plant.common_name || plant.scientific_name || '';
             const wateringFrequency = mapWateringFrequency(plant.watering);
+            const apiPlantName = plant.common_name || plant.scientific_name || '';
 
             setFormData({
                 id: plant.id,
                 name: plantName,
+                api_name: apiPlantName,
                 lastWatered: '',
                 wateringFrequency: wateringFrequency,
                 imageURL: imageUrl,
@@ -129,6 +133,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
             setFormData({
                 id: '',
                 name: '',
+                api_name: '',
                 lastWatered: '',
                 wateringFrequency: '',
                 imageURL: '',
@@ -154,9 +159,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
         }
     };
 
-
-    // TODO fix loading in redux
-    // function to add plant using redux
     const onAddPlant = async (): Promise<void> => {
 
         // Validate the form before adding the plant
@@ -168,6 +170,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
         const plantData: UserPlant = {
             id: formData.id,
             name: formData.name,
+            api_name: formData.api_name,
             lastWatered: formData.lastWatered,
             wateringFrequency: formData.wateringFrequency,
             imageURL: formData.imageURL,
@@ -178,17 +181,21 @@ export default function UploadPlantScreenPresenter({}: Props) {
             // Dispatch the action and unwrap the result to catch any errors
             const resultAction = await dispatch(addPlantsToDB(plantData));
             const result = unwrapResult(resultAction);
-    
+
             // If successful, show the popup
+            setPopUpMessage("You have successfully added the plant to your profile!");
+            setPopUpHeader("Added plant")
             setOpenPopUp(true);
+            
+            // set selected plant to null
+            dispatch(setUploadPlant(null));
+
         } catch (error) {
             // If there's an error, dispatch the appropriate error message
             console.log('Error adding plant:', error);
         }
     };
 
-
-    // Validation function to check if all fields are filled
     const isFormValid = () => {
         return (
             (image !== null || usingDefaultImage) &&
@@ -211,7 +218,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 formData={formData}
                 handleSearchChange={handleSearchChange}
                 handleSelectPlant={handleSelectPlant}
-                handleChange={handleChange}
+                handleFormChange={handleFormChange}
                 onDrop={onDrop}
                 isDragActive={isDragActive}
                 onAddPlant={onAddPlant}
@@ -225,7 +232,8 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 getInputProps={getInputProps}
                 selectedPlant={selectedPlant}
             />
-            <Popup.AddPlantPopUp open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup.AddPlantPopUp>
+            <Popup.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
+            handleClose={() => setOpenPopUp(false)}></Popup.PopUp>
         </>
     );
 }
