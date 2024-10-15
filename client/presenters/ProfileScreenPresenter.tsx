@@ -38,14 +38,6 @@ export default function ProfileScreenController() {
     await dispatch(updatePlantInDB(completedTask.plantName));
   };
 
-  const navigatToPlant = (plant: UserPlant) => {
-    const params = new URLSearchParams({
-      plantname: plant.name,
-    });
-    
-    navigate('/myplant?'.concat(params.toString()))
-  }
-
   return (
     <ProfileScreenView
       todayTasks={userTasksToday}
@@ -56,7 +48,6 @@ export default function ProfileScreenController() {
       onAddNewPlant={handleAddNewPlant}
       loading={loading}
       onCompleteTask={onCompleteTask}
-      onClickPlant={navigatToPlant}
     />
   );
 }
