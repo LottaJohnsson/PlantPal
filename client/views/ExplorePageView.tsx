@@ -17,7 +17,6 @@ import {
     Grid
 } from "@mui/material";
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
-import SearchBar from "../presenters/SearchBarController";
 import { TransitionGroup } from 'react-transition-group';
 
 type Props = {
