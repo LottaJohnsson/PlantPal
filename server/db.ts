@@ -8,16 +8,15 @@
  */
 
 import mysql from 'mysql2/promise';
+require('dotenv').config();
 
 // password StrongPassword123!
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'plantpal',
-  password: 'StrongPassword123!',
-  database: 'plantpalDB',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+  socketPath: process.env.MYSQL_SOCKET_PATH || undefined,
+  host: process.env.MYSQL_HOST || undefined,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 });
 
 export async function query(sql: string, values?: any) {
