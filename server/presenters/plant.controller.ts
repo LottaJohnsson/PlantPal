@@ -46,9 +46,11 @@ router.get("/isAuthenticated", (req: Request, res: Response) => {
  */
 router.post("/add", requireAuth, upload.single('imageFile'), async (req: Request, res: Response) => {
     try {
-        const {id, plantName, wateringFrequency, lastWatered, imageURL} = req.body;
+        const {id, plantName, apiPlantName, wateringFrequency, lastWatered, imageURL} = req.body;
         const imageFile = req.file?.buffer ?? null; // Set imageFile to null if undefined
         let email = "";
+
+        console.log("Adding plant to user profile:", req.body);
 
         // Get email from findUserBySessionId (you probably meant "findUserBySessionId")
         try {
@@ -63,7 +65,7 @@ router.post("/add", requireAuth, upload.single('imageFile'), async (req: Request
         }
 
         // Add the plant to the user's profile (imageFile is binary, imageURL is optional)
-        const success = await Model.addPlantToUser(id, plantName, wateringFrequency, lastWatered, imageURL, imageFile, email);
+        const success = await Model.addPlantToUser(id, plantName, apiPlantName, wateringFrequency, lastWatered, imageURL, imageFile, email);
 
         if (success) {
             return res.status(200).json({success: true, message: "Plant added successfully"});

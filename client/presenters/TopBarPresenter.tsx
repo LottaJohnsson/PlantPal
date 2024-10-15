@@ -25,7 +25,7 @@ export default function TopBarPresenter() {
     function buttonClick(page: string) {
         if (page == "logout") {
             dispatch(logoutUserR());
-            navigate('/explore')
+            navigate('/')
             setPopUpMessage("You have been successfully logged out");
             setPopUpHeader("Logged out")
             setOpenPopUp(true)
@@ -71,8 +71,8 @@ export default function TopBarPresenter() {
                 data={data || []}
                 onOptionClick={onOptionClick}
             />
-            <Popup.LogoutPopup open={openPopUp} message={popupMessage} header={popupHeader}
-                   handleClose={() => setOpenPopUp(false)}></Popup.LogoutPopup>
+            <Popup.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
+                   handleClose={() => setOpenPopUp(false)}></Popup.PopUp>
         </>
     )
 

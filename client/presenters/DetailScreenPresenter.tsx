@@ -7,7 +7,6 @@ import {setUploadPlant} from "../redux/slices/plantSlice";
 
 export default function DetailScreenPresenter() {
     const [tabIndex, setTabIndex] = useState(0);
-    const [query, setQuery] = useState<URLSearchParams>()
     const navigate = useNavigate();
     const plant = useAppSelector(state => state.plant)
     const careAdvice = useAppSelector(state => state.careAdvice)
@@ -18,23 +17,18 @@ export default function DetailScreenPresenter() {
     }
 
     function onAddToProfile() {
-        if (query != null) {
-            const id = query.get('id') as string;
-            const name = query.get('name') as string;
-            dispatch(setUploadPlant(plant.currentPlant));
-            navigate(`/upload`);
-        }
+        dispatch(setUploadPlant(plant.currentPlant));
+        navigate(`/upload`);   
     }
 
 
     return (
-        <>
-            <DetailsScreenView
-                advice={careAdvice}
-                species={plant}
-                handleTabChange={handleTabChange}
-                tabIndex={tabIndex}
-                onAddToProfile={onAddToProfile}/>
-        </>
+        <DetailsScreenView
+            advice={careAdvice}
+            species={plant}
+            handleTabChange={handleTabChange}
+            tabIndex={tabIndex}
+            onAddToProfile={onAddToProfile}/>
+
     );
 }

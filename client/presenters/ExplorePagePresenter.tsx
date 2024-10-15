@@ -35,6 +35,7 @@ export default function ExplorePagePresenter({}: Props) {
     
     useEffect(() => {
         console.log("Plants state updated:", plants);
+        
         if (plants.plants) {
             const newCards = plants.plants.map((plant: any, i: number) => ({
                 image: plant.default_image?.medium_url || 'https://i.ebayimg.com/images/g/pQoAAOSwAa1f2dlL/s-l960.webp',
