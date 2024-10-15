@@ -11,8 +11,8 @@ import Popup from "../components/PopUp";
 type Props = {}
 
 export default function MyPlantInfoPresenter({}: Props) {
-  // const [advice, setAdvice] = useState(null)
-  // const [species, setSpecies] = useState(null)
+  // const [advice, setAdvice] = useState<CareAdvice>()
+  // const [species, setSpecies] = useState<Plant>()
   // const {search, fetchPlants, fetchTasks} = usePlant()
   const [tabIndex, setTabIndex] = useState(0)
   const [plant, setPlant] = useState<UserPlant>()
@@ -36,6 +36,8 @@ export default function MyPlantInfoPresenter({}: Props) {
   const queryParams = new URLSearchParams(window.location.search)
   const plant_name = queryParams.get('plantname')
 
+  // STANNA HÄR //
+
   const navigate = useNavigate();
 
   // Called at the start
@@ -44,10 +46,17 @@ export default function MyPlantInfoPresenter({}: Props) {
   }, [])
 
   useEffect(() => {
-    setPlant(userPlants.find((plant) => plant.name === plant_name))
+    console.log("UserPlant changed")
+    console.log(JSON.stringify(userPlants[0]))
+    console.log(plant_name)
+    console.log(JSON.stringify(userPlants.find((plant) => JSON.stringify(plant.name.trim) === JSON.stringify(plant_name?.trim))))
+    const curPlant = userPlants.find((plant) => JSON.stringify(plant.name.trim) === JSON.stringify(plant_name?.trim))
+    setPlant(curPlant)
   }, [userPlants])
 
   useEffect(() => {
+    console.log("Plant changed")
+    console.log(JSON.stringify(plant))
     fetchSpeciesData()
   }, [plant])
 
@@ -59,10 +68,18 @@ export default function MyPlantInfoPresenter({}: Props) {
 
   }, [userTasksToday, userTasksLate, userTasksUpcoming, userTasksDone])
 
+  useEffect(() => {
+    console.log("Advice")
+    console.log(JSON.stringify(advice))
+  }, [advice, species])
+
   const fetchPlantData = async () => {
     if (userPlants.length === 0) {
       await dispatch(fetchUserPlantsFromDB())
       dispatch(generateTasks())
+    } else {
+      const curPlant = userPlants.find((plant) => JSON.stringify(plant.name.trim) === JSON.stringify(plant_name?.trim))
+      setPlant(curPlant)
     }
 
     if (plant_name) {
@@ -72,18 +89,25 @@ export default function MyPlantInfoPresenter({}: Props) {
   }
 
   const fetchSpeciesData = async () => {
+    const curPlant = userPlants.find((plant) => JSON.stringify(plant.name.trim) === JSON.stringify(plant_name?.trim))
+    setPlant(curPlant)
 
     console.log("fetching species data")
 
-    if (plant?.id.length !== 0 && plant !== undefined) {
-      console.log('Plant has id: %s', plant?.id)
+    console.log("Species, advice, plant")
+    console.log(JSON.stringify(species))
+    console.log(JSON.stringify(advice))
+    console.log(JSON.stringify(curPlant))
 
-      if (plant.id !==species.currentPlant?.id) {
+    if (curPlant?.id.length !== 0 && curPlant !== undefined) {
+      console.log('Plant has id: %s', curPlant.id)
+
+      if (curPlant.id !==species.currentPlant?.id) {
         console.log("Id does not matched saved species")
 
         try {
           console.log("Try to fetch specific species info through id")
-          const response = await fetch(`plants/search?query=${encodeURIComponent(plant.id)}`, {
+          const response = await fetch(`plants/search?query=${encodeURIComponent(curPlant.name)}`, {
               method: "GET",
               headers: {
                   "Content-Type": "application/json"
@@ -94,12 +118,14 @@ export default function MyPlantInfoPresenter({}: Props) {
           console.log("received result");
           console.log(response.status)
           console.log(JSON.stringify(json))
-          const currentPlant = json.result.find((res: { id: { toString: () => string; }; }) => res.id.toString() === plant.id);
+          const currentPlant = json.result[0];
 
+          console.log("Current plant and current plant id")
           console.log(currentPlant)
+          console.log(currentPlant.id)
 
-          dispatch(setCurrentPlant(currentPlant[0]))
-          dispatch(fetchCareAdvice(currentPlant[0].id))
+          dispatch(setCurrentPlant(currentPlant))
+          dispatch(fetchCareAdvice(currentPlant.id))
         } catch (error) {
           console.error("Error fetching species data in fetchSpeciesData():", error);
         }
