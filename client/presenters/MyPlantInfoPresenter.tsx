@@ -17,6 +17,7 @@ export default function MyPlantInfoPresenter({}: Props) {
   const [lateTasks, setLateTasks] = useState<Task[]>([])
   const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([])
   const [doneTasks, setDoneTasks] = useState<Task[]>([])
+  const [paramExists, setParamExist] = useState<boolean>(true)
 
   const [openPopUp, setOpenPopUp] = useState(false)
 
@@ -63,7 +64,7 @@ export default function MyPlantInfoPresenter({}: Props) {
       }
 
     } else {
-      throw new Error("Missing plant name");
+      setParamExist(false)
     }
   }
 
@@ -71,10 +72,8 @@ export default function MyPlantInfoPresenter({}: Props) {
     const plant = userPlants.find((plant) => JSON.stringify(plant.name.trim()) === JSON.stringify(plantName?.trim()))
 
     if (plant?.id.length !== 0 && plant !== undefined) {
-      console.log('Plant has id: %s', plant.id)
 
       if (plant.id !==plantspecies.currentPlant?.id) {
-        console.log("Id does not matched saved species")
 
         try {
 
@@ -83,10 +82,7 @@ export default function MyPlantInfoPresenter({}: Props) {
           dispatch(fetchCareAdvice(await response.data.data[0].id))
 
         } catch (error) {
-          console.error("Error fetching species data in fetchSpeciesData():", error);
         }
-      } else {
-        console.log("Id does match current save species")
       }
     }
   }
@@ -98,7 +94,6 @@ export default function MyPlantInfoPresenter({}: Props) {
   const onRemoveFromProfile = async () => {
     const plant = userPlants.find((plant) => JSON.stringify(plant.name.trim()) === JSON.stringify(plantName?.trim()))
     if(plant) {
-      console.log('remove plant: %s',plant.name)
       await dispatch(removePlantFromDB(plant.name))
       setOpenPopUp(true)
     } else {
@@ -108,7 +103,6 @@ export default function MyPlantInfoPresenter({}: Props) {
 
   function handlePopupClose() {
     setOpenPopUp(false)
-    console.log("Close popup")
     navigate('/profile')
   } 
 
@@ -121,6 +115,7 @@ export default function MyPlantInfoPresenter({}: Props) {
   return (
     <>
       <MyPlantInfoView 
+        paramExists={paramExists}
         species={plantspecies} 
         advice={careadvice} 
         plant={userPlants.find((plant) => JSON.stringify(plant.name.trim()) === JSON.stringify(plantName?.trim()))}
