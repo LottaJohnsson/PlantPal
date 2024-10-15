@@ -5,6 +5,7 @@ import {addPlantsToDB, updateMessages} from '../redux/slices/userSlice'
 import {setUploadPlant} from '../redux/slices/plantSlice'
 import {UserPlant} from '../redux/slices/userSlice'
 import {useDropzone} from 'react-dropzone';
+import axios from 'axios';
 import Popup from "../components/PopUp";
 import {useNavigate} from "react-router-dom";
 import { unwrapResult } from '@reduxjs/toolkit';
@@ -82,17 +83,15 @@ export default function UploadPlantScreenPresenter({}: Props) {
         if (query.length > 2) {
             setLoading(true);
             try {
-                const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-                const json = await response.json();
-                setSearchResult(json.result.slice(0, 5));
+                const response = await axios.get(`plants/search?query=${encodeURIComponent(query)}`);
+                // check so search result exists before setting it
+                if (response.data.data) {
+                    setSearchResult(response.data.data.slice(0, 5));
+                } else {
+                    setSearchResult([]);
+                }
 
-            } catch (error) {
-                console.error("Error during search:", error);
+            } catch (error: any) {
                 setSearchResult([]);
             } finally {
                 setLoading(false);
@@ -106,7 +105,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
     // function to handle selecting a plant after searching
     const handleSelectPlant = (plant: any) => {
         setFormVisible(true);
-        console.log('selectedPlant', selectedPlant);
         if (plant.id) {
             setSelectedApiPlantId(plant.id);
 
@@ -178,7 +176,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
             // Dispatch the action and unwrap the result to catch any errors
             const resultAction = await dispatch(addPlantsToDB(plantData));
             const result = unwrapResult(resultAction);
-    
+
             // If successful, show the popup
             setOpenPopUp(true);
         } catch (error) {
