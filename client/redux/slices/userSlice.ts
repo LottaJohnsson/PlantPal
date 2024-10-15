@@ -195,7 +195,6 @@ export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
                 }
             })
             .catch(error => {
-                console.error('Error adding plant:', error);
                 return rejectWithValue(error.message || 'Error adding plant');
             });
     }
@@ -234,11 +233,11 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
                 }
             })
             .catch(error => {
-                console.error('Error updating plant:', error);
                 return rejectWithValue(error.message || 'Error updating plant');
             });
     }
 );
+
 
 
 
@@ -247,7 +246,7 @@ export const removePlantFromDB = createAsyncThunk<boolean, string>(
     'plants/removePlantFromProfile',
     async (plantName, {rejectWithValue, dispatch, getState}) => {
         return axios
-            .delete(`/plants/delete`, {data: {plantName}})
+            .delete(`/plants/${ plantName }`)
             .then(response => {
                 if (response.data.success) {
                     return true;
@@ -256,7 +255,6 @@ export const removePlantFromDB = createAsyncThunk<boolean, string>(
                 }
             })
             .catch(error => {
-                console.error('Error removing plant:', error);
                 return rejectWithValue(error.message || 'Error removing plant');
             });
     }
@@ -358,6 +356,22 @@ const userTaskSlice = createSlice({
         builder.addCase(addPlantsToDB.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string || 'Failed to add plant';
+            state.success = null;
+        });
+
+        builder.addCase(removePlantFromDB.pending, state => {
+            state.loading = true;
+            state.error = null;
+            state.success = null;
+        });
+        builder.addCase(removePlantFromDB.fulfilled, state => {
+            state.loading = false;
+            state.error = null;
+            state.success = 'Plant removed successfully!';
+        });
+        builder.addCase(removePlantFromDB.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string || 'Failed to remove plant';
             state.success = null;
         });
     },

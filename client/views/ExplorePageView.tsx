@@ -20,17 +20,22 @@ import {
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { TransitionGroup } from 'react-transition-group';
 
+type Card = {
+    image: string,
+    name: string,
+    index: number,
+}
 
 type Props = {
     slideDirection: "right" | "left" | undefined;
-    cards: any;
+    cards: Card[];
     currentCards: number;
     handleNext: () => void;
     handlePrev: () => void;
     onSearchQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     showSearch: boolean;
     onOptionClick: (plant: any) => void;
-    initialPlants: any;
+    initialPlants: Card[];
 };
 
 export default function ExplorePageView({ slideDirection, cards, currentCards, handleNext, handlePrev, onSearchQueryChange, showSearch, onOptionClick, initialPlants }: Props) {
@@ -51,18 +56,18 @@ export default function ExplorePageView({ slideDirection, cards, currentCards, h
                 ref={containerRef}
                 >
                 <TransitionGroup>
-                    {
-                        !showSearch ? (
-                            <Collapse>
-                                <Typography variant="h2" sx={{marginBottom: '16px'}}>
-                                    Looking for a plant?
-                                </Typography>
-                            </Collapse>
-                        ) : (
-                            <div/>
-                        )
-                    }
-                    <div style={{marginLeft: '2%', marginTop: '2%'}}>
+                    {!showSearch ? (
+                        <Collapse>
+                            <Typography variant="h2" sx={{ marginBottom: '16px' }}>
+                                Looking for a plant?
+                            </Typography>
+                        </Collapse>
+                    ) : (
+                        <Collapse>
+                            <div />
+                        </Collapse>
+                    )}
+                    <div style={{ marginLeft: '2%', marginTop: '2%' }}>
                         <TextField
                             label="Search for a plant"
                             variant="outlined"
