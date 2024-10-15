@@ -185,6 +185,8 @@ export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
             .post(`/plants/add`, formData)
             .then(response => {
                 if (response.data.success) {
+                    // Add the plant to the state, excluding the imageFile
+                    plantData.imageFile = null;
                     dispatch(addPlant(plantData));
                     return true;
                 } else {

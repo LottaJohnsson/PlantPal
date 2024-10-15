@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, Box, Button, TextField, MenuItem, CircularProgress } from '@mui/material';
-import { format } from 'date-fns'; // change to moment?
-import {useAppSelector, useAppDispatch} from '../redux/hooks'
+import moment from 'moment';
 import {UserPlant} from '../redux/slices/userSlice'
 import {Plant} from '../redux/slices/plantSlice'
 
@@ -14,7 +13,7 @@ type Props = {
     formData: UserPlant;
     handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSelectPlant: (plant: any) => void;
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleFormChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onDrop: (acceptedFiles: File[]) => void;
     isDragActive: boolean;
     onAddPlant: () => Promise<void>;
@@ -38,7 +37,7 @@ export default function UploadPlantScreenView({
     formData,
     handleSearchChange,
     handleSelectPlant,
-    handleChange,
+    handleFormChange,
     onAddPlant,
     selectedApiPlantId,
     handleRemoveImage,
@@ -288,7 +287,7 @@ export default function UploadPlantScreenView({
                         fullWidth
                         name="name"
                         value={formData.name}
-                        onChange={handleChange}
+                        onChange={handleFormChange}
                         sx={{ marginBottom: '16px', marginTop: '16px',
                             '& .MuiFormHelperText-root': {
                             color: 'red',
@@ -303,7 +302,7 @@ export default function UploadPlantScreenView({
                         fullWidth
                         name="lastWatered"
                         value={formData.lastWatered}
-                        onChange={handleChange}
+                        onChange={handleFormChange}
                         sx={{ marginBottom: '16px',
                             '& .MuiFormHelperText-root': {
                             color: 'red', 
@@ -312,7 +311,7 @@ export default function UploadPlantScreenView({
                             shrink: true,
                         }}
                         inputProps={
-                            { max: format(new Date(), 'yyyy-MM-dd')}
+                            { max: moment().format('YYYY-MM-DD') }
                         }
                         helperText={errorMessage && !formData.lastWatered.trim() ? 'Please enter a date' : ''}
                     />
@@ -323,7 +322,7 @@ export default function UploadPlantScreenView({
                         fullWidth
                         name="wateringFrequency"
                         value={formData.wateringFrequency}
-                        onChange={handleChange}
+                        onChange={handleFormChange}
                         helperText={errorMessage && !formData.wateringFrequency.trim() ? 'Please select how often you would like to water this plant' : ''}
                         sx={{
                             marginBottom: '16px',
