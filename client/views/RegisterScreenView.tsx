@@ -118,8 +118,19 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
                         </Stack>
                     </div>
                 </Stack>
-                <img style={{height: '100vh', width: '100%', objectFit: 'contain', flex: 1, objectPosition: 'right bottom'}}
-                    src='elle-lumiere-Dze_6fnPIKk-unsplash.jpg' alt='Plant Image'></img>
+                <img
+                    style={{
+                        height: '100vh',
+                        width: '100%',
+                        objectFit: 'contain',
+                        flex: 1,
+                        objectPosition: 'right bottom',
+                        maskImage: 'linear-gradient(to right, transparent 20%, black 40%)',
+                        WebkitMaskImage: 'linear-gradient(to right, transparent 20%, black 40%)', 
+                    }}
+                    src='elle-lumiere-Dze_6fnPIKk-unsplash.jpg'
+                    alt='Smoothly Blended Image'
+                />
             </Stack>
         </div>
     )

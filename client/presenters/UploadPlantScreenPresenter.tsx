@@ -7,7 +7,6 @@ import {UserPlant} from '../redux/slices/userSlice'
 import {useDropzone} from 'react-dropzone';
 import axios from 'axios';
 import Popup from "../components/PopUp";
-import {useNavigate} from "react-router-dom";
 import { unwrapResult } from '@reduxjs/toolkit';
 
 
@@ -31,13 +30,11 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [image, setImage] = useState<string | null>(null);
     const [usingDefaultImage, setUsingDefaultImage] = useState(false);
-    //const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const dispatch = useAppDispatch();
     const selectedPlant = useAppSelector(state => state.plant.uploadPlant);
     const errorUserSlice = useAppSelector(state => state.task.error);
     const successUserSlice = useAppSelector(state => state.task.success);
     const [openPopUp, setOpenPopUp] = useState(false)
-    const navigate = useNavigate();
 
     const onDrop = (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -50,7 +47,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
 
     const {getRootProps, getInputProps} = useDropzone({onDrop});
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setFormData({...formData, [name]: value});
     };
@@ -78,7 +75,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         setSearchQuery(query);
-        //setIsPlantSelected(false);
         setFormVisible(false);
         if (query.length > 2) {
             setLoading(true);
@@ -102,7 +98,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
         }
     };
 
-    // function to handle selecting a plant after searching
     const handleSelectPlant = (plant: any) => {
         setFormVisible(true);
         if (plant.id) {
@@ -152,9 +147,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
         }
     };
 
-
-    // TODO fix loading in redux
-    // function to add plant using redux
     const onAddPlant = async (): Promise<void> => {
 
         // Validate the form before adding the plant
@@ -185,8 +177,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
         }
     };
 
-
-    // Validation function to check if all fields are filled
     const isFormValid = () => {
         return (
             (image !== null || usingDefaultImage) &&
@@ -209,7 +199,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 formData={formData}
                 handleSearchChange={handleSearchChange}
                 handleSelectPlant={handleSelectPlant}
-                handleChange={handleChange}
+                handleFormChange={handleFormChange}
                 onDrop={onDrop}
                 isDragActive={isDragActive}
                 onAddPlant={onAddPlant}
