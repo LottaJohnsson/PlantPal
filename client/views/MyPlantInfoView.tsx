@@ -118,6 +118,7 @@ function TasksRow({
 }
 
 interface speciesInfoProps {
+    plant: UserPlant | undefined,
     advice: any,
     species: any,
     handleTabChange: (event: SyntheticEvent<Element, Event>, tabindex: number) => void,
@@ -125,12 +126,13 @@ interface speciesInfoProps {
 }
 
 function SpeciesInfo({
+    plant,
     advice,
     species,
     handleTabChange,
     tabIndex,
 }: speciesInfoProps) {
-    if (advice.loading || species.loading) {
+    if (advice.loading || species.loading || parseInt(advice.careAdvice.species_id) !== parseInt(plant?.id? plant?.id : "0" )) {
      return(
         <div style={{ 
             display: 'flex',      
@@ -203,7 +205,7 @@ export default function MyPlantInfoView({
                         <TasksRow plant={plant} lateTasks={lateTasks} upcomingTasks={upcomingTasks} doneTasks={doneTasks} onCompleteTask={onCompleteTask}></TasksRow>
                     </Stack>
                 </Stack>
-                <SpeciesInfo advice={advice} species={species} handleTabChange={handleTabChange} tabIndex={tabIndex}></SpeciesInfo>
+                <SpeciesInfo advice={advice} species={species} handleTabChange={handleTabChange} tabIndex={tabIndex} plant={plant}></SpeciesInfo>
             </Stack>
         )
 
