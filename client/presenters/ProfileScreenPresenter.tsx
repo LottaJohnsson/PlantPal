@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ProfileScreenView from '../views/ProfileScreenView';
+import ProfileScreenView from '../Views/ProfileScreenView';
 import { useNavigate } from 'react-router-dom';
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {UserPlant, Task, completeTask} from '../redux/slices/userSlice'

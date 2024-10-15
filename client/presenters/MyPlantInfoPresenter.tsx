@@ -35,7 +35,6 @@ export default function MyPlantInfoPresenter({}: Props) {
   const queryParams = new URLSearchParams(window.location.search)
   const plantName = queryParams.get('plantname')
 
-  // STANNA HÄR
 
   const navigate = useNavigate();
 

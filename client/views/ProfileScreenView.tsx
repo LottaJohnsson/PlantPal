@@ -10,7 +10,7 @@ type Props = {
   plants: UserPlant[];
   onAddNewPlant: () => void;
   loading: boolean; // Accept loading prop
-  onCompleteTask: (task: any) => void;
+  onCompleteTask: (task: Task) => void;
   doneTasks: Task[];
   onClickPlant: (plant: UserPlant) => void;
 };
