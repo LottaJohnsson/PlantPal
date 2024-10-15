@@ -236,7 +236,7 @@ export default function MyPlantInfoView({
                 flexDirection: 'column', 
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '100%',
+                height: '90vh',
             }}>
                 <Box
                     sx={{
