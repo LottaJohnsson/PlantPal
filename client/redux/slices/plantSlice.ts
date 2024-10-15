@@ -47,7 +47,6 @@ const plantSlice = createSlice({
     initialState,
     reducers: {
         setCurrentPlant: (state, action: PayloadAction<Plant>) => {
-            console.log("setting current plant");
             state.currentPlant = action.payload
         },
         setUploadPlant: (state, action: PayloadAction<Plant | null>) => {

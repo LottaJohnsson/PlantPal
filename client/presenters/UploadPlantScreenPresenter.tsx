@@ -191,8 +191,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
             dispatch(setUploadPlant(null));
 
         } catch (error) {
-            // If there's an error, dispatch the appropriate error message
-            console.log('Error adding plant:', error);
+
         }
     };
 
@@ -233,7 +232,10 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 selectedPlant={selectedPlant}
             />
             <Popup.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
-            handleClose={() => setOpenPopUp(false)}></Popup.PopUp>
+            handleClose={() => {
+                setOpenPopUp(false);
+                (document.activeElement as HTMLElement)?.blur();
+                }}></Popup.PopUp>
         </>
     );
 }

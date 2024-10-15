@@ -47,7 +47,7 @@ export default function LoginScreenView(
                             <Alert severity="error" sx={{display: error !== '' ? 'flex' : 'none'}}>{error}</Alert>
                             <TextField
                                 required
-                                id="outlined-required"
+                                id="loginemail"
                                 label="Email"
                                 type="email"
                                 color="secondary"
@@ -58,7 +58,7 @@ export default function LoginScreenView(
                             />
                             <TextField
                                 required
-                                id="outlined-required"
+                                id="loginpassword"
                                 label="Password"
                                 type="password"
                                 color="secondary"

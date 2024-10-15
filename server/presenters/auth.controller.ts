@@ -58,10 +58,15 @@ router.post("/register", async (req: Request, res: Response) => {
         const {email, password} = req.body;
         const {id: sessionId} = req.session;
 
+        console.log("Registering user with email:", email);
+
         const successfulRegistration = await Model.createUser(sessionId, email, password);
 
+        console.log("Registration successful:", successfulRegistration);
+
         if (successfulRegistration) {
-            return res.status(200);
+            console.log("Registration successful");
+            return res.status(200).json({message: "Registration successful"});
         } else {
             return res.status(401).json({message: "Registration failed. Email might already be in use."});
         }

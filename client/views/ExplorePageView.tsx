@@ -65,24 +65,24 @@ export default function ExplorePageView({ slideDirection, cards, currentCards, h
                 ref={containerRef}
                 >
                 <TransitionGroup>
-                    {
-                        !showSearch ? (
-                            <Collapse>
-                                <Typography variant="h2" sx={{marginBottom: '16px'}}>
-                                    Looking for a plant?
-                                </Typography>
-                            </Collapse>
-                        ) : (
-                            <div/>
-                        )
-                    }
-                    <div style={{marginLeft: '2%', marginTop: '2%'}}>
+                    {!showSearch ? (
+                        <Collapse>
+                            <Typography variant="h2" sx={{ marginBottom: '16px' }}>
+                                Looking for a plant?
+                            </Typography>
+                        </Collapse>
+                    ) : (
+                        <Collapse>
+                            <div />
+                        </Collapse>
+                    )}
+                    <div style={{ marginLeft: '2%', marginTop: '2%' }}>
                         <TextField
                             label="Search for a plant"
                             variant="outlined"
                             fullWidth
                             onChange={searchQueryChange}
-                            sx={{marginBottom: '16px', width: '600px'}}
+                            sx={{ marginBottom: '16px', width: '600px' }}
                         />
                     </div>
                 </TransitionGroup>

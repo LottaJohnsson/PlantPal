@@ -34,7 +34,6 @@ export default function ExplorePagePresenter({}: Props) {
     }, [dispatch])
     
     useEffect(() => {
-        console.log("Plants state updated:", plants);
         
         if (plants.plants) {
             const newCards = plants.plants.map((plant: any, i: number) => ({
@@ -46,7 +45,6 @@ export default function ExplorePagePresenter({}: Props) {
             }));
             setCards(newCards);
             if (!initialPlantsSet.current) {
-                console.log("Setting initial plants:", newCards);
                 setInitialPlants(newCards);
                 initialPlantsSet.current = true;
             }

@@ -43,7 +43,6 @@ const initialState: InitialState = {
 // create tasks from user plants
 const createTasks = (plants: UserPlant[]): Task[] => {
     return plants.flatMap((plant: UserPlant): Task[] => {
-        console.log('createTasks:');
         const lastWatered = moment(plant.lastWatered);
         const wateringFrequency = plant.wateringFrequency;
         const today = moment();
@@ -52,7 +51,6 @@ const createTasks = (plants: UserPlant[]): Task[] => {
 
         // Create a "done" task if last watered is today
         if (lastWatered.isSame(today, 'day')) {
-            console.log('lastWatered is today', plant);
             tasks.push({
                 date: today.format('YYYY-MM-DD'),
                 taskName: `Water ${plant.name}`,
@@ -197,7 +195,6 @@ export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
                 }
             })
             .catch(error => {
-                console.error('Error adding plant:', error);
                 return rejectWithValue(error.message || 'Error adding plant');
             });
     }
@@ -236,7 +233,6 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
                 }
             })
             .catch(error => {
-                console.error('Error updating plant:', error);
                 return rejectWithValue(error.message || 'Error updating plant');
             });
     }
@@ -258,7 +254,6 @@ export const removePlantFromDB = createAsyncThunk<boolean, string>(
                 }
             })
             .catch(error => {
-                console.error('Error removing plant:', error);
                 return rejectWithValue(error.message || 'Error removing plant');
             });
     }
