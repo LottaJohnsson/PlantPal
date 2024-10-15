@@ -3,19 +3,17 @@ import MyPlantInfoView from '../Views/MyPlantInfoView'
 import { usePlant } from '../Contexts/plantContext';
 import { UserPlant, Task, fetchUserPlantsFromDB, generateTasks, removePlantFromDB, completeTask, updatePlantInDB } from '../redux/slices/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { fetchPlants, setCurrentPlant } from '../redux/slices/plantSlice';
-import { fetchCareAdvice } from '../redux/slices/careAdviceSlice';
+import { Plant, setCurrentPlant } from '../redux/slices/plantSlice';
+import { CareAdvice, fetchCareAdvice } from '../redux/slices/careAdviceSlice';
 import { useNavigate } from 'react-router-dom';
 import Popup from "../components/PopUp";
 
 type Props = {}
 
 export default function MyPlantInfoPresenter({}: Props) {
-  // const [advice, setAdvice] = useState<CareAdvice>()
-  // const [species, setSpecies] = useState<Plant>()
-  // const {search, fetchPlants, fetchTasks} = usePlant()
+  const [advice, setAdvice] = useState<CareAdvice>()
+  const [species, setSpecies] = useState<Plant>()
   const [tabIndex, setTabIndex] = useState(0)
-  const [plant, setPlant] = useState<UserPlant>()
   const [lateTasks, setLateTasks] = useState<Task[]>([])
   const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([])
   const [doneTasks, setDoneTasks] = useState<Task[]>([])
@@ -30,13 +28,13 @@ export default function MyPlantInfoPresenter({}: Props) {
   const userTasksUpcoming = useAppSelector(state => state.task.userTasksUpcoming)
   const userTasksDone = useAppSelector(state => state.task.userTasksDone)
 
-  const species = useAppSelector(state => state.plant)
-  const advice = useAppSelector(state => state.careAdvice)
+  const plantspecies = useAppSelector(state => state.plant)
+  const careadvice = useAppSelector(state => state.careAdvice)
 
   const queryParams = new URLSearchParams(window.location.search)
-  const plant_name = queryParams.get('plantname')
+  const plantName = queryParams.get('plantname')
 
-  // STANNA HÄR //
+  // STANNA HÄR
 
   const navigate = useNavigate();
 
@@ -46,19 +44,8 @@ export default function MyPlantInfoPresenter({}: Props) {
   }, [])
 
   useEffect(() => {
-    console.log("UserPlant changed")
-    console.log(JSON.stringify(userPlants[0]))
-    console.log(plant_name)
-    console.log(JSON.stringify(userPlants.find((plant) => JSON.stringify(plant.name.trim) === JSON.stringify(plant_name?.trim))))
-    const curPlant = userPlants.find((plant) => JSON.stringify(plant.name.trim) === JSON.stringify(plant_name?.trim))
-    setPlant(curPlant)
-  }, [userPlants])
-
-  useEffect(() => {
-    console.log("Plant changed")
-    console.log(JSON.stringify(plant))
     fetchSpeciesData()
-  }, [plant])
+  }, [userPlants])
 
   // Called when there is a change in userTasksToday, userTasksLate, userTasksUpcoming or userTasksDone
   useEffect(() => {
@@ -68,46 +55,30 @@ export default function MyPlantInfoPresenter({}: Props) {
 
   }, [userTasksToday, userTasksLate, userTasksUpcoming, userTasksDone])
 
-  useEffect(() => {
-    console.log("Advice")
-    console.log(JSON.stringify(advice))
-  }, [advice, species])
-
   const fetchPlantData = async () => {
-    if (userPlants.length === 0) {
-      await dispatch(fetchUserPlantsFromDB())
-      dispatch(generateTasks())
-    } else {
-      const curPlant = userPlants.find((plant) => JSON.stringify(plant.name.trim) === JSON.stringify(plant_name?.trim))
-      setPlant(curPlant)
-    }
+    if (plantName) {
+      if (userPlants.length === 0) {
+        await dispatch(fetchUserPlantsFromDB())
+        dispatch(generateTasks())
+      }
 
-    if (plant_name) {
     } else {
       throw new Error("Missing plant name");
     }
   }
 
   const fetchSpeciesData = async () => {
-    const curPlant = userPlants.find((plant) => JSON.stringify(plant.name.trim) === JSON.stringify(plant_name?.trim))
-    setPlant(curPlant)
+    const plant = userPlants.find((plant) => JSON.stringify(plant.name.trim()) === JSON.stringify(plantName?.trim()))
 
-    console.log("fetching species data")
+    if (plant?.id.length !== 0 && plant !== undefined) {
+      console.log('Plant has id: %s', plant.id)
 
-    console.log("Species, advice, plant")
-    console.log(JSON.stringify(species))
-    console.log(JSON.stringify(advice))
-    console.log(JSON.stringify(curPlant))
-
-    if (curPlant?.id.length !== 0 && curPlant !== undefined) {
-      console.log('Plant has id: %s', curPlant.id)
-
-      if (curPlant.id !==species.currentPlant?.id) {
+      if (plant.id !==plantspecies.currentPlant?.id) {
         console.log("Id does not matched saved species")
 
         try {
           console.log("Try to fetch specific species info through id")
-          const response = await fetch(`plants/search?query=${encodeURIComponent(curPlant.name)}`, {
+          const response = await fetch(`plants/search?query=${encodeURIComponent(plant.name)}`, {
               method: "GET",
               headers: {
                   "Content-Type": "application/json"
@@ -115,14 +86,7 @@ export default function MyPlantInfoPresenter({}: Props) {
           });
 
           const json = await response.json();
-          console.log("received result");
-          console.log(response.status)
-          console.log(JSON.stringify(json))
           const currentPlant = json.result[0];
-
-          console.log("Current plant and current plant id")
-          console.log(currentPlant)
-          console.log(currentPlant.id)
 
           dispatch(setCurrentPlant(currentPlant))
           dispatch(fetchCareAdvice(currentPlant.id))
@@ -133,32 +97,6 @@ export default function MyPlantInfoPresenter({}: Props) {
         console.log("Id does match current save species")
       }
     }
-
-    /* if (id && name) {
-      console.log("ID and Name in url")
-      if (id !== species.currentPlant?.id ) {
-        console.log("Id does not matched saved species")
-        try {
-          const response = await fetch(`plants/search?query=${encodeURIComponent(name)}`, {
-              method: "GET",
-              headers: {
-                  "Content-Type": "application/json"
-              }
-          });
-
-          const json = await response.json();
-          console.log("received result");
-          const currentPlant = json.result[0];
-
-          console.log(currentPlant)
-
-          dispatch(setCurrentPlant(currentPlant[0]))
-          dispatch(fetchCareAdvice(currentPlant[0].id))
-        } catch (error) {
-          console.error("Error fetching species data in fetchSpeciesData():", error);
-        }
-      }
-    } */
   }
 
   function handleTabChange(event: React.SyntheticEvent, tabindex: number) {
@@ -166,6 +104,7 @@ export default function MyPlantInfoPresenter({}: Props) {
   }
 
   const onRemoveFromProfile = async () => {
+    const plant = userPlants.find((plant) => JSON.stringify(plant.name.trim()) === JSON.stringify(plantName?.trim()))
     if(plant) {
       console.log('remove plant: %s',plant.name)
       await dispatch(removePlantFromDB(plant.name))
@@ -190,9 +129,9 @@ export default function MyPlantInfoPresenter({}: Props) {
   return (
     <>
       <MyPlantInfoView 
-        species={species} 
-        advice={advice} 
-        plant={plant}
+        species={plantspecies} 
+        advice={careadvice} 
+        plant={userPlants.find((plant) => JSON.stringify(plant.name.trim()) === JSON.stringify(plantName?.trim()))}
         upcomingTasks={upcomingTasks}
         lateTasks={lateTasks}
         doneTasks={doneTasks}
