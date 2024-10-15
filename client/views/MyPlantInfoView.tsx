@@ -1,11 +1,14 @@
-import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Paper, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableRow, Tabs, Typography } from '@mui/material'
+import { Alert, Box, Button, Card, CardContent, CardHeader, CircularProgress, Paper, Stack, Tab, Table, TableBody, TableCell, TableContainer, TableRow, Tabs, Typography } from '@mui/material'
 import React, { SyntheticEvent } from 'react'
 import PlantTable from "../components/PlantTable";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Task, UserPlant } from '../redux/slices/userSlice';
 import TaskBox from '../components/TaskBox'
+import { Plant } from '../redux/slices/plantSlice';
+import { CareAdvice } from '../redux/slices/careAdviceSlice';
 
 interface Props {
+    paramExists: boolean,
     advice: any,
     species: any,
     plant: UserPlant | undefined,
@@ -174,6 +177,7 @@ function SpeciesInfo({
 }
 
 export default function MyPlantInfoView({
+    paramExists,
     species,
     advice,
     plant,
@@ -185,7 +189,30 @@ export default function MyPlantInfoView({
     onRemoveFromProfile,
     onCompleteTask,
 }: Props) {
-    if (plant  && plant.id.length !== 0) {
+    if (!paramExists) {
+        return (
+            <div style={{ 
+                display: 'flex',      
+                flexDirection: 'column', 
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '90vh',
+            }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
+                    }}
+                >
+                    <Alert severity="error" > 404 Plant not found! </Alert>
+                </Box>
+            </div>
+        )
+    } else if (plant  && plant.id.length !== 0) {
         return (
             <Stack direction="column" sx={{padding: "3%"}} spacing={2} >
                 <Stack direction="row" alignItems={"left"} spacing={2}>
