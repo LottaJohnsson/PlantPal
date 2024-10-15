@@ -4,6 +4,7 @@ import GeneralScreen from "./presenters/DetailScreenPresenter";
 import AboutScreen from "./presenters/AboutScreenPresenter";
 import ExplorePage from "./presenters/ExplorePagePresenter";
 import TopBar from "./presenters/TopBarPresenter";
+import MyPlantInfo from "./presenters/MyPlantInfoPresenter";
 import Button from '@mui/material/Button';
 import LoginScreenPresenter from "./presenters/LoginScreenPresenter";
 import {ThemeProvider} from "@mui/material/styles";
@@ -19,6 +20,8 @@ const App: React.FC = () => {
                 <TopBar/>
                 <Routes>
                     {/*Public Routes*/}
+                    <Route path="/"/>
+                    <Route path="/myplant" element={<MyPlantInfo/>}/>
                     <Route path="/" element={<ExplorePage/>}/>
                     <Route path="/generalinfo" element={<GeneralScreen/>}/>
                     <Route path="/login" element={<LoginScreenPresenter/>}/>
