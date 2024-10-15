@@ -84,9 +84,9 @@ router.post("/add", requireAuth, upload.single('imageFile'), async (req: Request
 /**
  * Route for deleting a plant from the user's profile.
  */
-router.post("/delete", requireAuth, async (req: Request, res: Response) => {
+router.delete("/:plantName", requireAuth, async (req: Request, res: Response) => {
     try {
-        const {plantName} = req.body;
+        const {plantName} = req.params;
         let email = "";
 
         try {
