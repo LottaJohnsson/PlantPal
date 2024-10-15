@@ -191,7 +191,8 @@ export default function MyPlantInfoView({
                 <Stack direction="row" alignItems={"left"} spacing={2}>
                     <img src={plant?.imageFile && !plant?.imageURL ? plant?.imageFile : plant?.imageURL} alt={plant?.name} style={{
                         height: '300px',
-                        objectFit: 'contain',
+                        maxWidth: '300px',
+                        objectFit: 'cover',
                         flex: 1,
                         objectPosition: 'left bottom',
                     }}/>
