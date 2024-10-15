@@ -228,18 +228,26 @@ export default function MyPlantInfoView({
         )
     } else {
         return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
-                }}
-            >
-                <CircularProgress size={80}/>
-            </Box>
+            <div style={{ 
+                display: 'flex',      
+                flexDirection: 'column', 
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+            }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent background
+                    }}
+                >
+                    <CircularProgress size={80}/>
+                </Box>
+            </div>
         )
     }
 }
