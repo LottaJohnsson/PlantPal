@@ -8,3 +8,4 @@ public/bundle.js
 .DS_Store
 /dist/
 /dist/*
+.env
