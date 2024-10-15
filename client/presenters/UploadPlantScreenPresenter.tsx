@@ -173,7 +173,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
             setOpenPopUp(true);
         } catch (error) {
             // If there's an error, dispatch the appropriate error message
-            console.log('Error adding plant:', error);
         }
     };
 

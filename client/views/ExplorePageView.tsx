@@ -14,7 +14,8 @@ import {
     TextField,
     Collapse,
     Fade,
-    Grid
+    Grid,
+    Alert
 } from "@mui/material";
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { TransitionGroup } from 'react-transition-group';
@@ -25,29 +26,14 @@ type Props = {
     currentCards: number;
     handleNext: () => void;
     handlePrev: () => void;
-    onSearchQueryChange: (query: string) => void;
+    onSearchQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     showSearch: boolean;
-    setShowSearch: (showSearch: boolean) => void;
     onOptionClick: (plant: any) => void;
     initialPlants: any;
 };
 
-export default function ExplorePageView({ slideDirection, cards, currentCards, handleNext, handlePrev, onSearchQueryChange, showSearch, setShowSearch, onOptionClick, initialPlants }: Props) {
+export default function ExplorePageView({ slideDirection, cards, currentCards, handleNext, handlePrev, onSearchQueryChange, showSearch, onOptionClick, initialPlants }: Props) {
     const containerRef = React.useRef<HTMLElement>(null);
-
-    function searchQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const query = event.target.value;
-        onSearchQueryChange(query);
-        if (query.length > 0) {
-            setShowSearch(true);
-        } else {
-            setShowSearch(false);
-        }
-    }
-
-    function optionClick(plant: any) {
-        onOptionClick(plant.plant);
-    }
 
     return (
         <Stack spacing={2} sx={{ height: '90vh', padding: 0, margin: 0 }}>
@@ -77,11 +63,12 @@ export default function ExplorePageView({ slideDirection, cards, currentCards, h
                             label="Search for a plant"
                             variant="outlined"
                             fullWidth
-                            onChange={searchQueryChange}
+                            onChange={onSearchQueryChange}
                             sx={{ marginBottom: '16px', width: '600px' }}
                         />
                     </div>
                 </TransitionGroup>
+                {!initialPlants[0].image && <Alert severity='warning'>Cannot reach the API</Alert>}
             </Box>
             {!showSearch &&
             <Fade in={!showSearch}>
@@ -120,9 +107,9 @@ export default function ExplorePageView({ slideDirection, cards, currentCards, h
                                             display: (card.index >= currentCards * 5 && card.index <= currentCards * 5 + 5 - 1) ? "block" : "none",
                                             overflow: 'hidden'
                                         }}>
-                                            {initialPlants.length > 0 ? (
+                                            {card.image? (
                                                 <>
-                                                    <CardActionArea onClick={() => optionClick(card)}>
+                                                    <CardActionArea onClick={() => onOptionClick(card.plant)}>
                                                     <img
                                                     src={card.image}
                                                     alt={card.name}
@@ -138,7 +125,6 @@ export default function ExplorePageView({ slideDirection, cards, currentCards, h
                                                     <Skeleton width="50%" />
                                                 </Box>
                                             )}
-
                                         </Box>
                                     </Slide>
                                 ))}
@@ -159,7 +145,7 @@ export default function ExplorePageView({ slideDirection, cards, currentCards, h
                     <Grid item key={card.index} xs={6} sm={4} md={3}>
                         <Box sx={{ textAlign: 'center', marginTop: '16px' }}>
                         {card.image ? (
-                            <CardActionArea onClick={() => optionClick(card)}>
+                            <CardActionArea onClick={() => onOptionClick(card.plant)}>
                             <img
                             src={card.image}
                             alt={card.name}

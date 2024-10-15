@@ -1,7 +1,6 @@
 import React from "react";
 import {createRoot} from "react-dom/client"; // Import createRoot from react-dom/client
 import App from "./App";
-import {PlantProvider} from "./Contexts/plantContext";
 import store, {persistor} from './redux/store'
 import {Provider} from 'react-redux'
 import {PersistGate} from "redux-persist/integration/react";
@@ -15,7 +14,6 @@ root.render(
     <React.StrictMode>
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                    <PlantProvider>
                         <style>
                             {`
                 body {
@@ -24,8 +22,6 @@ root.render(
             `}
                         </style>
                         <App/>
-                    </PlantProvider>
-
             </PersistGate>
         </Provider>
     </React.StrictMode>

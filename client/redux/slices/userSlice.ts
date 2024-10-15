@@ -42,7 +42,6 @@ const initialState: InitialState = {
 // create tasks from user plants
 const createTasks = (plants: UserPlant[]): Task[] => {
     return plants.flatMap((plant: UserPlant): Task[] => {
-        console.log('createTasks:');
         const lastWatered = moment(plant.lastWatered);
         const wateringFrequency = plant.wateringFrequency;
         const today = moment();
@@ -51,7 +50,6 @@ const createTasks = (plants: UserPlant[]): Task[] => {
 
         // Create a "done" task if last watered is today
         if (lastWatered.isSame(today, 'day')) {
-            console.log('lastWatered is today', plant);
             tasks.push({
                 date: today.format('YYYY-MM-DD'),
                 taskName: `Water ${plant.name}`,
@@ -290,14 +288,12 @@ const userTaskSlice = createSlice({
         completeTask: (state, action: PayloadAction<Task>) => {
             let task = action.payload;
         
-            console.log('Completing task:', task);
         
             // Find the task in the correct array and remove it
             const todayIndex = state.userTasksToday.findIndex((t) => t.taskName === task.taskName);
             const lateIndex = state.userTasksLate.findIndex((t) => t.taskName === task.taskName);
             const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);
         
-            console.log('Indexes:', todayIndex, lateIndex, upcomingIndex);
         
             if (todayIndex !== -1) {
                 state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);

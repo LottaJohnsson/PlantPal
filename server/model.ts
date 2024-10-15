@@ -163,9 +163,6 @@ class Model {
     latestWatered: string, 
     email: string,
   ): Promise<boolean> {
-
-    console.log("Updating plant in model!");
-    console.log("plant data:", plantName, latestWatered, email);
       try {
           const query = `
               UPDATE plants

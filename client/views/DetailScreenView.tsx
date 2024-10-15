@@ -80,11 +80,7 @@ export default function GeneralScreenView(
         onAddToProfile,
     }: GeneralScreenViewProps) {
 
-    console.log(advice.error)
-    console.log("care advice " + advice.careAdvice);
-
     if (species.loading || advice.loading) {
-        console.log("loading")
         return (
             <Box
                 sx={{
