@@ -1,6 +1,7 @@
 import express, {Request, Response} from "express";
 import Model from "../model";
 import model from "../model";
+import exp from "constants";
 
 const router = express.Router();
 
@@ -75,8 +76,6 @@ router.post("/register", async (req: Request, res: Response) => {
  * Route for logging in a user. Checks if the email and password is correct, and if so, logs in the user.
  */
 router.post("/login", async (req: Request, res: Response) => {
-    console.log("try to log in");
-
     if (!validateEmail(req.body.email)) {
         return res.status(400).json({message: "Invalid email"});
     }
@@ -125,3 +124,4 @@ function validateEmail(email: string) {
 }
 
 export default router;
+export {requireAuth};

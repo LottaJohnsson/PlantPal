@@ -11,7 +11,15 @@ type Props = {
     onSubmit : () => void
 }
 
+
 export default function RegisterScreenView({error, loading, setIsLogin, onEmailChange, onPasswordChange, onConfirmPassswordChange, onSubmit }: Props) {
+    
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+        if (event.key === 'Enter') {
+            onSubmit();
+        }
+    };
+
     function emailInputChanged(event: React.ChangeEvent<HTMLInputElement>) {
         onEmailChange(event.target.value)
     }
@@ -50,6 +58,7 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
                     noValidate
                     autoComplete="off"
                     sx={{flex: 1, '& > :not(style)': {width: '100%'}, marginLeft: '2%'}}
+                    onKeyDown={handleKeyDown}
                 >
                     <div style={{marginBottom: '10%', marginTop: '10%'}}>
                         <Typography variant='h2'>Are your plants dying?</Typography>
@@ -109,8 +118,19 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
                         </Stack>
                     </div>
                 </Stack>
-                <img style={{height: '100vh', width: '100%', objectFit: 'contain', flex: 1, objectPosition: 'right bottom'}}
-                    src='elle-lumiere-Dze_6fnPIKk-unsplash.jpg' alt='Plant Image'></img>
+                <img
+                    style={{
+                        height: '100vh',
+                        width: '100%',
+                        objectFit: 'contain',
+                        flex: 1,
+                        objectPosition: 'right bottom',
+                        maskImage: 'linear-gradient(to right, transparent 20%, black 40%)',
+                        WebkitMaskImage: 'linear-gradient(to right, transparent 20%, black 40%)', 
+                    }}
+                    src='elle-lumiere-Dze_6fnPIKk-unsplash.jpg'
+                    alt='Smoothly Blended Image'
+                />
             </Stack>
         </div>
     )

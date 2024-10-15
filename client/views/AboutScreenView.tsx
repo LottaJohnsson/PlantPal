@@ -51,11 +51,11 @@ export default function AboutScreenView({}: Props) {
             </Box>
             <Box textAlign='left' px='15%' paddingBottom='50px'>
                 <Typography variant="h5">
-                    At Plant Pal, we’re passionate about helping you take the best care of your plants.
+                    At PlantPal, we’re passionate about helping you take the best care of your plants.
                     Whether you’re a seasoned plant enthusiast or just starting your plant journey,
-                    Plant Pal provides easy-to-follow care tips tailored to your specific plants.
+                    PlantPal provides easy-to-follow care tips tailored to your specific plants.
                     From watering schedules to sunlight requirements, we’ve got all the insights you
-                    need to help your plants thrive. With Plant Pal by your side, keeping your plants
+                    need to help your plants thrive. With PlantPal by your side, keeping your plants
                     happy and healthy has never been easier!
                 </Typography>
             </Box>

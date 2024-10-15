@@ -1,10 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import UploadPlantScreenView from '../Views/UploadPlantScreenView';
+import React, {useState, useEffect} from 'react'
+import UploadPlantScreenView from '../views/UploadPlantScreenView'
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
-import {addPlantsToDB, addPlant} from '../redux/slices/userSlice'
+import {addPlantsToDB, updateMessages} from '../redux/slices/userSlice'
 import {setUploadPlant} from '../redux/slices/plantSlice'
 import {UserPlant} from '../redux/slices/userSlice'
 import {useDropzone} from 'react-dropzone';
+import axios from 'axios';
+import Popup from "../components/PopUp";
+import { unwrapResult } from '@reduxjs/toolkit';
+
+
 
 type Props = {};
 
@@ -16,6 +21,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const [formData, setFormData] = useState({
         id: '',
         name: '',
+        api_name: '',
         lastWatered: '',
         wateringFrequency: '',
         imageURL: '',
@@ -25,31 +31,19 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [image, setImage] = useState<string | null>(null);
     const [usingDefaultImage, setUsingDefaultImage] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const dispatch = useAppDispatch();
     const selectedPlant = useAppSelector(state => state.plant.uploadPlant);
     const errorUserSlice = useAppSelector(state => state.task.error);
     const successUserSlice = useAppSelector(state => state.task.success);
+    const [openPopUp, setOpenPopUp] = useState(false)
+    const [popupMessage, setPopUpMessage] = useState<string>('')
+    const [popupHeader, setPopUpHeader] = useState<string>('')
 
     useEffect(() => {
-        if (errorUserSlice) {
-            setErrorMessage(null);
+        if (selectedPlant) {
+            handleSelectPlant(selectedPlant);
         }
-        if (successUserSlice) {
-            setSuccessMessage(null);
-        }
-    });
-
-    useEffect(() => {
-        
-        if (errorUserSlice) {
-            setErrorMessage(errorUserSlice);
-        }
-        if (successUserSlice) {
-            setSuccessMessage(successUserSlice);
-        }
-    }, [errorUserSlice, successUserSlice]);
+    }, [selectedPlant]);
 
     const onDrop = (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -62,7 +56,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
 
     const {getRootProps, getInputProps} = useDropzone({onDrop});
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setFormData({...formData, [name]: value});
     };
@@ -84,30 +78,25 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 setImageFile(null);
                 setImage(defaultImageUrl);
             }
-        } else {
-            console.log('No plant selected to use default image.');
         }
     };
 
     const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
         setSearchQuery(query);
-        //setIsPlantSelected(false);
         setFormVisible(false);
         if (query.length > 2) {
             setLoading(true);
             try {
-                const response = await fetch(`plants/search?query=${encodeURIComponent(query)}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-                const json = await response.json();
-                setSearchResult(json.result.slice(0, 5));
+                const response = await axios.get(`plants/search?query=${encodeURIComponent(query)}`);
+                // check so search result exists before setting it
+                if (response.data.data) {
+                    setSearchResult(response.data.data.slice(0, 5));
+                } else {
+                    setSearchResult([]);
+                }
 
-            } catch (error) {
-                console.error("Error during search:", error);
+            } catch (error: any) {
                 setSearchResult([]);
             } finally {
                 setLoading(false);
@@ -118,34 +107,38 @@ export default function UploadPlantScreenPresenter({}: Props) {
         }
     };
 
-    // function to handle selecting a plant after searching
     const handleSelectPlant = (plant: any) => {
         setFormVisible(true);
         if (plant.id) {
             setSelectedApiPlantId(plant.id);
-            //setSelectedPlant(plant); // Store the selected plant details 
+
+            // checks for plant details
+            const imageUrl = plant.default_image?.small_url || '';
+            const plantName = plant.common_name || plant.scientific_name || '';
+            const wateringFrequency = mapWateringFrequency(plant.watering);
+            const apiPlantName = plant.common_name || plant.scientific_name || '';
+
             setFormData({
                 id: plant.id,
-                name: plant.common_name || plant.scientific_name || '',
+                name: plantName,
+                api_name: apiPlantName,
                 lastWatered: '',
-                wateringFrequency: mapWateringFrequency(plant.watering),
-                imageURL: plant.default_image.small_url || '',
+                wateringFrequency: wateringFrequency,
+                imageURL: imageUrl,
                 imageFile: null,
             });
-            //setIsPlantSelected(true);
             dispatch(setUploadPlant(plant));
         } else {
             setSelectedApiPlantId(null);
-            //setSelectedPlant(null); // Reset selected plant
             setFormData({
                 id: '',
                 name: '',
+                api_name: '',
                 lastWatered: '',
                 wateringFrequency: '',
                 imageURL: '',
                 imageFile: null,
             });
-            //setIsPlantSelected(false);
             dispatch(setUploadPlant(null));
         }
         setSearchResult([]);
@@ -166,37 +159,42 @@ export default function UploadPlantScreenPresenter({}: Props) {
         }
     };
 
-
-    // TODO fix loading in redux
-    // function to add plant using redux
     const onAddPlant = async (): Promise<void> => {
-
-        // Clear previous messages
-        setErrorMessage(null);
-        setSuccessMessage(null);
 
         // Validate the form before adding the plant
         if (!isFormValid()) {
-            setErrorMessage("You need to fill in everything to add the plant!");
+            dispatch(updateMessages({error: "You need to fill in everything to add the plant!"}));
             return;
         }
 
         const plantData: UserPlant = {
             id: formData.id,
             name: formData.name,
+            api_name: formData.api_name,
             lastWatered: formData.lastWatered,
             wateringFrequency: formData.wateringFrequency,
             imageURL: formData.imageURL,
             imageFile: formData.imageFile,
         };
 
-        // Add the plant to db and get the action result
-        await dispatch(addPlantsToDB(plantData));
+        try {
+            // Dispatch the action and unwrap the result to catch any errors
+            const resultAction = await dispatch(addPlantsToDB(plantData));
+            const result = unwrapResult(resultAction);
 
+            // If successful, show the popup
+            setPopUpMessage("You have successfully added the plant to your profile!");
+            setPopUpHeader("Added plant")
+            setOpenPopUp(true);
+            
+            // set selected plant to null
+            dispatch(setUploadPlant(null));
+
+        } catch (error) {
+            // If there's an error, dispatch the appropriate error message
+        }
     };
 
-
-    // Validation function to check if all fields are filled
     const isFormValid = () => {
         return (
             (image !== null || usingDefaultImage) &&
@@ -209,28 +207,32 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const isDragActive = image !== null;
 
     return (
-        <UploadPlantScreenView
-            image={imageFile}
-            searchQuery={searchQuery}
-            searchResult={searchResult}
-            loading={loading}
-            formVisible={formVisible}
-            formData={formData}
-            handleSearchChange={handleSearchChange}
-            handleSelectPlant={handleSelectPlant}
-            handleChange={handleChange}
-            onDrop={onDrop}
-            isDragActive={isDragActive}
-            onAddPlant={onAddPlant}
-            selectedApiPlantId={selectedApiPlantId}
-            //isPlantSelected={isPlantSelected}
-            handleRemoveImage={handleRemoveImage}
-            handleUseDefaultImage={handleUseDefaultImage}
-            usingDefaultImage={usingDefaultImage}
-            errorMessage={errorMessage}
-            successMessage={successMessage}
-            getRootProps={getRootProps}
-            getInputProps={getInputProps}
-        />
+        <>
+            <UploadPlantScreenView
+                image={imageFile}
+                searchQuery={searchQuery}
+                searchResult={searchResult}
+                loading={loading}
+                formVisible={formVisible}
+                formData={formData}
+                handleSearchChange={handleSearchChange}
+                handleSelectPlant={handleSelectPlant}
+                handleFormChange={handleFormChange}
+                onDrop={onDrop}
+                isDragActive={isDragActive}
+                onAddPlant={onAddPlant}
+                selectedApiPlantId={selectedApiPlantId}
+                handleRemoveImage={handleRemoveImage}
+                handleUseDefaultImage={handleUseDefaultImage}
+                usingDefaultImage={usingDefaultImage}
+                errorMessage={errorUserSlice}
+                successMessage={successUserSlice}
+                getRootProps={getRootProps}
+                getInputProps={getInputProps}
+                selectedPlant={selectedPlant}
+            />
+            <Popup.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
+            handleClose={() => setOpenPopUp(false)}></Popup.PopUp>
+        </>
     );
 }

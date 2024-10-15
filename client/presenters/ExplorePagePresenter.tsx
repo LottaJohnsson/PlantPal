@@ -1,45 +1,109 @@
-import React, {useState, useEffect} from 'react'
-import ExplorePageView from '../Views/ExplorePageView'
+import React, {useState, useEffect, useRef} from 'react'
+import ExplorePageView from '../views/ExplorePageView'
 import {Card} from '@mui/material'
+import {fetchPlants} from "../redux/slices/plantSlice";
+import {useAppDispatch, useAppSelector} from "../redux/hooks";
+import { useNavigate } from 'react-router-dom';
+import {setCurrentPlant} from '../redux/slices/plantSlice'
+import {fetchCareAdvice} from "../redux/slices/careAdviceSlice";
+import {Plant} from '../redux/slices/plantSlice';
 
 type Props = {}
-
+type Card = {
+    image: string,
+    name: string,
+    index: number,
+}
 export default function ExplorePagePresenter({}: Props) {
     const [slideDirrection, setSlideDirection] = useState<"right" | "left" | undefined>("left")
-    const [cards, setCards] = useState<React.ReactElement[]>([])
+    const [cards, setCards] = useState<Card[]>([])
     const [currentCards, setCurrentCards] = useState(0)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [loading, setLoading] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
+    const [initialPlants, setInitialPlants] = useState<Card[]>(Array.from({ length: 28 }, (_, i) => ({
+        image: '',
+        name: '',
+        index: i,
+        id: i,
+    })));
+    const initialPlantsSet = useRef(false);
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch()
+
+
+    const plants = useAppSelector(state => state.plant)
 
     useEffect(() => {
-        setCards(duplicateCards)
-    }, [])
+        dispatch(fetchPlants(""))
+    }, [dispatch])
+    
+    useEffect(() => {
+        if (plants.plants) {
+            const newCards = plants.plants.map((plant: any, i: number) => ({
+                image: plant.default_image?.medium_url || 'https://i.ebayimg.com/images/g/pQoAAOSwAa1f2dlL/s-l960.webp',
+                name: plant.common_name,
+                index: i,
+                id: plant.id,
+                plant: plant
+            }));
+            setCards(newCards);
+            if (!initialPlantsSet.current && newCards.length > 0) {
+                setInitialPlants(newCards);
+                initialPlantsSet.current = true;
+            }
+        }
+    }, [plants]);
 
+    const skeletonCards: Card[] = Array.from({ length: 28 }, (_, i) => ({
+        image: '',
+        name: '',
+        index: i,
+        id: i,
+    }));
 
-    const cardsPerPage = 4
-    const duplicateCards: React.ReactElement[] = Array.from(
-        {length: 12},
-        (_, i) => <Card key={i}>
-            Word of the Day {i}
-        </Card>
-    )
-    const pages = duplicateCards.length / cardsPerPage
+    const pages = 7;
+
+    function handleOptionClickCB(plant: Plant) {
+        dispatch(setCurrentPlant(plant))
+        dispatch(fetchCareAdvice(plant.id))
+        navigate(`/generalinfo`,);
+    }
+
+    function handleSearchQueryChangeCB(event: React.ChangeEvent<HTMLInputElement>) {
+        const query = event.target.value
+        setSearchQuery(query)
+        setLoading(true)
+        if (query.length > 0) {
+            setShowSearch(true);
+        } else {
+            setShowSearch(false);
+        }
+        dispatch(fetchPlants(searchQuery))
+    }
+
 
     function handleNext() {
         setSlideDirection("left")
-        console.log('prev: %d', currentCards)
         setCurrentCards((prevCards) => (prevCards + 1) % (pages))
-        console.log('prevAfter: %d', currentCards)
     }
 
     function handlePrev() {
         setSlideDirection("right")
-        console.log('prev: %d', currentCards)
         setCurrentCards((prevCards) => ((prevCards - 1) % (pages) + pages) % pages)
-        console.log('prevAfter: %d', currentCards)
     }
 
 
     return (
-        <ExplorePageView slideDirection={slideDirrection} cards={cards} currentCards={currentCards}
-                         handleNext={handleNext} handlePrev={handlePrev}/>
+        <ExplorePageView 
+            slideDirection={slideDirrection} 
+            cards={cards.length > 0 ? cards : skeletonCards} 
+            currentCards={currentCards}
+            handleNext={handleNext} handlePrev={handlePrev}
+            onSearchQueryChange={handleSearchQueryChangeCB}
+            showSearch={showSearch}
+            onOptionClick={handleOptionClickCB}
+            initialPlants={initialPlants}
+            />
     )
 }

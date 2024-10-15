@@ -73,7 +73,7 @@ function TopBar(
                             onClick={() => buttonClick("profile")}
                         >Profile</Button>)}
                         <Button color="secondary"
-                                onClick={() => buttonClick("explore")}
+                                onClick={() => buttonClick("")}
                         >Explore
                         </Button>
                         <Button color="secondary"

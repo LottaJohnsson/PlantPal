@@ -8,13 +8,15 @@
  */
 
 import mysql from 'mysql2/promise';
+require('dotenv').config();
 
 // password StrongPassword123!
 const pool = mysql.createPool({
-  socketPath: process.env.MYSQL_HOST, // Use the service name 'db' defined in docker-compose.yml PlantPalPassword123!
-  user: process.env.MYSQL_USER || 'plantpal',
-  password: process.env.MYSQL_PASSWORD || 'StrongPassword123!', // StrongPassword123!
-  database: process.env.MYSQL_DATABASE || 'plantpalDB',
+  socketPath: process.env.MYSQL_SOCKET_PATH || undefined,
+  host: process.env.MYSQL_HOST || undefined,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 });
 
 export async function query(sql: string, values?: any) {
@@ -44,6 +46,7 @@ export async function initializeDatabase() {
         id INT AUTO_INCREMENT PRIMARY KEY,
         plant_id VARCHAR(255), 
         plant_name VARCHAR(255) NOT NULL,
+        api_plant_name VARCHAR(255),
         watering_frequency VARCHAR(50) NOT NULL,
         latest_watered DATE NOT NULL,
         image_url VARCHAR(255),

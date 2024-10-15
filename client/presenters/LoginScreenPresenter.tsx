@@ -52,15 +52,9 @@ export default function LoginScreenPresenter({}: Props) {
             setError('Email is not in a valid format');
             return;
         }
-        try {
-            setError('');
-            setLoading(true);
-            await dispatch(loginUserR({email: emailRef.current, password: passwordRef.current}));
-        } catch (error) {
-            setError('Wrong email or password');
-            setLoading(false);
-            console.log(error);
-        }
+        setError('');
+        setLoading(true);
+        await dispatch(loginUserR({email: emailRef.current, password: passwordRef.current}));
     }
 
     async function handleRegisterSubmitCB() {
@@ -68,23 +62,22 @@ export default function LoginScreenPresenter({}: Props) {
             setError('Please fill in all fields');
             return;
         }
+
+        if (passwordRef.current !== confirmPasswordRef.current) {
+            setError('Password and confirm password do not match');
+            return;
+        }
+
         if (!validateEmail(emailRef.current)) {
             setError('Email is not in a valid format');
             return;
         }
-        try {
-            setError('');
-            setLoading(true);
-            await dispatch(registerUserR({email: emailRef.current, password: passwordRef.current}));
-        } catch (error) {
-            setError('Something went wrong while registering the account');
-            setLoading(false);
-            console.log(error);
-        }
+        setError('');
+        setLoading(true);
+        await dispatch(registerUserR({email: emailRef.current, password: passwordRef.current}));
     }
 
     async function fetchUserData() {
-        console.log("Fetching user data");
         await dispatch(fetchUserPlantsFromDB());
         await dispatch(generateTasks());
     }
