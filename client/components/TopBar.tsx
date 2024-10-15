@@ -2,8 +2,6 @@ import React from "react";
 import {AppBar, Box, Toolbar, Typography, Button, Autocomplete, TextField} from "@mui/material";
 import {Plant} from '../redux/slices/plantSlice';
 
-//import SearchBar from "../Controllers/SearchBarController";
-
 interface TopBarProps {
     isAuthenticated: boolean,
     onInputChange: (query: string) => void,

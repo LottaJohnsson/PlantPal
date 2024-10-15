@@ -1,8 +1,9 @@
 import {Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@mui/material";
 import React from "react";
+import { Plant } from "../redux/slices/plantSlice";
 
 interface PlantTableProps {
-    plant: any,
+    plant: Plant,
 }
 
 function createRow(
@@ -16,7 +17,7 @@ export default function PlantTable({plant}: PlantTableProps) {
     const rows = [
         createRow('Cycle', plant.cycle),
         createRow('Other Names', plant.other_name.join(', ')),
-        createRow('Scientific Name', plant.scientific_name),
+        createRow('Scientific Name', plant.scientific_name[0]),
         createRow('Sunlight', plant.sunlight.join(', ')),
         createRow('Watering', plant.watering),
     ];
