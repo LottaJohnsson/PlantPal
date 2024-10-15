@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import GeneralScreenView from "../views/GeneralScreenView";
+import DetailsScreenView from "../views/DetailScreenView";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {fetchCareAdvice} from '../redux/slices/careAdviceSlice';
@@ -29,7 +29,7 @@ export default function DetailScreenPresenter() {
 
     return (
         <>
-            <GeneralScreenView
+            <DetailsScreenView
                 advice={careAdvice}
                 species={plant}
                 handleTabChange={handleTabChange}
