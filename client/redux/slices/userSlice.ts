@@ -240,12 +240,13 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
 
 
 
+
 // remove plant from database
 export const removePlantFromDB = createAsyncThunk<boolean, string>(
     'plants/removePlantFromProfile',
     async (plantName, {rejectWithValue, dispatch, getState}) => {
         return axios
-            .delete(`/plants/delete`, {data: {plantName}})
+            .delete(`/plants/${ plantName }`)
             .then(response => {
                 if (response.data.success) {
                     return true;
@@ -287,11 +288,11 @@ const userTaskSlice = createSlice({
 
         completeTask: (state, action: PayloadAction<Task>) => {
             let task = action.payload;
-            
+        
             // Find the task in the correct array and remove it
             const todayIndex = state.userTasksToday.findIndex((t) => t.taskName === task.taskName);
             const lateIndex = state.userTasksLate.findIndex((t) => t.taskName === task.taskName);
-            const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);
+            const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);  
         
             if (todayIndex !== -1) {
                 state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);
@@ -355,6 +356,22 @@ const userTaskSlice = createSlice({
         builder.addCase(addPlantsToDB.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string || 'Failed to add plant';
+            state.success = null;
+        });
+
+        builder.addCase(removePlantFromDB.pending, state => {
+            state.loading = true;
+            state.error = null;
+            state.success = null;
+        });
+        builder.addCase(removePlantFromDB.fulfilled, state => {
+            state.loading = false;
+            state.error = null;
+            state.success = 'Plant removed successfully!';
+        });
+        builder.addCase(removePlantFromDB.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string || 'Failed to remove plant';
             state.success = null;
         });
     },

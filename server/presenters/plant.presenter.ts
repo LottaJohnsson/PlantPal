@@ -84,9 +84,9 @@ router.post("/add", requireAuth, upload.single('imageFile'), async (req: Request
 /**
  * Route for deleting a plant from the user's profile.
  */
-router.post("/delete", requireAuth, async (req: Request, res: Response) => {
+router.delete("/:plantName", requireAuth, async (req: Request, res: Response) => {
     try {
-        const {plantName} = req.body;
+        const {plantName} = req.params;
         let email = "";
 
         try {
@@ -229,7 +229,6 @@ router.get("/care_advice", async (req: Request, res: Response) => {
         const result = response.data;
 
         if (status === 200) {
-            console.log(result);
             return res.status(status).json(result);
         } else if (status === 429) {
             return res.status(status).json({error: "Code: 429 Too many requests with this API key"});

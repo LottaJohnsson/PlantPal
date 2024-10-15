@@ -191,7 +191,6 @@ export default function UploadPlantScreenPresenter({}: Props) {
             dispatch(setUploadPlant(null));
 
         } catch (error) {
-
         }
     };
 
