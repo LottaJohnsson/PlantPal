@@ -80,11 +80,7 @@ export default function GeneralScreenView(
         onAddToProfile,
     }: GeneralScreenViewProps) {
 
-    console.log(advice.error)
-    console.log("care advice " + advice.careAdvice);
-
     if (species.loading || advice.loading) {
-        console.log("loading")
         return (
             <Box
                 sx={{
@@ -100,7 +96,7 @@ export default function GeneralScreenView(
                     zIndex: 9999,
                 }}
             >
-                <CircularProgress size={80}/>
+                <CircularProgress size={50} sx={{ color: 'secondary.dark' }}/>
             </Box>
         );
     }
@@ -118,7 +114,7 @@ export default function GeneralScreenView(
                     width: '100vw',
                     height: '100vh',
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    zIndex: 9999,
+                    zIndex: 900,
                 }}
             >
                 <Typography variant="h4" color="error">

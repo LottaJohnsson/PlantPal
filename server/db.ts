@@ -47,6 +47,7 @@ export async function initializeDatabase() {
         id INT AUTO_INCREMENT PRIMARY KEY,
         plant_id VARCHAR(255), 
         plant_name VARCHAR(255) NOT NULL,
+        api_plant_name VARCHAR(255),
         watering_frequency VARCHAR(50) NOT NULL,
         latest_watered DATE NOT NULL,
         image_url VARCHAR(255),
