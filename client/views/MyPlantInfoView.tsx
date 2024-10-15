@@ -257,7 +257,7 @@ export default function MyPlantInfoView({
                 </Stack>
                 <Stack sx={{padding: "5%", flex: 2, alignContent: 'center'}}>
                     <Typography align='center' variant='h6' >
-                        To get plant species information add a plant from out api
+                        To get plant species information add a plant from our api
                     </Typography>
                 </Stack>
             </Stack>
