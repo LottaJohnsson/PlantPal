@@ -12,6 +12,7 @@ export type Task = {
 export type UserPlant = {
     id: string;
     name: string;
+    api_name: string
     wateringFrequency: string;
     lastWatered: string;
     imageURL: string;
@@ -137,6 +138,7 @@ export const fetchUserPlantsFromDB = createAsyncThunk<UserPlant[]>('fetchUserPla
             const plants = response.data.plants.map((plant: any): UserPlant => ({
                 id: plant.plant_id,
                 name: plant.plant_name,
+                api_name: plant.api_plant_name,
                 wateringFrequency: plant.watering_frequency,
                 lastWatered: moment(plant.latest_watered).local().format('YYYY-MM-DD'),
                 imageURL: plant.image_url,
@@ -168,6 +170,7 @@ export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
         const formData = new FormData();
 
         formData.append('plantName', plantData.name);
+        formData.append('apiPlantName', plantData.api_name);
         formData.append('wateringFrequency', plantData.wateringFrequency);
         formData.append('lastWatered', plantData.lastWatered);
         formData.append('id', plantData.id);
@@ -288,12 +291,10 @@ const userTaskSlice = createSlice({
         completeTask: (state, action: PayloadAction<Task>) => {
             let task = action.payload;
         
-        
             // Find the task in the correct array and remove it
             const todayIndex = state.userTasksToday.findIndex((t) => t.taskName === task.taskName);
             const lateIndex = state.userTasksLate.findIndex((t) => t.taskName === task.taskName);
-            const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);
-        
+            const upcomingIndex = state.userTasksUpcoming.findIndex((t) => t.taskName === task.taskName);  
         
             if (todayIndex !== -1) {
                 state.userTasksToday = state.userTasksToday.filter((t) => t.taskName !== task.taskName);

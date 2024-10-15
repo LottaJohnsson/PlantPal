@@ -21,6 +21,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const [formData, setFormData] = useState({
         id: '',
         name: '',
+        api_name: '',
         lastWatered: '',
         wateringFrequency: '',
         imageURL: '',
@@ -35,6 +36,14 @@ export default function UploadPlantScreenPresenter({}: Props) {
     const errorUserSlice = useAppSelector(state => state.task.error);
     const successUserSlice = useAppSelector(state => state.task.success);
     const [openPopUp, setOpenPopUp] = useState(false)
+    const [popupMessage, setPopUpMessage] = useState<string>('')
+    const [popupHeader, setPopUpHeader] = useState<string>('')
+
+    useEffect(() => {
+        if (selectedPlant) {
+            handleSelectPlant(selectedPlant);
+        }
+    }, [selectedPlant]);
 
     const onDrop = (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
@@ -107,10 +116,12 @@ export default function UploadPlantScreenPresenter({}: Props) {
             const imageUrl = plant.default_image?.small_url || '';
             const plantName = plant.common_name || plant.scientific_name || '';
             const wateringFrequency = mapWateringFrequency(plant.watering);
+            const apiPlantName = plant.common_name || plant.scientific_name || '';
 
             setFormData({
                 id: plant.id,
                 name: plantName,
+                api_name: apiPlantName,
                 lastWatered: '',
                 wateringFrequency: wateringFrequency,
                 imageURL: imageUrl,
@@ -122,6 +133,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
             setFormData({
                 id: '',
                 name: '',
+                api_name: '',
                 lastWatered: '',
                 wateringFrequency: '',
                 imageURL: '',
@@ -158,6 +170,7 @@ export default function UploadPlantScreenPresenter({}: Props) {
         const plantData: UserPlant = {
             id: formData.id,
             name: formData.name,
+            api_name: formData.api_name,
             lastWatered: formData.lastWatered,
             wateringFrequency: formData.wateringFrequency,
             imageURL: formData.imageURL,
@@ -170,7 +183,13 @@ export default function UploadPlantScreenPresenter({}: Props) {
             const result = unwrapResult(resultAction);
 
             // If successful, show the popup
+            setPopUpMessage("You have successfully added the plant to your profile!");
+            setPopUpHeader("Added plant")
             setOpenPopUp(true);
+            
+            // set selected plant to null
+            dispatch(setUploadPlant(null));
+
         } catch (error) {
             // If there's an error, dispatch the appropriate error message
         }
@@ -212,7 +231,8 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 getInputProps={getInputProps}
                 selectedPlant={selectedPlant}
             />
-            <Popup.AddPlantPopUp open={openPopUp} handleClose={() => setOpenPopUp(false)}></Popup.AddPlantPopUp>
+            <Popup.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
+            handleClose={() => setOpenPopUp(false)}></Popup.PopUp>
         </>
     );
 }

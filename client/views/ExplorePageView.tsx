@@ -20,6 +20,7 @@ import {
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { TransitionGroup } from 'react-transition-group';
 
+
 type Props = {
     slideDirection: "right" | "left" | undefined;
     cards: any;
@@ -50,15 +51,18 @@ export default function ExplorePageView({ slideDirection, cards, currentCards, h
                 ref={containerRef}
                 >
                 <TransitionGroup>
-                     {
-                     !showSearch && 
-                     <Collapse>
-                        <Typography variant='h2' sx={{ marginBottom: '16px' }}>
-                        Looking for a plant?
-                        </Typography>
-                     </Collapse>
+                    {
+                        !showSearch ? (
+                            <Collapse>
+                                <Typography variant="h2" sx={{marginBottom: '16px'}}>
+                                    Looking for a plant?
+                                </Typography>
+                            </Collapse>
+                        ) : (
+                            <div/>
+                        )
                     }
-                    <div style={{ marginLeft: '2%', marginTop: '2%' }}>
+                    <div style={{marginLeft: '2%', marginTop: '2%'}}>
                         <TextField
                             label="Search for a plant"
                             variant="outlined"

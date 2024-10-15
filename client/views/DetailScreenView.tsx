@@ -96,7 +96,7 @@ export default function GeneralScreenView(
                     zIndex: 9999,
                 }}
             >
-                <CircularProgress size={80}/>
+                <CircularProgress size={50} sx={{ color: 'secondary.dark' }}/>
             </Box>
         );
     }
@@ -114,7 +114,7 @@ export default function GeneralScreenView(
                     width: '100vw',
                     height: '100vh',
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    zIndex: 9999,
+                    zIndex: -1,
                 }}
             >
                 <Typography variant="h4" color="error">
