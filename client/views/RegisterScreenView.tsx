@@ -125,8 +125,8 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
                         objectFit: 'contain',
                         flex: 1,
                         objectPosition: 'right bottom',
-                        maskImage: 'linear-gradient(to right, transparent 30%, black 40%)',
-                        WebkitMaskImage: 'linear-gradient(to right, transparent 30%, black 40%)', 
+                        maskImage: 'linear-gradient(to right, transparent 20%, black 40%)',
+                        WebkitMaskImage: 'linear-gradient(to right, transparent 20%, black 40%)', 
                     }}
                     src='elle-lumiere-Dze_6fnPIKk-unsplash.jpg'
                     alt='Smoothly Blended Image'
