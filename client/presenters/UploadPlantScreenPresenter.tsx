@@ -6,7 +6,7 @@ import {setUploadPlant} from '../redux/slices/plantSlice'
 import {UserPlant} from '../redux/slices/userSlice'
 import {useDropzone} from 'react-dropzone';
 import axios from 'axios';
-import Popup from "../components/PopUp";
+import Popup from "../components/Popup";
 import { unwrapResult } from '@reduxjs/toolkit';
 
 
