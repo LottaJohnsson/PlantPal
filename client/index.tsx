@@ -22,7 +22,6 @@ root.render(
             `}
                         </style>
                         <App/>
-                    
             </PersistGate>
         </Provider>
     </React.StrictMode>

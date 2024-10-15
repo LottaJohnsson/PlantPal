@@ -21,7 +21,12 @@ export default function ExplorePagePresenter({}: Props) {
     const [searchQuery, setSearchQuery] = useState('')
     const [loading, setLoading] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
-    const [initialPlants, setInitialPlants] = useState<Card[]>([]);
+    const [initialPlants, setInitialPlants] = useState<Card[]>(Array.from({ length: 28 }, (_, i) => ({
+        image: '',
+        name: '',
+        index: i,
+        id: i,
+    })));
     const initialPlantsSet = useRef(false);
     const navigate = useNavigate();
     const dispatch = useAppDispatch()
@@ -34,8 +39,6 @@ export default function ExplorePagePresenter({}: Props) {
     }, [dispatch])
     
     useEffect(() => {
-        console.log("Plants state updated:", plants);
-        
         if (plants.plants) {
             const newCards = plants.plants.map((plant: any, i: number) => ({
                 image: plant.default_image?.medium_url || 'https://i.ebayimg.com/images/g/pQoAAOSwAa1f2dlL/s-l960.webp',
@@ -45,8 +48,7 @@ export default function ExplorePagePresenter({}: Props) {
                 plant: plant
             }));
             setCards(newCards);
-            if (!initialPlantsSet.current) {
-                console.log("Setting initial plants:", newCards);
+            if (!initialPlantsSet.current && newCards.length > 0) {
                 setInitialPlants(newCards);
                 initialPlantsSet.current = true;
             }
@@ -57,6 +59,7 @@ export default function ExplorePagePresenter({}: Props) {
         image: '',
         name: '',
         index: i,
+        id: i,
     }));
 
     const pages = 7;
@@ -67,9 +70,15 @@ export default function ExplorePagePresenter({}: Props) {
         navigate(`/generalinfo`,);
     }
 
-    function handleSearchQueryChangeCB(query: string) {
+    function handleSearchQueryChangeCB(event: React.ChangeEvent<HTMLInputElement>) {
+        const query = event.target.value
         setSearchQuery(query)
         setLoading(true)
+        if (query.length > 0) {
+            setShowSearch(true);
+        } else {
+            setShowSearch(false);
+        }
         dispatch(fetchPlants(searchQuery))
     }
 
@@ -93,7 +102,6 @@ export default function ExplorePagePresenter({}: Props) {
             handleNext={handleNext} handlePrev={handlePrev}
             onSearchQueryChange={handleSearchQueryChangeCB}
             showSearch={showSearch}
-            setShowSearch={setShowSearch}
             onOptionClick={handleOptionClickCB}
             initialPlants={initialPlants}
             />
