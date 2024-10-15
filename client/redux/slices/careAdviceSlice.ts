@@ -24,7 +24,7 @@ const initialState: InitialState = {
 export const fetchCareAdvice = createAsyncThunk('fetchCareAdvice', (id: string) => {
     return axios
         .get(`plants/care_advice?query=${encodeURIComponent(id)}`)
-        .then(response => response.data.result[0])
+        .then(response => response.data.data[0])
 })
 
 const careAdviceSlice = createSlice({
