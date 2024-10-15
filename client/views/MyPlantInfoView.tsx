@@ -168,9 +168,7 @@ function SpeciesInfo({
     } else {
         return (
             <Stack sx={{padding: "5%", flex: 2, alignContent: 'center'}}>
-                <Typography align='center' variant='h4' color='warning.dark'> 
-                    Failed to get species information 
-                </Typography>
+                <Alert severity="error" > Failed to get species information! </Alert>
             </Stack>
         )
     }
@@ -256,6 +254,11 @@ export default function MyPlantInfoView({
                         </Button>
                         <TasksRow plant={plant} lateTasks={lateTasks} upcomingTasks={upcomingTasks} doneTasks={doneTasks} onCompleteTask={onCompleteTask}></TasksRow>
                     </Stack>
+                </Stack>
+                <Stack sx={{padding: "5%", flex: 2, alignContent: 'center'}}>
+                    <Typography align='center' variant='h6' >
+                        To get plant species information add a plant from out api
+                    </Typography>
                 </Stack>
             </Stack>
         )
