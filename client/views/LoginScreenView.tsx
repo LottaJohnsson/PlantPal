@@ -83,7 +83,7 @@ export default function LoginScreenView(
                                             color: 'secondary.dark',
                                             '&:hover': {
                                                 backgroundColor: 'secondary.dark',
-                                                color: 'secondary.dark'
+                                                color: 'secondary.light'
                                             }
                                         }}
                                         onClick={() => onSubmit()}

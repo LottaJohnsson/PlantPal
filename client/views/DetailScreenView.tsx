@@ -114,7 +114,7 @@ export default function GeneralScreenView(
                     width: '100vw',
                     height: '100vh',
                     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    zIndex: 900,
+                    zIndex: -1,
                 }}
             >
                 <Typography variant="h4" color="error">

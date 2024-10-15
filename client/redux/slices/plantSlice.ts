@@ -39,7 +39,7 @@ const initialState: PlantState = {
 export const fetchPlants = createAsyncThunk('fetchPlants', (query: string) => {
     return axios
         .get(`plants/search?query=${encodeURIComponent(query)}`)
-        .then(response => response.data)
+        .then(response => response.data.data)
 })
 
 const plantSlice = createSlice({
