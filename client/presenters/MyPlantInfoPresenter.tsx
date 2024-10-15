@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import MyPlantInfoView from '../Views/MyPlantInfoView'
+import MyPlantInfoView from '../views/MyPlantInfoView'
 import { Task, fetchUserPlantsFromDB, generateTasks, removePlantFromDB, completeTask, updatePlantInDB } from '../redux/slices/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { Plant, setCurrentPlant } from '../redux/slices/plantSlice';
 import { CareAdvice, fetchCareAdvice } from '../redux/slices/careAdviceSlice';
 import { useNavigate } from 'react-router-dom';
-import Popup from "../components/PopUp";
+import Popup from "../components/Popup";
 import axios from 'axios';
 
 type Props = {}

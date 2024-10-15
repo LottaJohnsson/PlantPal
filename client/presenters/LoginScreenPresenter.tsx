@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
-import LoginScreenView from '../Views/LoginScreenView';
-import RegisterScreenView from '../Views/RegisterScreenView';
+import LoginScreenView from '../views/LoginScreenView';
+import RegisterScreenView from '../views/RegisterScreenView';
 import {useNavigate} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
 import {loginUserR, registerUserR} from "../redux/slices/authSlice";

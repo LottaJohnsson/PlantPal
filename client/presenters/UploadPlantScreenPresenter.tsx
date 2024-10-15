@@ -6,7 +6,7 @@ import {setUploadPlant} from '../redux/slices/plantSlice'
 import {UserPlant} from '../redux/slices/userSlice'
 import {useDropzone} from 'react-dropzone';
 import axios from 'axios';
-import Popup from "../components/PopUp";
+import PopUp from '../components/Popup';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 
@@ -230,11 +230,11 @@ export default function UploadPlantScreenPresenter({}: Props) {
                 getInputProps={getInputProps}
                 selectedPlant={selectedPlant}
             />
-            <Popup.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
+            <PopUp.PopUp open={openPopUp} message={popupMessage} header={popupHeader}
             handleClose={() => {
                 setOpenPopUp(false);
                 (document.activeElement as HTMLElement)?.blur();
-                }}></Popup.PopUp>
+                }}></PopUp.PopUp>
         </>
     );
 }
