@@ -92,7 +92,7 @@ function TasksRow({
                 </Typography>
                 <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
                     {lateTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
+                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask} darkcolor={'warning.dark'} lightcolor={'warning.light'} completable={true}/>
                     ))}
                 </Stack>
             </Stack>
@@ -102,7 +102,7 @@ function TasksRow({
                 </Typography>
                 <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
                     {upcomingTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
+                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask} darkcolor={'secondary.dark'} lightcolor={'secondary.light'} completable={true}/>
                     ))}
                 </Stack>
             </Stack>
@@ -112,7 +112,7 @@ function TasksRow({
                 </Typography>
                 <Stack direction="row" spacing={2} sx={{alignItems: "baseline", alignContent: "baseline"}}>
                     {doneTasks.filter((task) => task.taskName === `Water ${plant?.name}`).map((task, index) => (
-                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask}/>
+                        <TaskBox key={index} task={task} onCompleteTask={onCompleteTask} darkcolor={'primary.dark'} lightcolor={'primary.light'} completable={false}/>
                     ))}
                 </Stack>
             </Stack>
