@@ -65,7 +65,7 @@ function PopUp(props: PopUp) {
 //     );
 // }
 
-function RemovePlantPopUp(props: addPlantProps) {
+/* function RemovePlantPopUp(props: addPlantProps) {
     return (
         <div>
             <Dialog
@@ -90,7 +90,7 @@ function RemovePlantPopUp(props: addPlantProps) {
             </Dialog>
         </div>
     );
-}
+} */
 
 
 export default {PopUp};

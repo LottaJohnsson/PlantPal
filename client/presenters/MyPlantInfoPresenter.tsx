@@ -140,7 +140,7 @@ export default function MyPlantInfoPresenter({}: Props) {
         onRemoveFromProfile={onRemoveFromProfile}
         onCompleteTask={onCompleteTask}
       />
-      <Popup.RemovePlantPopUp open={openPopUp} handleClose={handlePopupClose}></Popup.RemovePlantPopUp>
+      <Popup.PopUp open={openPopUp} handleClose={handlePopupClose} header="Removed Plant" message="You have successfully removed the plant"></Popup.PopUp>
     </>
   )
 }
