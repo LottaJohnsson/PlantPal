@@ -20,17 +20,22 @@ import {
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { TransitionGroup } from 'react-transition-group';
 
+type Card = {
+    image: string,
+    name: string,
+    index: number,
+}
 
 type Props = {
     slideDirection: "right" | "left" | undefined;
-    cards: any;
+    cards: Card[];
     currentCards: number;
     handleNext: () => void;
     handlePrev: () => void;
     onSearchQueryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     showSearch: boolean;
     onOptionClick: (plant: any) => void;
-    initialPlants: any;
+    initialPlants: Card[];
 };
 
 export default function ExplorePageView({ slideDirection, cards, currentCards, handleNext, handlePrev, onSearchQueryChange, showSearch, onOptionClick, initialPlants }: Props) {
