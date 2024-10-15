@@ -97,3 +97,8 @@ npm run dev
 | GET    | /plants/get                | Retrieves all plants associated with the user                                | None                             |
 | GET    | /plants/search             | Searches for plant species                                                   | `query`                          |
 | GET    | /plants/care_advice        | Retrieves care advice for a specific plant                                   | `query`                          |
+
+### Architecture graphic
+
+![Arch](https://github.com/user-attachments/assets/af9b3f46-15bd-4dd6-ba7f-85525336cda3)
+
