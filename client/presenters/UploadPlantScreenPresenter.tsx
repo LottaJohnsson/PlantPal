@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import UploadPlantScreenView from '../views/UploadPlantScreenView';
+import React, {useState, useEffect} from 'react'
+import UploadPlantScreenView from '../views/UploadPlantScreenView'
 import {useAppSelector, useAppDispatch} from '../redux/hooks'
 import {addPlantsToDB, updateMessages} from '../redux/slices/userSlice'
 import {setUploadPlant} from '../redux/slices/plantSlice'
