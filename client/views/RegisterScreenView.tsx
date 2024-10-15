@@ -70,7 +70,7 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
                             <Alert severity="error" sx={{display: error !== '' ? 'flex' : 'none'}}>{error}</Alert>
                             <TextField
                                 required
-                                id="outlined-required"
+                                id="regemail"
                                 label="Email"
                                 type='email'
                                 color="secondary"
@@ -78,7 +78,7 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
                             />
                             <TextField
                                 required
-                                id="outlined-required"
+                                id="regpassword"
                                 label="Password"
                                 type='password'
                                 color="secondary"
@@ -86,7 +86,7 @@ export default function RegisterScreenView({error, loading, setIsLogin, onEmailC
                             />
                             <TextField
                                 required
-                                id="outlined-required"
+                                id="regconfirm"
                                 label="Confirm Password"
                                 type='password'
                                 color="secondary"

@@ -195,7 +195,6 @@ export const addPlantsToDB = createAsyncThunk<boolean, UserPlant>(
                 }
             })
             .catch(error => {
-                console.error('Error adding plant:', error);
                 return rejectWithValue(error.message || 'Error adding plant');
             });
     }
@@ -234,7 +233,6 @@ export const updatePlantInDB = createAsyncThunk<boolean, string>(
                 }
             })
             .catch(error => {
-                console.error('Error updating plant:', error);
                 return rejectWithValue(error.message || 'Error updating plant');
             });
     }
@@ -257,7 +255,6 @@ export const removePlantFromDB = createAsyncThunk<boolean, string>(
                 }
             })
             .catch(error => {
-                console.error('Error removing plant:', error);
                 return rejectWithValue(error.message || 'Error removing plant');
             });
     }
