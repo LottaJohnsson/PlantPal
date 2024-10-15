@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import MyPlantInfoView from '../Views/MyPlantInfoView'
-import { usePlant } from '../Contexts/plantContext';
-import { UserPlant, Task, fetchUserPlantsFromDB, generateTasks, removePlantFromDB, completeTask, updatePlantInDB } from '../redux/slices/userSlice';
+import { Task, fetchUserPlantsFromDB, generateTasks, removePlantFromDB, completeTask, updatePlantInDB } from '../redux/slices/userSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { Plant, setCurrentPlant } from '../redux/slices/plantSlice';
 import { CareAdvice, fetchCareAdvice } from '../redux/slices/careAdviceSlice';
 import { useNavigate } from 'react-router-dom';
 import Popup from "../components/PopUp";
+import axios from 'axios';
 
 type Props = {}
 
@@ -77,19 +77,11 @@ export default function MyPlantInfoPresenter({}: Props) {
         console.log("Id does not matched saved species")
 
         try {
-          console.log("Try to fetch specific species info through id")
-          const response = await fetch(`plants/search?query=${encodeURIComponent(plant.name)}`, {
-              method: "GET",
-              headers: {
-                  "Content-Type": "application/json"
-              }
-          });
 
-          const json = await response.json();
-          const currentPlant = json.result[0];
+          const response = await axios.get(`plants/search?query=${encodeURIComponent(plant.api_name)}`);
+          dispatch(setCurrentPlant(await response.data.data[0]))
+          dispatch(fetchCareAdvice(await response.data.data[0].id))
 
-          dispatch(setCurrentPlant(currentPlant))
-          dispatch(fetchCareAdvice(currentPlant.id))
         } catch (error) {
           console.error("Error fetching species data in fetchSpeciesData():", error);
         }
