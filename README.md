@@ -97,12 +97,3 @@ npm run dev
 | GET    | /plants/get                | Retrieves all plants associated with the user                                | None                             |
 | GET    | /plants/search             | Searches for plant species                                                   | `query`                          |
 | GET    | /plants/care_advice        | Retrieves care advice for a specific plant                                   | `query`                          |
-
-#### Deploy on gcloud
-
-
-docker build . -t plantpal --platform linux/amd64
-
-docker tag plantpal europe-west2-docker.pkg.dev/plant-pal-438113/plantpal/plantpal:latest
-
-docker push europe-west2-docker.pkg.dev/plant-pal-438113/plantpal/plantpal:latest 
